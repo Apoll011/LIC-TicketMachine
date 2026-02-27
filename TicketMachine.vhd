@@ -16,7 +16,5 @@ architecture logicFunction OF TicketMachine IS
 		);
 	end Key_Scan;
 begin
-	key_scan01: Key_Scan port map (
-		
-	);
+
 END TicketMachine;
