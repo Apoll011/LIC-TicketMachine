@@ -1,0 +1,12 @@
+use ieee;
+USE ieee.std_logic_1164.all;
+
+entity TicketMachine is
+	port();
+end TicketMachine;
+
+architecture logicFunction OF TicketMachine IS
+
+begin
+
+END TicketMachine;
