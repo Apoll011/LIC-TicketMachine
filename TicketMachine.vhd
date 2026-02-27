@@ -7,7 +7,15 @@ entity TicketMachine is
 	);
 end TicketMachine;
 
-architecture logicFunction OF TicketMachine IS
+architecture logicFunction of TicketMachine is
+	component KeyDecode_FSM
+	port( 
+		reset 		: in std_logic;
+		clk			: in std_logic;
+		Kpress, Kack: in std_logic;
+		Kval			: out std_logic
+	);
+	end component;
 begin
 
-END logicFunction;
+end logicFunction;
