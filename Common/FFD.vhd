@@ -1,22 +1,19 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.all;
+library ieee;
+use ieee.std_logic_1164.all;
 
-ENTITY FFD IS
-PORT(	CLK : in std_logic;
+entity FFD IS
+	port(	
+		CLK 	: in std_logic;
 		RESET : in STD_LOGIC;
-		SET : in std_logic;
-		D : IN STD_LOGIC;
-		EN : IN STD_LOGIC;
-		Q : out std_logic
-		);
-END FFD;
+		SET 	: in std_logic;
+		D 		: IN STD_LOGIC;
+		EN 	: IN STD_LOGIC;
+		Q 		: out std_logic
+	);
+end FFD;
 
-ARCHITECTURE logicFunction OF FFD IS
+architecture logicFunction of FFD is
 
-BEGIN
-
-
-Q <= '0' when RESET = '1' else '1' when SET = '1' else D WHEN rising_edge(clk) and EN = '1';
-
-
-END LogicFunction;
+begin
+	Q <= '0' when RESET = '1' else '1' when SET = '1' else D WHEN rising_edge(clk) and EN = '1';
+end LogicFunction;
