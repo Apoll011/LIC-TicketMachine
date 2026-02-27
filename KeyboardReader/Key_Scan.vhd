@@ -39,8 +39,9 @@ architecture scan of Key_Scan is
 	);
 	end component;
 
-	signal counter_out : std_logic_vector(3 downto 0);
-
+	signal counter_out, not_c : std_logic_vector(3 downto 0);
+	
+	signal not_k_press : std_logic;
 begin
 	Kcounter : Counter port map (
 		CLK 	=> CLK, 
@@ -52,13 +53,14 @@ begin
 	mux : MUX4X1 port map (
 		A		=> Keys_Horizontal, 
 		OP		=> counter_out(1 downto 0), 
-		F		=> Kpress
+		F		=> not_k_press
 	);
 	
 	SKdecoder : Decoder port map (
 		S 		=> counter_out(3 downto 2),
-      C 		=> Keys_Vertical
+      C 		=> not_c
 	);
 
-        
+   Kpress 			<= not not_k_press;
+	Keys_Vertical	<= not not_c;
 end scan;
