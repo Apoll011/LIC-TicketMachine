@@ -56,30 +56,7 @@ begin
 	reset_tb <= '1';
 	Kscan_tb <= '0';
 	
-	Sclose_tb <= '1';
-	Spresence_tb <= '0';
-	B_tb <= '0';
-	wait for MCLK_PERIOD*2;
 	
-	reset_tb <= '0';
-	wait for MCLK_PERIOD*2;
-	
-	Sclose_tb <= '0';
-	wait for MCLK_PERIOD*5;
-	
-	Sopen_tb <= '1';
-	wait for MCLK_PERIOD*5;
-	
-	Spresence_tb <= '1';
-	wait for MCLK_PERIOD*5;
-	
-	Spresence_tb <= '0';
-	wait for MCLK_PERIOD*5;
-	
-	Sclose_tb <= '1';
-	B_tb <=	'0';
-	wait for MCLK_PERIOD*5;
-
 	wait;
 end process;
 
