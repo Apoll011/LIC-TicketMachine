@@ -50,19 +50,57 @@ begin
 		wait for MCLK_HALF_PERIOD;
 end process;
 
-stimulus: process 
+stimulus: process
 begin
-	-- reset
-	reset_tb <= '1';
-	Kscan_tb <= '0';
-	
-	--Sclose_tb <= '1';
-	--Spresence_tb <= '0';
-	--B_tb <= '0';
-	--wait for MCLK_PERIOD*2;
 
+-- reset
+reset_tb <= '1';
+K_ack_tb <= '0';
+T_delay_tb <= "00";
+Keys_Horizontal_tb <= "1111";
 
-	wait;
+wait for MCLK_PERIOD*2;
+
+reset_tb <= '0';
+
+wait for MCLK_PERIOD*2;
+
+-- Simulate key press by setting one horizontal to '0'
+Keys_Horizontal_tb <= "1110";
+
+wait for MCLK_PERIOD*50;
+
+K_ack_tb <= '1';
+
+wait for MCLK_PERIOD*2;
+
+K_ack_tb <= '0';
+
+wait for MCLK_PERIOD*2;
+
+-- Release key
+Keys_Horizontal_tb <= "1111";
+
+wait for MCLK_PERIOD*50;
+
+-- Another key press
+Keys_Horizontal_tb <= "1101";
+
+wait for MCLK_PERIOD*50;
+
+K_ack_tb <= '1';
+
+wait for MCLK_PERIOD*2;
+
+K_ack_tb <= '0';
+
+wait for MCLK_PERIOD*2;
+
+Keys_Horizontal_tb <= "1111";
+
+wait for MCLK_PERIOD*50;
+
+wait;
 end process;
 
 end architecture;
