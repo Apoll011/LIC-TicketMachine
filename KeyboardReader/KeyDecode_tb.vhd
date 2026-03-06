@@ -6,13 +6,13 @@ end KeyDecode_tb;
 
 architecture behavioral of KeyDecode_tb is
 
-component Key_Decode is
+component Key_Scan is
 port(
-		Kack, Tdelay, RESET, CLK  	: in std_logic;
-		Kval								: out std_logic;
-		K 									: out std_logic_vector(3 downto 0);
-		Keys_Vertical 					: out std_logic_vector(3 downto 0);
-		Keys_Horizontal				: in std_logic_vector(3 downto 0)
+		Kscan, CLK, RESET	: in std_logic; 
+		Keys_Vertical 		: out std_logic_vector(3 downto 0);
+		Keys_Horizontal	: in std_logic_vector(3 downto 0);
+		K						: out std_logic_vector(3 downto 0);
+		Kpress				: out std_logic
 );
 end component;
 
@@ -22,27 +22,25 @@ constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
 signal reset_tb : std_logic;
 signal clk_tb : std_logic;
-signal Kack_tb : std_logic;
-signal Tdelay_tb : std_logic;
+signal Kscan_tb : std_logic;
 signal Keys_Vertical_tb : std_logic_vector(3 downto 0);
 signal Keys_Horizontal_tb : std_logic_vector(3 downto 0);
 signal K_tb : std_logic_vector(3 downto 0);
-signal Kval_tb : std_logic;
+signal Kpress_tb : std_logic;
 
 
 begin
 
 -- Unit Under Test
-UUT: Key_Decode
+UUT: Key_Scan
 port map(
 		RESET 				=> reset_tb,
 		CLK 					=> clk_tb,
-		Kack					=> Kack_tb,
-		Tdelay 				=> Tdelay_tb,
+		Kscan					=> Kscan_tb,
 		Keys_Horizontal	=> Keys_Horizontal_tb,
 		Keys_Vertical 		=> Keys_Vertical_tb,
 		K 						=> K_tb,
-		Kval 					=> Kval_tb
+		Kpress 				=> Kpress_tb
 );
 
 clk_gen : process
@@ -58,50 +56,44 @@ begin
 
 -- reset
 reset_tb <= '1';
-Kack_tb <= '0';
-Tdelay_tb <= '0';
+Kscan_tb <= '0';
 Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*2;
+wait for MCLK_PERIOD*6;
 
 reset_tb <= '0';
+Kscan_tb <= '1';
 
-wait for MCLK_PERIOD*2;
+wait for MCLK_PERIOD*6;
 
 -- Simulate key press by setting one horizontal to '0'
 Keys_Horizontal_tb <= "1110";
 
-wait for MCLK_PERIOD*50;
-
-Kack_tb <= '1';
-
-wait for MCLK_PERIOD*2;
-
-Kack_tb <= '0';
-
-wait for MCLK_PERIOD*2;
+wait for MCLK_PERIOD*6;
 
 -- Release key
 Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*50;
+wait for MCLK_PERIOD*6;
+
+
+
+Kscan_tb <= '0';
+
+wait for MCLK_PERIOD*6;
+
+Kscan_tb  <= '1';
+
+wait for MCLK_PERIOD*6;
 
 -- Another key press
 Keys_Horizontal_tb <= "1101";
 
-wait for MCLK_PERIOD*50;
-
-Kack_tb <= '1';
-
-wait for MCLK_PERIOD*2;
-
-Kack_tb <= '0';
-
-wait for MCLK_PERIOD*2;
+wait for MCLK_PERIOD*6;
 
 Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*50;
+wait for MCLK_PERIOD*6;
 
 wait;
 end process;

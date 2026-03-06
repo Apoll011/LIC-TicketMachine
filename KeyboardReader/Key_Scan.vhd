@@ -63,4 +63,6 @@ begin
 
    Kpress 			<= not not_k_press;
 	Keys_Vertical	<= not not_c;
+	K					<= counter_out;
+	
 end scan;
