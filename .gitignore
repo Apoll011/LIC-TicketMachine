@@ -25,3 +25,5 @@ capture/
 *.kotlin_module
 .idea
 *.so
+*.dll
+out/
