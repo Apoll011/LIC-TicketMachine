@@ -11,3 +11,4 @@ simulation/
 *.jic
 *.done
 *.bak
+pull.sh
