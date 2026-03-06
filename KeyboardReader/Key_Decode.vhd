@@ -48,7 +48,7 @@ begin
 		CLK 				=> CLK,
 		Kpress 			=> Kpress,
 		Kack 				=> Kack,
-		Tdelay 			=> Tdelay,
+		Tdelay 			=> '0',
 		Kval				=> Kval,
 		Kscan				=> Kscan
 	);
