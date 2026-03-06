@@ -12,3 +12,14 @@ simulation/
 *.done
 *.bak
 pull.sh
+# Gradle
+# ------
+.gradle/
+build/
+!**/src/**/build
+capture/
+
+# Kotlin
+# ------
+.kotlin/
+*.kotlin_module
