@@ -6,7 +6,7 @@ end KeyDecode_tb;
 
 architecture behavioral of KeyDecode_tb is
 
-component Key_Scan is
+component  	 is
 port(
 		Kscan, CLK, RESET	: in std_logic; 
 		Keys_Vertical 		: out std_logic_vector(3 downto 0);
@@ -75,8 +75,6 @@ wait for MCLK_PERIOD*6;
 Keys_Horizontal_tb <= "1111";
 
 wait for MCLK_PERIOD*6;
-
-
 
 Kscan_tb <= '0';
 
