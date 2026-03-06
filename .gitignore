@@ -23,3 +23,5 @@ capture/
 # ------
 .kotlin/
 *.kotlin_module
+.idea
+*.so

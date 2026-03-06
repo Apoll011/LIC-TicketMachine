@@ -10,11 +10,10 @@ object HAL {
 
     // Retorna 'true' se o bit definido pela mask está com valor lógico '1' no UsbPort
     fun isBit(mask: Int): Boolean {
-        println("")
-        return false
+        return readBits(mask) == mask
     }
 
-    // Retorna os valores dos bits representados por mask presentes no UsbPort
+    /// Retorna os valores dos bits representados por mask presentes no UsbPort
     fun readBits(mask: Int): Int {
 		return UsbPort.read() and mask
 	}
@@ -22,16 +21,16 @@ object HAL {
     // Escreve nos bits representados por mask os valores correspondentes em value
     fun writeBits(mask: Int, value: Int) {
         UsbPort.write(value and mask)
-		
-	}
+        bufferWrite = (bufferWrite and mask.inv()) or (value and mask)
+    }
 
     // Coloca os bits representados por mask no valor lógico '1'
     fun setBits(mask: Int) {
-        UsbPort.write(0xFF and mask)
+        writeBits(mask, 0xFF)
     }
 
     // Coloca os bits representados por mask no valor lógico '0'
     fun clrBits(mask: Int) {
-        UsbPort.write(0x00 and mask)
+        writeBits(mask, 0x00)
     }
 }
