@@ -11,6 +11,8 @@ simulation/
 *.jic
 *.done
 *.bak
+*.qpf
+*.qwf
 pull.sh
 # Gradle
 # ------
