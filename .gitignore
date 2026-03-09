@@ -27,3 +27,4 @@ capture/
 *.so
 *.dll
 out/
+*_assignment_defaults.qdf
