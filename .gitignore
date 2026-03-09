@@ -12,7 +12,7 @@ simulation/
 *.done
 *.bak
 *.qpf
-*.qwf
+*.qws
 pull.sh
 # Gradle
 # ------
