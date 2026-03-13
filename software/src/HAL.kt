@@ -33,4 +33,8 @@ object HAL {
     fun clrBits(mask: Int) {
         writeBits(mask, 0x00)
     }
+
+    fun testReadWrite() {
+        HAL.writeBits(0xFF, HAL.readBits(0xFF))
+    }
 }
