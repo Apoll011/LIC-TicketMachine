@@ -8,24 +8,18 @@ port(
     clk             : in  std_logic;
     Kpress, Kack    : in  std_logic;
     Tdelay          : in  std_logic_vector(1 downto 0);  -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
-    Kval            : out std_logic
+    Kval, Kscan     : out std_logic
 );
 end KeyDecode_FSM;
 
 architecture behavioral of KeyDecode_FSM is
 
-    type STATE_TYPE is (
-        STATE_WAITING_KEY,
-        STATE_WAITING_BUFFER,
-        STATE_WAITING_TDELAY
-    );
+	type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
 
-    signal CurrentState, NextState : STATE_TYPE;
+	signal CurrentState, NextState : STATE_TYPE;
 
-    -- Contador interno para o período de repetição (27 bits para 100M ciclos @ 50MHz)
-    signal counter      : unsigned(26 downto 0);
-    signal max_count    : unsigned(26 downto 0);
-    signal timer_done   : std_logic;
+begin 
+
 
 begin
 
@@ -54,44 +48,35 @@ begin
 
     timer_done <= '1' when (counter = max_count - 1) else '0';
 
-    -- Registo de estado
-    CurrentState <= STATE_WAITING_KEY when reset = '1' else NextState when rising_edge(clk);
+	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(CLK);
 
 GenerateNextState:
-    process (CurrentState, Kpress, Kack, timer_done)
-    begin
-        case CurrentState is
+process (CurrentState, Kpress, Kack)
+    begin 
+        case CurrentState is 
+            when STANDING_BY         => if (Kpress = '1') then 
+                                                NextState <= READING_DATA;
+                                            else
+                                                NextState <= STANDING_BY;
+                                            end if;
 
-            when STATE_WAITING_KEY =>
-                if (Kpress = '1') then
-                    NextState <= STATE_WAITING_BUFFER;
-                else
-                    NextState <= STATE_WAITING_KEY;
-                end if;
+            when READING_DATA    => if (Kack = '1') then
+                                                NextState <= DATA_ACCEPTED;
+                                            else 
+                                                NextState <= READING_DATA;
+                                            end if;
 
-            when STATE_WAITING_BUFFER =>
-                if (Kack = '1') then
-                    if (Kpress = '1') then
-                        NextState <= STATE_WAITING_TDELAY;
-                    else
-                        NextState <= STATE_WAITING_KEY;
-                    end if;
-                else
-                    NextState <= STATE_WAITING_BUFFER;
-                end if;
-
-            when STATE_WAITING_TDELAY =>
-                if (Kpress = '0') then
-                    NextState <= STATE_WAITING_KEY;
-                elsif (timer_done = '1') then
-                    NextState <= STATE_WAITING_BUFFER;
-                else
-                    NextState <= STATE_WAITING_TDELAY;
-                end if;
+            when DATA_ACCEPTED   => if (Kack = '0' and Kpress = '0') then
+                                                NextState <= STANDING_BY;
+                                            else 
+                                                NextState <= DATA_ACCEPTED;
+                                            end if;
 
         end case;
     end process;
 
-    Kval <= '1' when (CurrentState = STATE_WAITING_BUFFER) else '0';
 
+	Kscan <= '1' when (CurrentState = STANDING_BY) else '0';
+
+	Kval <= '1' when (CurrentState = READING_DATA) else '0';
 end behavioral;

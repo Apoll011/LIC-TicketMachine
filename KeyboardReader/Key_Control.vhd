@@ -17,7 +17,7 @@ architecture logicFunction of Key_Control is
         clk             : in  std_logic;
         Kpress, Kack    : in  std_logic;
         Tdelay          : in  std_logic_vector(1 downto 0);
-        Kval            : out std_logic
+        Kval, Kscan     : out std_logic
     );
     end component;
 
@@ -31,10 +31,7 @@ begin
         Kpress  => Kpress,
         Kack    => Kack,
         Tdelay  => Tdelay,
-        Kval    => k_val
+        Kval    => Kval
+		  Kscan   => Kscan
     );
-
-    Kval  <= k_val;
-    Kscan <= not k_val;
-
 end logicFunction;
