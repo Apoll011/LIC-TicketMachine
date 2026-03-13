@@ -39,7 +39,7 @@ begin
 
 	decode: Key_Decode port map (
 		Kack => outputPort(0),
-		Tdelay => '0',
+		Tdelay => "11",
 		RESET => '0',
 		CLK => CLK,
 		K(0) => inputPort(6),
