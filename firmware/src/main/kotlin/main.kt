@@ -3,6 +3,7 @@ import KeyBoard.testKeydecode
 fun main(){
     HAL.init()
     while (true) {
-        testKeydecode()
+        val key = KeyBoard.readKey() ?: continue
+        println("Key pressed: $key")
     }
 }
