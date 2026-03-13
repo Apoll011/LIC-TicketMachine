@@ -15,7 +15,7 @@ object HAL {
 
     /// Retorna os valores dos bits representados por mask presentes no UsbPort
     fun readBits(mask: Int): Int {
-        return UsbPort.read() and mask 
+        return UsbPort.read() and mask
     }
 
     // Escreve nos bits representados por mask os valores correspondentes em value
@@ -32,5 +32,9 @@ object HAL {
     // Coloca os bits representados por mask no valor lógico '0'
     fun clrBits(mask: Int) {
         writeBits(mask, 0x00)
+    }
+
+    fun testReadWrite() {
+        HAL.writeBits(0xFF, HAL.readBits(0xFF))
     }
 }

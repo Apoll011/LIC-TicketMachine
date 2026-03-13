@@ -11,6 +11,7 @@ simulation/
 *.jic
 *.done
 *.bak
+*.qws
 pull.sh
 # Gradle
 # ------
@@ -27,3 +28,4 @@ capture/
 *.so
 *.dll
 out/
+*_assignment_defaults.qdf

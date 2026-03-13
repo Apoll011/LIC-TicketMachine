@@ -1,8 +1,8 @@
-import isel.leic.UsbPort
+import KeyBoard.testKeydecode
 
 fun main(){
     HAL.init()
-	while (true) {
-        HAL.writeBits(0xFF, HAL.readBits(0xFF))
-	}
+    while (true) {
+        testKeydecode()
+    }
 }
