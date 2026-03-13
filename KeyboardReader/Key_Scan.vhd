@@ -39,23 +39,10 @@ architecture scan of Key_Scan is
 	);
 	end component;
 	
-		component clkDIV
-	port ( clk_in: in std_logic;
-		 clk_out: out std_logic);
-		end component;
-		
-		signal clk_out : std_logic;
-
 	signal counter_out, not_c : std_logic_vector(3 downto 0);
 	
 	signal not_k_press : std_logic;
 begin
-
-	Clkdi: clkDIV port map (
-		clk_in => CLK,
-		clk_out => clk_out
-	);
-	
 	
 	Kcounter : Counter port map (
 		CLK 	=> CLK, 

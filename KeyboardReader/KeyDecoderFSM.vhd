@@ -7,7 +7,7 @@ port(
     reset           : in  std_logic;
     clk             : in  std_logic;
     Kpress, Kack    : in  std_logic;
-    Tdelay          : in  std_logic_vector(1 downto 0);
+    Tdelay          : in  std_logic_vector(1 downto 0);  -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
     Kval, Kscan     : out std_logic
 );
 end KeyDecode_FSM;
@@ -18,7 +18,7 @@ architecture behavioral of KeyDecode_FSM is
 
 	signal CurrentState, NextState : STATE_TYPE;
 
-begin
+begin 
 
 	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(CLK);
 

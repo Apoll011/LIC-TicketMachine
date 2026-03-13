@@ -31,14 +31,26 @@ architecture logicFunction of Key_Decode is
         Kpress              : out std_logic
     );
     end component;
+	 
+	 component CLKDIV
+    generic(div: natural := 50000000);
+        port(
+            clk_in: in std_logic; -- Entrada do clock div
+            clk_out: out std_logic -- Saída do clock div
+        );
+    end component;
 
-    signal Kpress, Kscan : std_logic;
+
+    signal Kpress, Kscan, not_clk_divider, CLK_Divider : std_logic;
 
 begin
 
+    not_clk_divider <= not CLK_Divider;
+
+
     scan: Key_Scan port map (
         RESET           => RESET,
-        CLK             => CLK,
+        CLK             => CLK_Divider,
         Kpress          => Kpress,
         K               => K,
         Kscan           => Kscan,
@@ -48,12 +60,19 @@ begin
 
     control: Key_Control port map (
         RESET   => RESET,
-        CLK     => CLK,
+        CLK     => not_clk_divider,
         Kpress  => Kpress,
         Kack    => Kack,
         Tdelay  => Tdelay,
         Kval    => Kval,
         Kscan   => Kscan
     );
+	 
+	 Clk_div : CLKDIV generic map (500000) 
+    port map(
+        clk_in => CLK,
+        clk_out => CLK_Divider
+    );
+
 
 end logicFunction;
