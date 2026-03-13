@@ -30,9 +30,21 @@ architecture logicFunction of TicketMachine is
 	);
 	end component;
 	
+	component clkDIV
+	port ( clk_in: in std_logic;
+		 clk_out: out std_logic);
+	end component;
+		 
 	signal inputPort, outputPort	: STD_LOGIC_VECTOR(7 DOWNTO 0);	
+	signal clk_out			: std_logic;
 begin
-
+	
+	clkd: clkDIV port map (
+	
+		clk_in => CLK,
+		clk_out => clk_out
+	);
+			
 	usb: UsbPort port map (
 
 		inputPort 	=> inputPort,
