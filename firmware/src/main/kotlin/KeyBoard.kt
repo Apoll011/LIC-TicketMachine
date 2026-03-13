@@ -1,7 +1,7 @@
 object KeyBoard {
     private const val KVAL_MASK  = 0b10000000
     private const val KCODE_MASK = 0b01111000
-    private const val KACK_MASK  = 0b0000000  // outputPort(0) — escrita
+    private const val KACK_MASK  = 0b00000001  // outputPort(0) — escrita
 
     enum class Key {
         KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0,
