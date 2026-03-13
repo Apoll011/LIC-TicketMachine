@@ -2,7 +2,7 @@
 fun main(){
     HAL.init()
     while (true) {
-        val key = KeyBoard.readKey() ?: continue
+        val key = KBD.getKey() ?: continue
         println("Key pressed: $key")
     }
 }

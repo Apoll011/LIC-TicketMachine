@@ -1,36 +1,33 @@
-object KeyBoard {
+object KBD {
     private const val KVAL_MASK  = 0b10000000
     private const val KCODE_MASK = 0b01111000
     private const val KACK_MASK  = 0b00000001  // outputPort(0) — escrita
 
-    enum class Key {
-        KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0,
-        KEY_A, KEY_B, KEY_C, KEY_D,
-        KEY_HASH, KEY_STAR,
-        KEY_NONE
+    enum class Key(val char: Char) {
+        KEY_1('1'), KEY_2('2'), KEY_3('3'), KEY_4('4'), KEY_5('5'), KEY_6('6'), KEY_7('7'), KEY_8('8'), KEY_9('9'), KEY_0('0'),
+        KEY_A('A'), KEY_B('B'), KEY_C('C'), KEY_D('D'),
+        KEY_HASH('#'), KEY_STAR('*'),
+        KEY_NONE(' ')
     }
 
-    /**
-     * Tenta ler uma tecla.
-     * Retorna null se Kval não estiver activo (nada a ler ainda).
-     * Retorna a Key e completa o handshake com a FSM caso contrário.
-     */
+    fun getKey(): Char? {
+        return readKey()?.char
+    }
+
     fun readKey(): Key? {
         if (!HAL.isBit(KVAL_MASK)) return null
 
         val code = (HAL.readBits(KCODE_MASK) shr 3) and 0xF
-        val key = getKey(code)
+        val key = Key(code)
 
         HAL.setBits(KACK_MASK)
-
-        while (HAL.isBit(KVAL_MASK)) { /* aguarda */ }
 
         HAL.clrBits(KACK_MASK)
 
         return key
     }
 
-    private fun getKey(id: Int): Key = when (id) {
+    private fun Key(id: Int): Key = when (id) {
         0b0000 -> Key.KEY_D
         0b0100 -> Key.KEY_4
         0b1000 -> Key.KEY_1

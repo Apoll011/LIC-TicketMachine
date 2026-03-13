@@ -3,7 +3,7 @@ USE ieee.std_logic_1164.all;
 
 entity TicketMachine is
 	port(	
-		CLK								: in std_logic;
+		CLK, RESET						: in std_logic;
 		Keys_Vertical 					: out std_logic_vector(3 downto 0);
 		Keys_Horizontal				: in std_logic_vector(3 downto 0)
 		
@@ -41,7 +41,7 @@ begin
 	decode: Key_Decode port map (
 		Kack => outputPort(0),
 		Tdelay =>"11",
-		RESET => '0',
+		RESET => RESET,
 		CLK => CLK,
 		K(0) => inputPort(6),
 		K(1) => inputPort(5),

@@ -7,7 +7,7 @@ port(
     reset           : in  std_logic;
     clk             : in  std_logic;
     Kpress, Kack    : in  std_logic;
-    Tdelay          : in  std_logic_vector(1 downto 0);  -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
+    Tdelay          : in  std_logic_vector(1 downto 0);
     Kval, Kscan     : out std_logic
 );
 end KeyDecode_FSM;
@@ -18,35 +18,7 @@ architecture behavioral of KeyDecode_FSM is
 
 	signal CurrentState, NextState : STATE_TYPE;
 
-begin 
-
-
 begin
-
-    -- Limite do contador conforme Tabela 1
-    with Tdelay select
-        max_count <=
-            to_unsigned(25_000_000, 27) when "00",   -- 500 ms
-            to_unsigned(50_000_000, 27) when "01",   -- 1000 ms
-            to_unsigned(75_000_000, 27) when "10",   -- 1500 ms
-            to_unsigned(100_000_000,27) when "11",   -- 2000 ms_
-            to_unsigned(25_000_000, 27) when others;
-
-    -- Contador: só corre em STATE_WAITING_TDELAY
-    process (CLK, reset)
-    begin
-        if (reset = '1') then
-            counter <= (others => '0');
-        elsif rising_edge(CLK) then
-            if (CurrentState /= STATE_WAITING_TDELAY) then
-                counter <= (others => '0');
-            elsif (counter < max_count - 1) then
-                counter <= counter + 1;
-            end if;
-        end if;
-    end process;
-
-    timer_done <= '1' when (counter = max_count - 1) else '0';
 
 	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(CLK);
 

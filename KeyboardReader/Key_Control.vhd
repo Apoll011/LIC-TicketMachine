@@ -31,7 +31,7 @@ begin
         Kpress  => Kpress,
         Kack    => Kack,
         Tdelay  => Tdelay,
-        Kval    => Kval
+        Kval    => Kval,
 		  Kscan   => Kscan
     );
 end logicFunction;
