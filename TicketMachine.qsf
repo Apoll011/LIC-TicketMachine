@@ -99,6 +99,9 @@ set_location_assignment PIN_C11 -to RESET
 
 
 
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VHDL_FILE Common/clkDIV.vhd
 set_global_assignment -name VHDL_FILE UsbPort.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Decode.vhd
@@ -117,7 +120,4 @@ set_global_assignment -name VHDL_FILE KeyboardReader/KeyDecoderFSM.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Scan.vhd
 set_global_assignment -name VHDL_FILE TicketMachine.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Control.vhd
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

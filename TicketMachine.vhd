@@ -13,7 +13,8 @@ end TicketMachine;
 architecture logicFunction of TicketMachine is
 	component Key_Decode
 	port( 
-		Kack, Tdelay, RESET, CLK  	: in std_logic;
+		Kack, RESET, CLK  	: in std_logic;
+		Tdelay 							: in std_logic_vector(1 downto 0);
 		Kval								: out std_logic;
 		K 									: out std_logic_vector(3 downto 0);
 		Keys_Vertical 					: out std_logic_vector(3 downto 0);
@@ -39,7 +40,7 @@ begin
 
 	decode: Key_Decode port map (
 		Kack => outputPort(0),
-		Tdelay => "11",
+		Tdelay =>"11",
 		RESET => '0',
 		CLK => CLK,
 		K(0) => inputPort(6),

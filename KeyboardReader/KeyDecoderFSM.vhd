@@ -35,7 +35,7 @@ begin
             to_unsigned(25_000_000, 27) when "00",   -- 500 ms
             to_unsigned(50_000_000, 27) when "01",   -- 1000 ms
             to_unsigned(75_000_000, 27) when "10",   -- 1500 ms
-            to_unsigned(100_000_000,27) when "11",   -- 2000 ms
+            to_unsigned(100_000_000,27) when "11",   -- 2000 ms_
             to_unsigned(25_000_000, 27) when others;
 
     -- Contador: só corre em STATE_WAITING_TDELAY
