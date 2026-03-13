@@ -33,7 +33,12 @@ object KeyBoard {
             val key = getKey(code)
             println("Key: $key")
             HAL.setBits(0x01)
-            HAL.setBits(0x00)
+
+            while (HAL.isBit(0b10000000)) {}
+
+            HAL.clrBits(0x01)
+        } else {
+
         }
     }
 }
