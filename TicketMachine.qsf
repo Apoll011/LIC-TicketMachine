@@ -73,7 +73,7 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 #set_location_assignment PIN_D14 -to outputPort[7]
 
 
-set_location_assignment PIN_A8 -to K[0]
+set_location_assignment PIN_A8 -to t
 set_location_assignment PIN_A9 -to K[1]
 set_location_assignment PIN_A10 -to K[2]
 set_location_assignment PIN_B10 -to K[3]

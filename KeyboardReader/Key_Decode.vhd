@@ -3,8 +3,9 @@ use ieee.std_logic_1164.all;
 
 entity Key_Decode IS
 	port(	
-		Kack, Tdelay, RESET, CLK  	: in std_logic;
-		Kval								: out std_logic;
+		Kack, RESET, CLK			  	: in std_logic;
+		Kval, t							: out std_logic;
+		Tdelay  					      : in  std_logic_vector(1 downto 0);
 		K 									: out std_logic_vector(3 downto 0);
 		Keys_Vertical 					: out std_logic_vector(3 downto 0);
 		Keys_Horizontal				: in std_logic_vector(3 downto 0)
@@ -14,8 +15,9 @@ end Key_Decode;
 architecture logicFunction of Key_Decode is
 	component Key_Control
 	port( 
-		Kack, Kpress, Tdelay, RESET, CLK  	: in std_logic;
-		Kval, Kscan									: out std_logic
+		Kack, Kpress, RESET, CLK  	: in std_logic;
+		Tdelay    				      : in  std_logic_vector(1 downto 0);
+		Kval, Kscan, t					: out std_logic
 	);
 	end component;
 	
@@ -48,8 +50,10 @@ begin
 		CLK 				=> CLK,
 		Kpress 			=> Kpress,
 		Kack 				=> Kack,
-		Tdelay 			=> '0',
+		Tdelay 			=> Tdelay,
 		Kval				=> Kval,
 		Kscan				=> Kscan
 	);
+	
+	t <= Kpress;
 end LogicFunction;
