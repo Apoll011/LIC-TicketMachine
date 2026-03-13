@@ -68,7 +68,7 @@ begin
         Kscan   => Kscan
     );
 	 
-	 Clk_div : CLKDIV generic map (500000) 
+	 Clk_div : CLKDIV generic map (50) 
     port map(
         clk_in => CLK,
         clk_out => CLK_Divider

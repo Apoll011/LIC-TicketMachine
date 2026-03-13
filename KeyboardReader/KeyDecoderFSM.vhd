@@ -14,13 +14,29 @@ end KeyDecode_FSM;
 
 architecture behavioral of KeyDecode_FSM is
 
+	 component CLKDIV
+    generic(div: natural := 50000000);
+        port(
+            clk_in: in std_logic; -- Entrada do clock div
+            clk_out: out std_logic -- Saída do clock div
+        );
+	end component;
+
 	type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
 
 	signal CurrentState, NextState : STATE_TYPE;
+	signal clk_out: std_logic;
 
 begin 
 
-	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(CLK);
+	clkd: CLKDIV generic map (500000)
+	port map(
+		clk_in => clk,
+		clk_out => clk_out
+		
+	);
+
+	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(clk);
 
 GenerateNextState:
 process (CurrentState, Kpress, Kack)
@@ -38,7 +54,7 @@ process (CurrentState, Kpress, Kack)
                                                 NextState <= READING_DATA;
                                             end if;
 
-            when DATA_ACCEPTED   => if (Kack = '0' and Kpress = '0') then
+            when DATA_ACCEPTED   => if ((Kack = '0' and Kpress = '0') or clk_out = '1') then
                                                 NextState <= STANDING_BY;
                                             else 
                                                 NextState <= DATA_ACCEPTED;
