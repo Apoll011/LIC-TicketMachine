@@ -1,6 +1,7 @@
 object KBD {
     private const val KVAL_MASK  = 0b10000000
     private const val KCODE_MASK = 0b01111000
+
     private const val KACK_MASK  = 0b00000001  // outputPort(0) — escrita
 
     enum class Key(val char: Char) {
