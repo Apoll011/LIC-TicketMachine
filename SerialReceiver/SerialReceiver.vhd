@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity SerialReceiver is
     port (
-        SDX, CLK, SS : in  std_logic;
-        Q            : out std_logic_vector(9 downto 0)
+        SDX, CLK, SS, RESET : in  std_logic;
+        Q            		 : out std_logic_vector(9 downto 0)
     );
 end entity SerialReceiver;
 
@@ -31,7 +31,6 @@ architecture logicFunction of SerialReceiver is
     end component HoldRegister;
 
     signal shift_out : std_logic_vector(9 downto 0);
-    signal RESET     : std_logic;
 begin
 
     shift: component ShiftRegister
@@ -51,8 +50,5 @@ begin
         EN    => SS,
         Q     => Q
     );
-
-    RESET <= '0';
-
 
 end architecture logicFunction;

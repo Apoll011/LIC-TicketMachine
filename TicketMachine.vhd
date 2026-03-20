@@ -25,15 +25,15 @@ architecture logicFunction of TicketMachine is
 	
 	component UsbPort
 	port( 
-		inputPort:  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		outputPort :  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+		inputPort	:  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
+		outputPort 	:  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
 	);
 	end component;
 	
 	component SerialReceiver
     port(
-        SDX, CLK, SS    : in  std_logic;
-        Q           		: out std_logic_vector(9 downto 0)
+        SDX, CLK, SS, RESET   : in  std_logic;
+        Q           				: out std_logic_vector(9 downto 0)
     );
 	end component;
 
@@ -62,9 +62,10 @@ begin
 	);
 	
 	lcd_serial : SerialReceiver port map (
-		SDX => outputPort(4),
-		CLK => outputPort(3),
-		SS  => outputPort(1),
-		Q 	 => LCD_DATA
+		SDX 	=> outputPort(4),
+		CLK 	=> outputPort(3),
+		SS  	=> outputPort(1),
+		Q 	 	=> LCD_DATA,
+		RESET => RESET
 	);
 end logicFunction;
