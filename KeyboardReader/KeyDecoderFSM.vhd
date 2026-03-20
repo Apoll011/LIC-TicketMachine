@@ -14,57 +14,72 @@ end KeyDecode_FSM;
 
 architecture behavioral of KeyDecode_FSM is
 
-	 component CLKDIV
-    generic(div: natural := 50000000);
+    component KeyDelay
         port(
-            clk_in: in std_logic; -- Entrada do clock div
-            clk_out: out std_logic -- Saída do clock div
+            CLK     : in  std_logic;
+            Tdelay  : in  std_logic_vector(1 downto 0);
+            CLK_Out : out std_logic
         );
-	end component;
+    end component;
 
-	type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
+    type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
+    signal CurrentState, NextState : STATE_TYPE;
+    signal clk_out      : std_logic;
+    signal clk_out_prev : std_logic := '0';
+    signal clk_out_rise : std_logic;
 
-	signal CurrentState, NextState : STATE_TYPE;
-	signal clk_out: std_logic;
+begin
 
-begin 
+    -- Instantiate delay clock generator
+    clkd: KeyDelay
+    port map(
+        CLK     => clk,
+        Tdelay  => Tdelay,
+        CLK_Out => clk_out
+    );
 
-	clkd: CLKDIV generic map (500000)
-	port map(
-		clk_in => clk,
-		clk_out => clk_out
-		
-	);
+    DetectRise: process (clk, reset)
+    begin
+        if reset = '1' then
+            clk_out_prev <= '0';
+        elsif rising_edge(clk) then
+            clk_out_prev <= clk_out;
+        end if;
+    end process;
+	 
+    clk_out_rise <= '1' when (clk_out = '1' and clk_out_prev = '0') else '0';
 
-	CurrentState <= STANDING_BY when RESET = '1' else NextState when rising_edge(clk);
+	 CurrentState <= STANDING_BY when reset = '1' else NextState;
 
-GenerateNextState:
-process (CurrentState, Kpress, Kack)
-    begin 
-        case CurrentState is 
-            when STANDING_BY         => if (Kpress = '1') then 
-                                                NextState <= READING_DATA;
-                                            else
-                                                NextState <= STANDING_BY;
-                                            end if;
+    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise)
+    begin
+        case CurrentState is
 
-            when READING_DATA    => if (Kack = '1') then
-                                                NextState <= DATA_ACCEPTED;
-                                            else 
-                                                NextState <= READING_DATA;
-                                            end if;
+            when STANDING_BY =>
+                if (Kpress = '1') then
+                    NextState <= READING_DATA;
+                else
+                    NextState <= STANDING_BY;
+                end if;
 
-            when DATA_ACCEPTED   => if ((Kack = '0' and Kpress = '0') or clk_out = '1') then
-                                                NextState <= STANDING_BY;
-                                            else 
-                                                NextState <= DATA_ACCEPTED;
-                                            end if;
+            when READING_DATA =>
+                if (Kack = '1') then
+                    NextState <= DATA_ACCEPTED;
+                else
+                    NextState <= READING_DATA;
+                end if;
+
+            when DATA_ACCEPTED =>
+                if (clk_out_rise = '1') or (Kack = '0' and Kpress = '0') then
+                    NextState <= STANDING_BY;
+                else
+                    NextState <= DATA_ACCEPTED;
+                end if;
 
         end case;
     end process;
 
+    Kscan <= '1' when (CurrentState = STANDING_BY)  else '0';
+    Kval  <= '1' when (CurrentState = READING_DATA) else '0';
 
-	Kscan <= '1' when (CurrentState = STANDING_BY) else '0';
-
-	Kval <= '1' when (CurrentState = READING_DATA) else '0';
 end behavioral;

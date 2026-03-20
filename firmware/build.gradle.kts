@@ -3,8 +3,8 @@ plugins {
     application
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "com.isel.lic.3"
+version = "1.3"
 
 repositories {
     mavenCentral()

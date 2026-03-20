@@ -1,10 +1,10 @@
 object SerialEmitter {
 
-enum class Peripheral {LCD, TICKET}
+    enum class Peripheral {LCD, TICKET}
 
-fun init() {}
+    fun init() {}
 
-fun send(addr: Peripheral, data: Int, size: Int) {}
+    fun send(addr: Peripheral, data: Int, size: Int) {}
 
 fun isBusy(): Boolean {
     TODO("not implemented")
