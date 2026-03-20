@@ -19,10 +19,11 @@ pull.sh
 build/
 !**/src/**/build
 capture/
-
+vhdlfmt
 # Kotlin
 # ------
 .kotlin/
+.idea
 *.kotlin_module
 *.so
 *.dll

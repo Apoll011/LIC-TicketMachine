@@ -2,98 +2,98 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity KeyDecode_tb is
-end KeyDecode_tb;
+end entity KeyDecode_tb;
 
 architecture behavioral of KeyDecode_tb is
 
-component Key_Scan is
-port(
-		Kscan, CLK, RESET	: in std_logic; 
-		Keys_Vertical 		: out std_logic_vector(3 downto 0);
-		Keys_Horizontal	: in std_logic_vector(3 downto 0);
-		K						: out std_logic_vector(3 downto 0);
-		Kpress				: out std_logic
-);
-end component;
+    component Key_Scan is
+        port (
+            Kscan, CLK, RESET : in  std_logic;
+            Keys_Vertical     : out std_logic_vector(3 downto 0);
+            Keys_Horizontal   : in  std_logic_vector(3 downto 0);
+            K                 : out std_logic_vector(3 downto 0);
+            Kpress            : out std_logic
+        );
+    end component Key_Scan;
 
--- UUT signals
-constant MCLK_PERIOD : time := 20 ns;
-constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
+    -- UUT signals
+    constant MCLK_PERIOD      : time := 20 ns;
+    constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-signal reset_tb : std_logic;
-signal clk_tb : std_logic;
-signal Kscan_tb : std_logic;
-signal Keys_Vertical_tb : std_logic_vector(3 downto 0);
-signal Keys_Horizontal_tb : std_logic_vector(3 downto 0);
-signal K_tb : std_logic_vector(3 downto 0);
-signal Kpress_tb : std_logic;
+    signal reset_tb           : std_logic;
+    signal clk_tb             : std_logic;
+    signal Kscan_tb           : std_logic;
+    signal Keys_Vertical_tb   : std_logic_vector(3 downto 0);
+    signal Keys_Horizontal_tb : std_logic_vector(3 downto 0);
+    signal K_tb               : std_logic_vector(3 downto 0);
+    signal Kpress_tb          : std_logic;
 
 
 begin
 
--- Unit Under Test
-UUT: Key_Scan
-port map(
-		RESET 				=> reset_tb,
-		CLK 					=> clk_tb,
-		Kscan					=> Kscan_tb,
-		Keys_Horizontal	=> Keys_Horizontal_tb,
-		Keys_Vertical 		=> Keys_Vertical_tb,
-		K 						=> K_tb,
-		Kpress 				=> Kpress_tb
-);
+    -- Unit Under Test
+    UUT: component Key_Scan
+    port map (
+        RESET           => reset_tb,
+        CLK             => clk_tb,
+        Kscan           => Kscan_tb,
+        Keys_Horizontal => Keys_Horizontal_tb,
+        Keys_Vertical   => Keys_Vertical_tb,
+        K               => K_tb,
+        Kpress          => Kpress_tb
+    );
 
-clk_gen : process
-begin
-		clk_tb <= '0';
-		wait for MCLK_HALF_PERIOD;
-		clk_tb <= '1';
-		wait for MCLK_HALF_PERIOD;
-end process;
+    clk_gen: process
+    begin
+        clk_tb             <= '0';
+        wait for MCLK_HALF_PERIOD;
+        clk_tb             <= '1';
+        wait for MCLK_HALF_PERIOD;
+    end process clk_gen;
 
-stimulus: process
-begin
+    stimulus: process
+    begin
 
--- reset
-reset_tb <= '1';
-Kscan_tb <= '0';
-Keys_Horizontal_tb <= "1111";
+        -- reset
+        reset_tb           <= '1';
+        Kscan_tb           <= '0';
+        Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
-reset_tb <= '0';
-Kscan_tb <= '1';
+        reset_tb           <= '0';
+        Kscan_tb           <= '1';
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
--- Simulate key press by setting one horizontal to '0'
-Keys_Horizontal_tb <= "1110";
+        -- Simulate key press by setting one horizontal to '0'
+        Keys_Horizontal_tb <= "1110";
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
--- Release key
-Keys_Horizontal_tb <= "1111";
+        -- Release key
+        Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
-Kscan_tb <= '0';
+        Kscan_tb           <= '0';
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
-Kscan_tb  <= '1';
+        Kscan_tb           <= '1';
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
--- Another key press
-Keys_Horizontal_tb <= "1101";
+        -- Another key press
+        Keys_Horizontal_tb <= "1101";
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
-Keys_Horizontal_tb <= "1111";
+        Keys_Horizontal_tb <= "1111";
 
-wait for MCLK_PERIOD*6;
+        wait for MCLK_PERIOD * 6;
 
-wait;
-end process;
+        wait;
+    end process stimulus;
 
-end architecture;
+end architecture behavioral;

@@ -1,17 +1,17 @@
-LIBRARY IEEE;
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity Decoder is
-	port(
-		S : in std_logic_vector(1 downto 0); 
-		C : out std_logic_vector(3 downto 0)
-	); 
-end Decoder;
+    port (
+        S : in  std_logic_vector(1 downto 0);
+        C : out std_logic_vector(3 downto 0)
+    );
+end entity Decoder;
 
 architecture decoder of Decoder is
 begin
-	C(0)	<= not S(1) and not S(0);
-	C(1)	<= not S(1) and S(0);
-	C(2)	<= S(1) and not S(0);
-	C(3)	<= S(1) and S(0); 
-end decoder;
+    C(0) <= not S(1) and not S(0);
+    C(1) <= not S(1) and S(0);
+    C(2) <= S(1) and not S(0);
+    C(3) <= S(1) and S(0);
+end architecture decoder;

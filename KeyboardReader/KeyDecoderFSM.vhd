@@ -3,55 +3,55 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity KeyDecode_FSM is
-port(
-    reset           : in  std_logic;
-    clk             : in  std_logic;
-    Kpress, Kack    : in  std_logic;
-    Tdelay          : in  std_logic_vector(1 downto 0);  -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
-    Kval, Kscan     : out std_logic
-);
-end KeyDecode_FSM;
+    port (
+        reset        : in  std_logic;
+        clk          : in  std_logic;
+        Kpress, Kack : in  std_logic;
+        Tdelay       : in  std_logic_vector(1 downto 0); -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
+        Kval, Kscan  : out std_logic
+    );
+end entity KeyDecode_FSM;
 
 architecture behavioral of KeyDecode_FSM is
 
-    component KeyDelay
-        port(
+    component KeyDelay is
+        port (
             CLK     : in  std_logic;
             Tdelay  : in  std_logic_vector(1 downto 0);
             CLK_Out : out std_logic
         );
-    end component;
+    end component KeyDelay;
 
     type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
     signal CurrentState, NextState : STATE_TYPE;
-    signal clk_out      : std_logic;
-    signal clk_out_prev : std_logic := '0';
-    signal clk_out_rise : std_logic;
+    signal clk_out                 : std_logic;
+    signal clk_out_prev            : std_logic := '0';
+    signal clk_out_rise            : std_logic;
 
 begin
 
     -- Instantiate delay clock generator
-    clkd: KeyDelay
-    port map(
+    clkd: component KeyDelay
+    port map (
         CLK     => clk,
         Tdelay  => Tdelay,
         CLK_Out => clk_out
     );
 
-    DetectRise: process (clk, reset)
+    DetectRise: process (clk, reset) is
     begin
         if reset = '1' then
-            clk_out_prev <= '0';
+            clk_out_prev      <= '0';
         elsif rising_edge(clk) then
-            clk_out_prev <= clk_out;
+            clk_out_prev      <= clk_out;
         end if;
-    end process;
-	 
+    end process DetectRise;
+
     clk_out_rise <= '1' when (clk_out = '1' and clk_out_prev = '0') else '0';
 
-	 CurrentState <= STANDING_BY when reset = '1' else NextState;
+    CurrentState <= STANDING_BY when reset = '1' else NextState;
 
-    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise)
+    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
     begin
         case CurrentState is
 
@@ -77,9 +77,9 @@ begin
                 end if;
 
         end case;
-    end process;
+    end process GenerateNextState;
 
-    Kscan <= '1' when (CurrentState = STANDING_BY)  else '0';
-    Kval  <= '1' when (CurrentState = READING_DATA) else '0';
+    Kscan <= '1' when (CurrentState = STANDING_BY) else '0';
+    Kval <= '1' when (CurrentState = READING_DATA) else '0';
 
-end behavioral;
+end architecture behavioral;

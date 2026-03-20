@@ -6,8 +6,8 @@ entity TicketMachine is
 	port(	
 		CLK, RESET						: in std_logic;
 		Keys_Vertical 					: out std_logic_vector(3 downto 0);
-		Keys_Horizontal				: in std_logic_vector(3 downto 0)
-		
+		Keys_Horizontal				: in std_logic_vector(3 downto 0);
+		LCD_DATA		           		: out std_logic_vector(9 downto 0)
 	);
 end TicketMachine;
 
@@ -30,6 +30,14 @@ architecture logicFunction of TicketMachine is
 	);
 	end component;
 	
+	component SerialReceiver
+    port(
+        SDX, CLK, SS    : in  std_logic;
+        Q           		: out std_logic_vector(9 downto 0)
+    );
+	end component;
+
+	
 	signal inputPort, outputPort	: STD_LOGIC_VECTOR(7 DOWNTO 0);	
 begin
 
@@ -51,5 +59,12 @@ begin
 		Kval => inputPort(7),
 		Keys_Vertical => Keys_Vertical,
 		Keys_Horizontal => Keys_Horizontal
+	);
+	
+	lcd_serial : SerialReceiver port map (
+		SDX => outputPort(4),
+		CLK => outputPort(3),
+		SS  => outputPort(1),
+		Q 	 => LCD_DATA
 	);
 end logicFunction;
