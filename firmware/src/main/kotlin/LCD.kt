@@ -1,0 +1,52 @@
+// Escreve no LCD usando a interface a 8 bits .
+
+object LCD {
+    // Dimensao do display .
+    const val LINES = 2
+    const val COLS = 16
+
+    // Escreve um byte de comando / dados no LCD em serie
+    private fun writeByteSerial ( rs : Boolean , data : Int ) {
+
+    }
+
+    // Escreve um byte de comando / dados no LCD
+    private fun writeByte ( rs : Boolean , data : Int ) {
+
+    }
+
+    // Escreve um comando no LCD
+    private fun writeCMD(data : Int ) {
+
+    }
+
+    // Escreve um dado no LCD
+    private fun writeDATA(data : Int ) {
+
+    }
+
+    // Envia a sequencia de iniciacao para comunicacao a 8 bits .
+    fun init ( ) {
+
+    }
+
+    // Escreve um carater na posicao corrente
+    fun write ( c : Char ) {
+
+    }
+
+    // Escreve uma string na posicao corrente .
+    fun write ( text : String ) {
+
+    }
+
+    // Envia comando para posicionar cursor ( ’ line ’:0.. LINES -1 , ’ column ’:0.. COLS -1)
+    fun cursor ( line: Int , column : Int ) {
+
+    }
+
+    // Envia comando para limpar o ecra e posicionar o cursor em (0 ,0)
+    fun clear ( ) {
+        
+    }
+}
