@@ -47,6 +47,6 @@ object LCD {
 
     // Envia comando para limpar o ecra e posicionar o cursor em (0 ,0)
     fun clear ( ) {
-        
+
     }
 }
