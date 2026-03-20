@@ -5,8 +5,7 @@ entity KeyDelay IS
     port(
 		  CLK 		: in  std_logic;
         Tdelay    : in  std_logic_vector(1 downto 0);
-		  CLK_Out	: out  std_logic;
-        
+		  CLK_Out	: out  std_logic
     );
 end KeyDelay;
 

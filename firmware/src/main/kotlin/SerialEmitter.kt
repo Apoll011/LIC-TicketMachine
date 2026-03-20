@@ -6,6 +6,8 @@ fun init() {}
 
 fun send(addr: Peripheral, data: Int, size: Int) {}
 
-fun isBusy(): Boolean {}
+fun isBusy(): Boolean {
+    TODO("not implemented")
+}
 
 }
