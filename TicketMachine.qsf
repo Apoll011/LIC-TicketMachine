@@ -93,6 +93,8 @@ set_location_assignment PIN_P11 -to CLK
 
 set_location_assignment PIN_C10 -to Kack
 set_location_assignment PIN_C11 -to RESET
+#set_location_assignment PIN_D12 -to Tdelay[0]
+#set_location_assignment PIN_C12 -to Tdelay[1]
 
 
 
