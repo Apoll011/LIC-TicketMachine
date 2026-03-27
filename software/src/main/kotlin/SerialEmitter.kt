@@ -1,4 +1,4 @@
-object SerialEmitter {
+    object SerialEmitter {
     private const val LCD_MASK  = 0b00000010
     private const val SSC_MASK  = 0b00000100
     private const val SCLK_MASK = 0b00001000

@@ -17,15 +17,12 @@ object KBD {
 
     fun readKey(): Key? {
         if (!HAL.isBit(KVAL_MASK)) return null
-        val result = HAL.readBits(0xFF)
-        println(result.toString(2).padStart(8, '0'))
 
         val code = (HAL.readBits(KCODE_MASK) shr 3) and 0xF
         val key = Key(code)
-        HAL.clrBits(KACK_MASK)
-        Thread.sleep(200)
+
         HAL.setBits(KACK_MASK)
-        Thread.sleep(200)
+        while (HAL.isBit(KVAL_MASK)) Thread.sleep(1)
         HAL.clrBits(KACK_MASK)
 
         return key
