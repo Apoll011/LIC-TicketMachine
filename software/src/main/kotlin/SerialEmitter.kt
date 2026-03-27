@@ -21,18 +21,14 @@
             HAL.clrBits(SSC_MASK)
         }
 
-        _data = _data.shl(SDX_MASK)
-        for (i in 0 until size - 1) {
+        _data = _data.shl(4)
+        for (i in 0 until size) {
             HAL.clrBits(SCLK_MASK)
             HAL.writeBits(SDX_MASK, _data)
 
             _data = _data.shr(1)
             HAL.setBits(SCLK_MASK)
         }
-
-        HAL.clrBits(SCLK_MASK)
-        HAL.writeBits(SDX_MASK, 0XFF) //Writes the E
-        HAL.setBits(SCLK_MASK)
 
         if (addr == Peripheral.LCD) {
             HAL.setBits(LCD_MASK)

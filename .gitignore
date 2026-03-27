@@ -1,4 +1,6 @@
 # Quartus generated files
+dse*
+*.dse
 db/
 incremental_db/
 output_files/
