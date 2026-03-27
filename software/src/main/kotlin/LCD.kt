@@ -13,6 +13,8 @@ object LCD {
         while(SerialEmitter.isBusy()) { }
 
         SerialEmitter.send(Peripheral.LCD, (packet shl 1) or 1, 10)
+        SerialEmitter.send(Peripheral.LCD, 0, 10)
+        Thread.sleep(20)
     }
 
     // Escreve um byte de comando / dados no LCD
@@ -59,10 +61,12 @@ object LCD {
 
     // Envia comando para posicionar cursor ( ’ line ’:0.. LINES -1 , ’ column ’:0.. COLS -1)
     fun cursor (line: Int, column: Int) {
+        if (line > LINES) return
+
         if (line == 1){
-            writeCMD(0b10000000 + column & 3F)//linha1
-        } else if (line == 0) {
-            writeCMD(0b11000000 + column & 3F)//linha2
+            writeCMD(0b10000000 + column & 0x0F)//linha1
+        } else if (line == 2) {
+            writeCMD(0b11000000 + column & 0x0F)//linha2
         }
     }
 
