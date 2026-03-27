@@ -28,6 +28,13 @@ object KBD {
         return key
     }
 
+    fun waitKey(): Char {
+        while (true) {
+            val key = getKey() ?: continue
+            return key
+        }
+    }
+
     private fun Key(id: Int): Key = when (id) {
         0b0000 -> Key.KEY_1
         0b0100 -> Key.KEY_2
