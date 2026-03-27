@@ -12,7 +12,7 @@ object LCD {
 
     // Escreve um byte de comando / dados no LCD
     private fun writeByte ( rs : Boolean , data : Int ) {
-
+        writeByte(0, data)
     }
 
     // Escreve um comando no LCD
@@ -46,7 +46,7 @@ object LCD {
     }
 
     // Envia comando para limpar o ecra e posicionar o cursor em (0 ,0)
-    fun clear ( ) {
-
+    fun clear () {
+        writeCMD(0b00000001)
     }
 }
