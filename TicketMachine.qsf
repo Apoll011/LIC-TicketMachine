@@ -74,7 +74,6 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 
 
 set_location_assignment PIN_A8 -to K[0]
-set_location_assignment PIN_A9 -to K[1]
 set_location_assignment PIN_A10 -to K[2]
 set_location_assignment PIN_B10 -to K[3]
 set_location_assignment PIN_D13 -to Kval
@@ -92,7 +91,7 @@ set_location_assignment PIN_AA8 -to Keys_Vertical[3]
 set_location_assignment PIN_P11 -to CLK
 
 set_location_assignment PIN_C10 -to Kack
-set_location_assignment PIN_C11 -to RESET
+set_location_assignment PIN_A9 -to RESET
 #set_location_assignment PIN_D12 -to Tdelay[0]
 #set_location_assignment PIN_C12 -to Tdelay[1]
 

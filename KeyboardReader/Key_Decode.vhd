@@ -48,8 +48,7 @@ architecture logicFunction of Key_Decode is
 begin
 
     not_clk_divider <= not CLK_Divider;
-
-
+	
     scan: component Key_Scan
     port map (
         RESET           => RESET,
@@ -64,7 +63,7 @@ begin
     control: component Key_Control
     port map (
         RESET           => RESET,
-        CLK             => not_clk_divider,
+        CLK             => CLK_Divider,
         Kpress          => Kpress,
         Kack            => Kack,
         Tdelay          => Tdelay,

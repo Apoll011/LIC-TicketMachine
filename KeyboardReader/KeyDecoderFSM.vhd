@@ -49,9 +49,16 @@ begin
 
     clk_out_rise <= '1' when (clk_out = '1' and clk_out_prev = '0') else '0';
 
-    CurrentState <= STANDING_BY when reset = '1' else NextState;
+	StateReg: process(clk, reset) is
+	begin
+		 if reset = '1' then
+			  CurrentState <= STANDING_BY;
+		 elsif rising_edge(clk) then
+			  CurrentState <= NextState;
+		 end if;
+	end process StateReg;
 
-    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
+	GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
     begin
         case CurrentState is
 
