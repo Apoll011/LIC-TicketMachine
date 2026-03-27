@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity KeyDecode_FSM is
+entity KeyDecoderFSM is
     port (
         reset        : in  std_logic;
         clk          : in  std_logic;
@@ -10,9 +10,9 @@ entity KeyDecode_FSM is
         Tdelay       : in  std_logic_vector(1 downto 0); -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
         Kval, Kscan  : out std_logic
     );
-end entity KeyDecode_FSM;
+end entity KeyDecoderFSM;
 
-architecture behavioral of KeyDecode_FSM is
+architecture behavioral of KeyDecoderFSM is
 
     component KeyDelay is
         port (
@@ -49,14 +49,8 @@ begin
 
     clk_out_rise <= '1' when (clk_out = '1' and clk_out_prev = '0') else '0';
 
-	StateReg: process(clk, reset) is
-	begin
-		 if reset = '1' then
-			  CurrentState <= STANDING_BY;
-		 elsif rising_edge(clk) then
-			  CurrentState <= NextState;
-		 end if;
-	end process StateReg;
+	CurrentState <= STANDING_BY when reset = '1' else NextState;
+
 
 	GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
     begin
