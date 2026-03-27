@@ -12,7 +12,7 @@ object LCD {
 
     // Escreve um byte de comando / dados no LCD
     private fun writeByte ( rs : Boolean , data : Int ) {
-        writeByte(0, data)
+        writeByte(true, data)
     }
 
     // Escreve um comando no LCD
