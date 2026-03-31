@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity KeyDecode_tb is
-end entity KeyDecode_tb;
+entity KeyScan_tb is
+end entity KeyScan_tb;
 
-architecture behavioral of KeyDecode_tb is
+architecture behavioral of KeyScan_tb is
 
     component Key_Scan is
         port (
@@ -16,7 +16,6 @@ architecture behavioral of KeyDecode_tb is
         );
     end component Key_Scan;
 
-    -- UUT signals
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
@@ -28,10 +27,8 @@ architecture behavioral of KeyDecode_tb is
     signal K_tb               : std_logic_vector(3 downto 0);
     signal Kpress_tb          : std_logic;
 
-
 begin
 
-    -- Unit Under Test
     UUT: component Key_Scan
     port map (
         RESET           => reset_tb,
@@ -45,55 +42,74 @@ begin
 
     clk_gen: process
     begin
-        clk_tb             <= '0';
+        clk_tb <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb             <= '1';
+        clk_tb <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
-
-        -- reset
+        -- Reset: counter frozen at 0, Kpress must be inactive
         reset_tb           <= '1';
         Kscan_tb           <= '0';
         Keys_Horizontal_tb <= "1111";
-
         wait for MCLK_PERIOD * 6;
 
+        -- Release reset, enable scan
         reset_tb           <= '0';
         Kscan_tb           <= '1';
-
         wait for MCLK_PERIOD * 6;
 
-        -- Simulate key press by setting one horizontal to '0'
+        -- Press key col0 (H(0)='0') -> K="0000", Keys_Vertical="1110"
         Keys_Horizontal_tb <= "1110";
-
         wait for MCLK_PERIOD * 6;
 
-        -- Release key
+        -- Release
         Keys_Horizontal_tb <= "1111";
-
         wait for MCLK_PERIOD * 6;
 
+        -- Freeze counter (Kscan=0): K must not change
         Kscan_tb           <= '0';
-
         wait for MCLK_PERIOD * 6;
 
+        -- Re-enable scan
         Kscan_tb           <= '1';
-
         wait for MCLK_PERIOD * 6;
 
-        -- Another key press
+        -- Press key col1 (H(1)='0')
         Keys_Horizontal_tb <= "1101";
-
         wait for MCLK_PERIOD * 6;
 
+        -- Release
         Keys_Horizontal_tb <= "1111";
+        wait for MCLK_PERIOD * 6;
 
+        -- Press key col2 (H(2)='0')
+        Keys_Horizontal_tb <= "1011";
+        wait for MCLK_PERIOD * 6;
+
+        -- Release
+        Keys_Horizontal_tb <= "1111";
+        wait for MCLK_PERIOD * 6;
+
+        -- Press key col3 (H(3)='0')
+        Keys_Horizontal_tb <= "0111";
+        wait for MCLK_PERIOD * 6;
+
+        -- Release
+        Keys_Horizontal_tb <= "1111";
+        wait for MCLK_PERIOD * 6;
+
+        -- Reset mid-scan: counter must clear back to 0
+        reset_tb           <= '1';
+        wait for MCLK_PERIOD * 4;
+        reset_tb           <= '0';
         wait for MCLK_PERIOD * 6;
 
         wait;
     end process stimulus;
 
+	 -- 1640 ns
+	 
 end architecture behavioral;

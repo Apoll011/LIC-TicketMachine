@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C6GES
-set_global_assignment -name TOP_LEVEL_ENTITY KeyDecoderFSM
+set_global_assignment -name TOP_LEVEL_ENTITY Key_Decode
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:49:47  FEBRUARY 27, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
@@ -100,10 +100,10 @@ set_location_assignment PIN_A9 -to RESET
 
 
 
+set_global_assignment -name VHDL_FILE testbench/KeyDecode_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyScan_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyDelay_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyDecoderFSM_tb.vhd
-set_global_assignment -name VHDL_FILE testbench/KeyDecode_integration_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyControl_tb.vhd
 set_global_assignment -name VHDL_FILE SerialReceiver/ShiftRegister.vhd
 set_global_assignment -name VHDL_FILE SerialReceiver/HoldRegister.vhd
@@ -111,7 +111,6 @@ set_global_assignment -name VHDL_FILE KeyboardReader/KeyDelay.vhd
 set_global_assignment -name VHDL_FILE Common/clkDIV.vhd
 set_global_assignment -name VHDL_FILE UsbPort.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Decode.vhd
-set_global_assignment -name VHDL_FILE KeyboardReader/KeyDecode_tb.vhd
 set_global_assignment -name VHDL_FILE Common/sumador_binario.vhd
 set_global_assignment -name VHDL_FILE Common/sumador_4bit.vhd
 set_global_assignment -name VHDL_FILE Common/Reg.vhd

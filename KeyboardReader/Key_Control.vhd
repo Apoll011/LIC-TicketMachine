@@ -11,7 +11,7 @@ end entity Key_Control;
 
 architecture logicFunction of Key_Control is
 
-    component KeyDecode_FSM is
+    component KeyDecoderFSM is
         port (
             reset        : in  std_logic;
             clk          : in  std_logic;
@@ -19,13 +19,13 @@ architecture logicFunction of Key_Control is
             Tdelay       : in  std_logic_vector(1 downto 0);
             Kval, Kscan  : out std_logic
         );
-    end component KeyDecode_FSM;
+    end component KeyDecoderFSM;
 
     signal k_val : std_logic;
 
 begin
 
-    fsm: component KeyDecode_FSM
+    fsm: component KeyDecoderFSM
     port map (
         reset  => RESET,
         clk    => CLK,
