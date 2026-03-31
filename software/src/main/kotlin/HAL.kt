@@ -1,40 +1,32 @@
-import isel.leic.UsbPort;
+import isel.leic.UsbPort
 
 object HAL {
-
-    private var bufferWrite: Int = 0
+    private var bufferWrite = 0
 
     fun init() {
-        writeBits(0xFF, 0x00)
+        UsbPort.write(bufferWrite)
     }
 
-    // Retorna 'true' se o bit definido pela mask está com valor lógico '1' no UsbPort
     fun isBit(mask: Int): Boolean {
-        return readBits(mask) == mask
+        return (UsbPort.read() and mask) != 0
     }
 
-    /// Retorna os valores dos bits representados por mask presentes no UsbPort
     fun readBits(mask: Int): Int {
         return UsbPort.read() and mask
     }
 
-    // Escreve nos bits representados por mask os valores correspondentes em value
     fun writeBits(mask: Int, value: Int) {
-        UsbPort.write(value and mask)
         bufferWrite = (bufferWrite and mask.inv()) or (value and mask)
+        UsbPort.write(bufferWrite)
     }
 
-    // Coloca os bits representados por mask no valor lógico '1'
     fun setBits(mask: Int) {
-        writeBits(mask, 0xFF)
+        bufferWrite = bufferWrite or mask
+        UsbPort.write(bufferWrite)
     }
 
-    // Coloca os bits representados por mask no valor lógico '0'
     fun clrBits(mask: Int) {
-        writeBits(mask, 0x00)
-    }
-
-    fun testReadWrite() {
-        HAL.writeBits(0xFF, HAL.readBits(0xFF))
+        bufferWrite = bufferWrite and mask.inv()
+        UsbPort.write(bufferWrite)
     }
 }

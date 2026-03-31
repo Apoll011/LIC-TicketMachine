@@ -1,77 +1,78 @@
-// Escreve no LCD usando a interface a 8 bits .
-
 object LCD {
-    // Dimensao do display .
-    const val LINES = 2
-    const val COLS = 16
+    private const val LINES = 2
+    private const val COLS = 16
 
-    // Escreve um byte de comando / dados no LCD em serie
-    private fun writeByteSerial ( rs : Boolean , data : Int ) {
-        val rsBit = if (rs) 1 else 0
-        val packet = (rsBit shl 8) or (data and 0xFF)
+    private const val RS_MASK = 0x1
+    private const val E_MASK = 0x200
 
-        while(SerialEmitter.isBusy()) { }
+    private fun writeByteSerial(rs: Boolean, data: Int) {
+        var frame = (data and 0xFF) shl 1
+        if (rs) frame = frame or RS_MASK
 
-        SerialEmitter.send(Peripheral.LCD, (packet shl 1) or 1, 10)
-        SerialEmitter.send(Peripheral.LCD, 0, 10)
-        Thread.sleep(20)
+        SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
+        SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame or E_MASK, 10)
+        SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
     }
 
-    // Escreve um byte de comando / dados no LCD
-    private fun writeByte ( rs : Boolean , data : Int ) {
+    private fun writeByte(rs: Boolean, data: Int) {
         writeByteSerial(rs, data)
     }
 
-    // Escreve um comando no LCD
-    private fun writeCMD(data : Int ) {
-        writeByte(true, data)
-    }
-
-    // Escreve um dado no LCD
-    private fun writeDATA(data : Int ) {
+    private fun writeCMD(data: Int) {
         writeByte(false, data)
+
+        if (data == 0b00000001) Thread.sleep(2L)
+        else Thread.sleep(1L)
     }
 
-    // Envia a sequencia de iniciacao para comunicacao a 8 bits .
-    fun init () {
+    private fun writeDATA(data: Int) {
+        writeByte(true, data)
+        Thread.sleep(1L)
+    }
+
+    fun init() {
         SerialEmitter.init()
+        Thread.sleep(20)
+
+        initSequence()
+
+        initCommands()
     }
 
-    // Escreve um carater na posicao corrente
-    fun write (c : Char) {
-        writeChar(c)
-    }
-
-    // Escreve uma string na posicao corrente .
-    fun write(text: String) {
-        val chars = text.toList()
-
-        for (c in chars) {
-            writeChar(c)
+    fun initSequence() {
+        repeat(3) {
+            writeByte(false, 0x30) // 0x30 para que ocorra um erro de 8 bits
+            Thread.sleep(1)
         }
+    }
+
+    fun initCommands() {
+        writeCMD(0x38) // 8 bits
+        writeCMD(0x08) // display off
+        writeCMD(0x01) // clear
+        Thread.sleep(5)
+        writeCMD(0x06) // entry mode set
+        writeCMD(0x0C) // display on
     }
 
     fun writeChar(c: Char) {
-        //Use writeData, ANd I think writeCmd some command to write maybe?
-        var bit = c.toInt()
-
-        writeDATA(bit)
-        println(bit)
+        if (c != '\u0000') writeDATA(c.code)
     }
 
-    // Envia comando para posicionar cursor ( ’ line ’:0.. LINES -1 , ’ column ’:0.. COLS -1)
-    fun cursor (line: Int, column: Int) {
-        if (line > LINES) return
-
-        if (line == 1){
-            writeCMD(0b10000000 + column & 0x0F)//linha1
-        } else if (line == 2) {
-            writeCMD(0b11000000 + column & 0x0F)//linha2
+    fun write(text: String) {
+        for (char in text) {
+            writeChar(char)
         }
     }
 
-    // Envia comando para limpar o ecra e posicionar o cursor em (0 ,0)
-    fun clear () {
-        writeCMD(0b00000001)
+    fun cursor(line: Int, column: Int) {
+        val l = line.coerceIn(0, LINES - 1)
+        val c = column.coerceIn(0, COLS - 1)
+        val address = if (l == 0) c else 0x40 + c
+        writeCMD(0x80 or address)
+    }
+
+    fun clear() {
+        writeCMD(0x01)
     }
 }
