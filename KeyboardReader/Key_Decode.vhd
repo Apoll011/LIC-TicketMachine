@@ -43,12 +43,9 @@ architecture logicFunction of Key_Decode is
     end component CLKDIV;
 
 
-    signal Kpress, Kscan, not_clk_divider, CLK_Divider : std_logic;
+    signal Kpress, Kscan, CLK_Divider : std_logic;
 
-begin
-
-    not_clk_divider <= not CLK_Divider;
-	
+begin	
     scan: component Key_Scan
     port map (
         RESET           => RESET,
