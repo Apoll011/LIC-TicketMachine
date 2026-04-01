@@ -52,9 +52,9 @@ begin
 		Tdelay => "11",
 		RESET => RESET,
 		CLK => CLK,
-		K(0) => inputPort(6),
-		K(1) => inputPort(5),
-		K(2) => inputPort(4),
+		K(0) => inputPort(0),
+		K(1) => inputPort(1),
+		K(2) => inputPort(2),
 		K(3) => inputPort(3),
 		Kval => inputPort(7),
 		Keys_Vertical => Keys_Vertical,
@@ -62,9 +62,9 @@ begin
 	);
 	
 	lcd_serial : SerialReceiver port map (
-		SDX 	=> outputPort(4),
-		CLK 	=> outputPort(3),
-		SS  	=> outputPort(1),
+		SDX 	=> outputPort(0),
+		CLK 	=> outputPort(1),
+		SS  	=> outputPort(2),
 		Q 	 	=> LCD_DATA,
 		RESET => RESET
 	);
