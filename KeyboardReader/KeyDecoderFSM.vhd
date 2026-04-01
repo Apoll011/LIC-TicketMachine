@@ -23,6 +23,7 @@ architecture behavioral of KeyDecoderFSM is
     end component KeyDelay;
 
     type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
+
     signal CurrentState, NextState : STATE_TYPE;
     signal clk_out                 : std_logic;
     signal clk_out_prev            : std_logic := '0';
@@ -38,21 +39,28 @@ begin
         CLK_Out => clk_out
     );
 
+    -- Detect rising edge of the slow clock output
     DetectRise: process (clk, reset) is
     begin
         if reset = '1' then
-            clk_out_prev      <= '0';
+            clk_out_prev <= '0';
         elsif rising_edge(clk) then
-            clk_out_prev      <= clk_out;
+            clk_out_prev <= clk_out;
         end if;
     end process DetectRise;
 
     clk_out_rise <= '1' when (clk_out = '1' and clk_out_prev = '0') else '0';
 
-	CurrentState <= STANDING_BY when reset = '1' else NextState;
+    StateRegister: process (clk, reset) is
+    begin
+        if reset = '1' then
+            CurrentState <= STANDING_BY;
+        elsif rising_edge(clk) then
+            CurrentState <= NextState;
+        end if;
+    end process StateRegister;
 
-
-	GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
+    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
     begin
         case CurrentState is
 
@@ -80,7 +88,7 @@ begin
         end case;
     end process GenerateNextState;
 
-    Kscan <= '1' when (CurrentState = STANDING_BY) else '0';
-    Kval <= '1' when (CurrentState = READING_DATA) else '0';
+    Kscan <= '1' when (CurrentState = STANDING_BY)   else '0';
+    Kval  <= '1' when (CurrentState = READING_DATA)  else '0';
 
 end architecture behavioral;
