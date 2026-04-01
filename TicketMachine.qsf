@@ -55,49 +55,42 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
-#set_location_assignment PIN_C10 -to inputPort[0]
-#set_location_assignment PIN_C11 -to inputPort[1]
-#set_location_assignment PIN_D12 -to inputPort[2]
-#set_location_assignment PIN_C12 -to inputPort[3]
-#set_location_assignment PIN_A12 -to inputPort[4]
-#set_location_assignment PIN_B12 -to inputPort[5]
-#set_location_assignment PIN_A13 -to inputPort[6]
-#set_location_assignment PIN_A14 -to inputPort[7]
-#set_location_assignment PIN_A8 -to outputPort[0]
-#set_location_assignment PIN_A9 -to outputPort[1]
-#set_location_assignment PIN_A10 -to outputPort[2]
-#set_location_assignment PIN_B10 -to outputPort[3]
-#set_location_assignment PIN_D13 -to outputPort[4]
-#set_location_assignment PIN_C13 -to outputPort[5]
-#set_location_assignment PIN_E14 -to outputPort[6]
-#set_location_assignment PIN_D14 -to outputPort[7]
 
 
-set_location_assignment PIN_A8 -to K[0]
-set_location_assignment PIN_A10 -to K[2]
-set_location_assignment PIN_B10 -to K[3]
-set_location_assignment PIN_D13 -to Kval
+# -------------------------------------------------------------------------- #
+# System clock & reset
+# CLK  = 50 MHz onboard oscillator
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_P11 -to CLK
+set_location_assignment PIN_C12 -to RESET
 
-set_location_assignment PIN_W5 -to Keys_Horizontal[0]
-set_location_assignment PIN_AA14 -to Keys_Horizontal[1]
-set_location_assignment PIN_W12 -to Keys_Horizontal[2]
-set_location_assignment PIN_AB12 -to Keys_Horizontal[3]
-
+# -------------------------------------------------------------------------- #
+# 4x4 Matrix Keypad
+# -------------------------------------------------------------------------- #
 set_location_assignment PIN_AB11 -to Keys_Vertical[0]
 set_location_assignment PIN_AB10 -to Keys_Vertical[1]
-set_location_assignment PIN_AA9 -to Keys_Vertical[2]
-set_location_assignment PIN_AA8 -to Keys_Vertical[3]
+set_location_assignment PIN_AA9  -to Keys_Vertical[2]
+set_location_assignment PIN_AA8  -to Keys_Vertical[3]
 
-set_location_assignment PIN_P11 -to CLK
+set_location_assignment PIN_W5   -to Keys_Horizontal[0]
+set_location_assignment PIN_AA14 -to Keys_Horizontal[1]
+set_location_assignment PIN_W12  -to Keys_Horizontal[2]
+set_location_assignment PIN_AB12 -to Keys_Horizontal[3]
 
-set_location_assignment PIN_C10 -to Kack
-set_location_assignment PIN_A9 -to RESET
-#set_location_assignment PIN_D12 -to Tdelay[0]
-#set_location_assignment PIN_C12 -to Tdelay[1]
+# -------------------------------------------------------------------------- #
+# LCD – 8-bit parallel + RS + EN
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_W8   -to LCD_RS
+set_location_assignment PIN_V5   -to LCD_EN
 
-
-
-
+set_location_assignment PIN_AA15 -to LCD_DATA[0]
+set_location_assignment PIN_W13  -to LCD_DATA[1]
+set_location_assignment PIN_AB13 -to LCD_DATA[2]
+set_location_assignment PIN_Y11  -to LCD_DATA[3]
+set_location_assignment PIN_W11  -to LCD_DATA[4]
+set_location_assignment PIN_AA10 -to LCD_DATA[5]
+set_location_assignment PIN_Y8   -to LCD_DATA[6]
+set_location_assignment PIN_Y7   -to LCD_DATA[7]
 
 
 set_global_assignment -name VHDL_FILE testbench/KeyDecode_tb.vhd
