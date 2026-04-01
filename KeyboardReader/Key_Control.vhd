@@ -21,8 +21,6 @@ architecture logicFunction of Key_Control is
         );
     end component KeyDecoderFSM;
 
-    signal k_val : std_logic;
-
 begin
 
     fsm: component KeyDecoderFSM
