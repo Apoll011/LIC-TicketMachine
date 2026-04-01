@@ -31,14 +31,17 @@ architecture logicFunction of SerialReceiver is
     end component HoldRegister;
 
     signal shift_out : std_logic_vector(9 downto 0);
+	 signal not_SS		: std_logic;
 begin
 
+	 not_SS <= not SS;
+	 
     shift: component ShiftRegister
     port map (
         CLK   => CLK,
         RESET => RESET,
         S     => SDX,
-        EN    => not SS,
+        EN    => not_SS,
         Q     => shift_out
     );
 
