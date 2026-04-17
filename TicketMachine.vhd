@@ -11,7 +11,8 @@ entity TicketMachine is
 
         LCD_RS          : out std_logic;                      -- register select
         LCD_EN          : out std_logic;                      -- enable strobe
-        LCD_DATA        : out std_logic_vector(7 downto 0)    -- data[7:0]
+        LCD_DATA        : out std_logic_vector(7 downto 0);	  -- data[7:0]
+		  INPUT				: out std_logic_vector(7 downto 0)
     );
 end entity TicketMachine;
 
@@ -34,12 +35,12 @@ architecture logicFunction of TicketMachine is
         );
     end component UsbPort;
 
-    component SerialReceiver is
+    component PELCD is
         port (
             SDX, CLK, SS, RESET : in  std_logic;
             Q                   : out std_logic_vector(9 downto 0)
         );
-    end component SerialReceiver;
+    end component PELCD;
 
   	signal inputPort  : std_logic_vector(7 downto 0);
     signal outputPort : std_logic_vector(7 downto 0);
@@ -61,7 +62,7 @@ begin
     port map (
         RESET           => RESET,
         CLK             => CLK,
-        Kack            => inputPort(7),    -- software sets bit7 to ack a key
+        Kack            => outputPort(7),    -- software sets bit7 to ack a key
         Tdelay          => "11",
         Kval            => kval_int,
         K               => key_code,
@@ -69,21 +70,23 @@ begin
         Keys_Horizontal => Keys_Horizontal
     );
 
-    outputPort(7)          <= kval_int;
-    outputPort(6 downto 4) <= "000"; 
-    outputPort(3 downto 0) <= key_code;
+    inputPort(7)          <= kval_int;
+    inputPort(6 downto 4) <= "000"; 
+    inputPort(3 downto 0) <= key_code;
 
-    lcd_serial: component SerialReceiver
+    lcd_serial: component PELCD
     port map (
         RESET => RESET,
-        CLK   => inputPort(1),   -- serial clock driven by software (SCLK_MASK bit 1)
-        SDX   => inputPort(0),   -- serial data  (SDX_MASK  bit 0)
-        SS    => inputPort(2),   -- slave select (LCD_MASK   bit 2)
+        CLK   => outputPort(1),   -- serial clock driven by software (SCLK_MASK bit 1)
+        SDX   => outputPort(0),   -- serial data  (SDX_MASK  bit 0)
+        SS    => outputPort(2),   -- slave select (LCD_MASK   bit 2)
         Q     => lcd_frame
     );
 
-    LCD_RS   <= lcd_frame(0);              -- bit 0  = RS
+    LCD_RS   <= lcd_frame(9);              -- bit 0  = RS
     LCD_DATA <= lcd_frame(8 downto 1);     -- bits 8:1 = data byte
-    LCD_EN   <= lcd_frame(9);              -- bit 9  = E (enable)
+    LCD_EN   <= lcd_frame(0);              -- bit 9  = E (enable)
+
+	 INPUT <= outputPort;
 
 end architecture logicFunction;

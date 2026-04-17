@@ -39,7 +39,7 @@
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C6GES
-set_global_assignment -name TOP_LEVEL_ENTITY SerialReceiver
+set_global_assignment -name TOP_LEVEL_ENTITY TicketMachine
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "09:49:47  FEBRUARY 27, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
@@ -69,37 +69,43 @@ set_location_assignment PIN_C12 -to RESET
 # -------------------------------------------------------------------------- #
 set_location_assignment PIN_AB11 -to Keys_Vertical[0]
 set_location_assignment PIN_AB10 -to Keys_Vertical[1]
-set_location_assignment PIN_AA9  -to Keys_Vertical[2]
-set_location_assignment PIN_AA8  -to Keys_Vertical[3]
+set_location_assignment PIN_AA9 -to Keys_Vertical[2]
+set_location_assignment PIN_AA8 -to Keys_Vertical[3]
 
-set_location_assignment PIN_W5   -to Keys_Horizontal[0]
+set_location_assignment PIN_W5 -to Keys_Horizontal[0]
 set_location_assignment PIN_AA14 -to Keys_Horizontal[1]
-set_location_assignment PIN_W12  -to Keys_Horizontal[2]
+set_location_assignment PIN_W12 -to Keys_Horizontal[2]
 set_location_assignment PIN_AB12 -to Keys_Horizontal[3]
 
 # -------------------------------------------------------------------------- #
 # LCD – 8-bit parallel + RS + EN
 # -------------------------------------------------------------------------- #
-set_location_assignment PIN_W8   -to LCD_RS
-set_location_assignment PIN_V5   -to LCD_EN
+set_location_assignment PIN_W8 -to LCD_RS
+set_location_assignment PIN_V5 -to LCD_EN
 
 set_location_assignment PIN_AA15 -to LCD_DATA[0]
-set_location_assignment PIN_W13  -to LCD_DATA[1]
+set_location_assignment PIN_W13 -to LCD_DATA[1]
 set_location_assignment PIN_AB13 -to LCD_DATA[2]
-set_location_assignment PIN_Y11  -to LCD_DATA[3]
-set_location_assignment PIN_W11  -to LCD_DATA[4]
+set_location_assignment PIN_Y11 -to LCD_DATA[3]
+set_location_assignment PIN_W11 -to LCD_DATA[4]
 set_location_assignment PIN_AA10 -to LCD_DATA[5]
-set_location_assignment PIN_Y8   -to LCD_DATA[6]
-set_location_assignment PIN_Y7   -to LCD_DATA[7]
+set_location_assignment PIN_Y8 -to LCD_DATA[6]
+set_location_assignment PIN_Y7 -to LCD_DATA[7]
 
 
+
+set_global_assignment -name VHDL_FILE LCD/ShiftRegister.vhd
+set_global_assignment -name VHDL_FILE LCD/SerialReceiver.vhd
+set_global_assignment -name VHDL_FILE LCD/PELCD.vhd
+set_global_assignment -name VHDL_FILE LCD/HoldRegister.vhd
+set_global_assignment -name VHDL_FILE TicketDispenser/ticketDispenser.vhd
+set_global_assignment -name VHDL_FILE Common/int7seg.vhd
+set_global_assignment -name VHDL_FILE Common/decoderHex.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyDecode_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyScan_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyDelay_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyDecoderFSM_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyControl_tb.vhd
-set_global_assignment -name VHDL_FILE SerialReceiver/ShiftRegister.vhd
-set_global_assignment -name VHDL_FILE SerialReceiver/HoldRegister.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/KeyDelay.vhd
 set_global_assignment -name VHDL_FILE Common/clkDIV.vhd
 set_global_assignment -name VHDL_FILE UsbPort.vhd
@@ -118,8 +124,16 @@ set_global_assignment -name VHDL_FILE KeyboardReader/KeyDecoderFSM.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Scan.vhd
 set_global_assignment -name VHDL_FILE TicketMachine.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Control.vhd
-set_global_assignment -name VHDL_FILE SerialReceiver/SerialReceiver.vhd
 set_global_assignment -name VHDL_FILE testbench/SerialReceiver_tb.vhd
+
+set_location_assignment PIN_A8 -to INPUT[0]
+set_location_assignment PIN_A9 -to INPUT[1]
+set_location_assignment PIN_A10 -to INPUT[2]
+set_location_assignment PIN_B10 -to INPUT[3]
+set_location_assignment PIN_D13 -to INPUT[4]
+set_location_assignment PIN_C13 -to INPUT[5]
+set_location_assignment PIN_E14 -to INPUT[6]
+set_location_assignment PIN_D14 -to INPUT[7]
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top

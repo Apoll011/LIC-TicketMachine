@@ -6,12 +6,12 @@ end entity SerialReceiver_tb;
 
 architecture behavioral of SerialReceiver_tb is
 
-    component SerialReceiver is
+    component PELCD is
         port (
             SDX, CLK, SS, RESET : in  std_logic;
             Q                   : out std_logic_vector(9 downto 0)
         );
-    end component SerialReceiver;
+    end component PELCD;
 
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
@@ -24,7 +24,7 @@ architecture behavioral of SerialReceiver_tb is
 
 begin
 
-    UUT: component SerialReceiver
+    UUT: component PELCD
     port map (
         RESET => reset_tb,
         CLK   => clk_tb,
