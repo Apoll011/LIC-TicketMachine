@@ -21,7 +21,7 @@ architecture logicFunction of TicketMachine is
         port (
             Kack, RESET, CLK : in  std_logic;
             Tdelay           : in  std_logic_vector(1 downto 0);
-            Kval             : out std_logic;
+            Kval     , clko       : out std_logic;
             K                : out std_logic_vector(3 downto 0);
             Keys_Vertical    : out std_logic_vector(3 downto 0);
             Keys_Horizontal  : in  std_logic_vector(3 downto 0)
@@ -42,13 +42,14 @@ architecture logicFunction of TicketMachine is
         );
     end component PELCD;
 
-  	signal inputPort  : std_logic_vector(7 downto 0);
+  	 signal inputPort  : std_logic_vector(7 downto 0);
     signal outputPort : std_logic_vector(7 downto 0);
 
     signal key_code   : std_logic_vector(3 downto 0);
     signal kval_int   : std_logic;
 
     signal lcd_frame  : std_logic_vector(9 downto 0);
+	 signal clko_1		 : std_logic;
 
 begin
 
@@ -64,6 +65,7 @@ begin
         CLK             => CLK,
         Kack            => outputPort(7),    -- software sets bit7 to ack a key
         Tdelay          => "11",
+		  clko				=> clko_1,
         Kval            => kval_int,
         K               => key_code,
         Keys_Vertical   => Keys_Vertical,
@@ -94,6 +96,6 @@ begin
 	 LCD_DATA(7) <= lcd_frame(1);
     LCD_EN  	 <= lcd_frame(0);              -- bit 9  = E (enable)
 
-	 INPUT <= lcd_frame(7 downto 0);
-
+	 INPUT(0) <= clko_1;
+	
 end architecture logicFunction;
