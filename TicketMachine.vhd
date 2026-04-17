@@ -84,8 +84,15 @@ begin
     );
 
     LCD_RS   <= lcd_frame(9);              -- bit 0  = RS
-    LCD_DATA <= lcd_frame(8 downto 1);     -- bits 8:1 = data byte
-    LCD_EN   <= lcd_frame(0);              -- bit 9  = E (enable)
+    LCD_DATA(0) <= lcd_frame(8);     	 -- bits 8:1 = data byte
+	 LCD_DATA(1) <= lcd_frame(7);
+	 LCD_DATA(2) <= lcd_frame(6);
+	 LCD_DATA(3) <= lcd_frame(5);
+	 LCD_DATA(4) <= lcd_frame(4);
+	 LCD_DATA(5) <= lcd_frame(3);
+	 LCD_DATA(6) <= lcd_frame(2);
+	 LCD_DATA(7) <= lcd_frame(1);
+    LCD_EN  	 <= lcd_frame(0);              -- bit 9  = E (enable)
 
 	 INPUT <= lcd_frame(7 downto 0);
 
