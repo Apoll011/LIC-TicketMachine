@@ -33,7 +33,7 @@ object SerialEmitter {
 
         if (addr == Peripheral.LCD) {
             HAL.setBits(LCD_MASK)       // SS=1
-            Thread.sleep(1)             // tempo suficiente
+            Thread.sleep(1)      // tempo suficiente
             HAL.setBits(SCLK_MASK)      // pulso de clock extra para HoldRegister capturar
             HAL.clrBits(SCLK_MASK)
             Thread.sleep(1)
