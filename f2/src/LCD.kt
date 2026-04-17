@@ -8,9 +8,11 @@ object LCD {
     private fun writeByteSerial(rs: Boolean, data: Int) {
         var frame = (data and 0xFF) shl 1
         if (rs) frame = frame or RS_MASK
-        println(data)
+
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
+        Thread.sleep(0, 50)
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame or E_MASK, 10)
+        Thread.sleep(0, 80)
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
     }
 

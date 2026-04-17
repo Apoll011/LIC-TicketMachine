@@ -87,6 +87,6 @@ begin
     LCD_DATA <= lcd_frame(8 downto 1);     -- bits 8:1 = data byte
     LCD_EN   <= lcd_frame(0);              -- bit 9  = E (enable)
 
-	 INPUT <= outputPort;
+	 INPUT <= lcd_frame(7 downto 0);
 
 end architecture logicFunction;
