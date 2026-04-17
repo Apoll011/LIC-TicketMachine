@@ -24,9 +24,10 @@ object SerialEmitter {
 
         for (i in 0 until size) {
             HAL.writeBits(SDX_MASK, _data)
-
             _data = _data.shr(1)
+            Thread.sleep(1)            // deixa SDX estabilizar
             HAL.setBits(SCLK_MASK)
+            Thread.sleep(1)            // clock high time
             HAL.clrBits(SCLK_MASK)
         }
 
