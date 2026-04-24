@@ -30,10 +30,10 @@ begin
         else "10000000" when d = "1000"
         else "10011000" when d = "1001"
         else "10001000" when d = "1010"
-        else "10000011" when -- A d = "1011"
-        else "11000110" when -- B d = "1100"
-        else "10100001" when -- C d = "1101"
-        else "10000110" when -- D d = "1110"
-        else "10001110" when -- E; -- F
+        else "10000011" when d = "1011"
+        else "11000110" when d = "1100"
+        else "10100001" when d = "1101"
+        else "10000110" when d = "1110"
+        else "10001110" when d = "1111";
 
 end architecture logicFunction;

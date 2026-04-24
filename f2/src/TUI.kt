@@ -4,6 +4,7 @@ object TUI {
         KBD.init()
         LCD.init()
         LCD.clear()
+        TicketDispenser.init()
     }
 
     fun clear() {

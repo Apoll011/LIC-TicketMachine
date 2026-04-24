@@ -12,7 +12,11 @@ entity TicketMachine is
         LCD_RS          : out std_logic; -- register select
         LCD_EN          : out std_logic; -- enable strobe
         LCD_DATA        : out std_logic_vector(7 downto 0); -- data[7:0]
-        INPUT           : out std_logic_vector(7 downto 0)
+        INPUT           : out std_logic_vector(7 downto 0);
+		  CollectTicket	: in std_logic;
+        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out STD_LOGIC_VECTOR(7 downto 0)
+
+		  
     );
 end entity TicketMachine;
 
@@ -49,6 +53,15 @@ architecture logicFunction of TicketMachine is
 				Prt,Rt 				  : out std_logic
         );
     end component PETD;
+	 
+	 component TICKET_DISPENSER 
+    port (
+        RT, Prt, CollectTicket             : in  STD_LOGIC;
+        O, D                               : in  STD_LOGIC_VECTOR(3 downto 0);
+        Fn                                 : out STD_LOGIC;
+        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out STD_LOGIC_VECTOR(7 downto 0)
+    );
+	 end component TICKET_DISPENSER;
 
     signal inputPort  : std_logic_vector(7 downto 0);
     signal outputPort : std_logic_vector(7 downto 0);
@@ -85,7 +98,7 @@ begin
     );
 
     inputPort(7)          <= kval_int;
-    inputPort(6 downto 4) <= "000";
+    inputPort(6 downto 5) <= "00";
     inputPort(3 downto 0) <= key_code;
 
     lcd_serial: component PELCD
@@ -96,32 +109,32 @@ begin
         SS              => outputPort(2),  -- slave select (LCD_MASK   bit 2)
         Q               => lcd_frame
     );
-    /*
     ticket_serial: component PETD
     port map (
         RESET => RESET,
-        CLK   => ,   
-        SDX   => ,   
-        SS    => ,   
+        CLK   => outputPort(1),   
+        SDX   => outputPort(0),   
+        SS    => outputPort(2),
         D     => PETD_D,
-		  Prt	  => Prt_out
-    );
+  		  Rt	  => Rt_out,
+  		  Prt	  => Prt_out
+      );
 	 
-	 ticketdispenser: component TICKET_DISPENSER
+ 	 ticketdispenser: component TICKET_DISPENSER
 	 port map(
-		 RT				=> , 
-		 Prt 				=> , 
-		 CollectTicket => ,
-		 O 				=> , 
-		 D					=> ,
-		 Fn 				=> ,
-		 HEX0 			=> , 
-		 HEX1 			=> , 
-		 HEX2				=> , 
-		 HEX3 			=> , 
-		 HEX4 			=> , 
-		 HEX5 			=>
-        */
+		 RT				=> Rt_out, 
+		 Prt 				=> Prt_out, 
+		 CollectTicket => CollectTicket,
+		 O 				=> PETD_D(3 downto 0), 
+		 D					=> PETD_D(7 downto 4),
+		 Fn 				=> inputPort(4),
+		 HEX0 			=> HEX0, 
+		 HEX1 			=> HEX1, 
+		 HEX2				=> HEX2, 
+		 HEX3 			=> HEX3, 
+		 HEX4 			=> HEX4, 
+		 HEX5 			=> HEX5);
+		 
     LCD_RS                <= lcd_frame(9); -- bit 0  = RS
     LCD_DATA(0)           <= lcd_frame(8); -- bits 8:1 = data byte
     LCD_DATA(1)           <= lcd_frame(7);
