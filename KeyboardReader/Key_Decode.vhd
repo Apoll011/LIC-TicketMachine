@@ -5,7 +5,7 @@ entity Key_Decode is
     port (
         Kack, RESET, CLK : in  std_logic;
         Tdelay           : in  std_logic_vector(1 downto 0);
-        Kval, clko       : out std_logic;
+        Kval		       : out std_logic;
         K                : out std_logic_vector(3 downto 0);
         Keys_Vertical    : out std_logic_vector(3 downto 0);
         Keys_Horizontal  : in  std_logic_vector(3 downto 0)
@@ -18,7 +18,7 @@ architecture logicFunction of Key_Decode is
         port (
             Kack, Kpress, RESET, CLK : in  std_logic;
             Tdelay                   : in  std_logic_vector(1 downto 0);
-            Kval, Kscan, clko        : out std_logic
+            Kval, Kscan			       : out std_logic
         );
     end component Key_Control;
 
@@ -64,7 +64,6 @@ begin
         Kpress          => Kpress,
         Kack            => Kack,
         Tdelay          => Tdelay,
-        clko            => clko,
         Kval            => Kval,
         Kscan           => Kscan
     );

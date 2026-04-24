@@ -8,7 +8,7 @@ entity KeyDecoderFSM is
         clk          : in  std_logic;
         Kpress, Kack : in  std_logic;
         Tdelay       : in  std_logic_vector(1 downto 0); -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
-        Kval, Kscan , clko : out std_logic
+        Kval, Kscan  : out std_logic
     );
 end entity KeyDecoderFSM;
 
@@ -88,7 +88,6 @@ begin
         end case;
     end process GenerateNextState;
 
-	 clko <= clk_out;
     Kscan <= '1' when (CurrentState = STANDING_BY)   else '0';
     Kval  <= '1' when (CurrentState = READING_DATA)  else '0';
 
