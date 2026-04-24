@@ -7,8 +7,8 @@ entity KeyDecoderFSM is
         reset        : in  std_logic;
         clk          : in  std_logic;
         Kpress, Kack : in  std_logic;
-        Tdelay       : in  std_logic_vector(1 downto 0); -- 00=500ms 01=1000ms 10=1500ms 11=2000ms
-        Kval, Kscan , clko : out std_logic
+        Tdelay       : in  std_logic_vector(1 downto 0);
+        Kval, Kscan, clko : out std_logic
     );
 end entity KeyDecoderFSM;
 
@@ -22,16 +22,28 @@ architecture behavioral of KeyDecoderFSM is
         );
     end component KeyDelay;
 
+    component FFD is
+        port (
+            CLK   : in  std_logic;
+            RESET : in  std_logic;
+            SET   : in  std_logic;
+            D     : in  std_logic;
+            EN    : in  std_logic;
+            Q     : out std_logic
+        );
+    end component FFD;
+
     type STATE_TYPE is (STANDING_BY, READING_DATA, DATA_ACCEPTED);
 
     signal CurrentState, NextState : STATE_TYPE;
     signal clk_out                 : std_logic;
     signal clk_out_prev            : std_logic := '0';
     signal clk_out_rise            : std_logic;
+    signal Kpress_latch            : std_logic;
+    signal Kack_received           : std_logic;
 
 begin
 
-    -- Instantiate delay clock generator
     clkd: component KeyDelay
     port map (
         CLK     => clk,
@@ -39,7 +51,30 @@ begin
         CLK_Out => clk_out
     );
 
-    -- Detect rising edge of the slow clock output
+    -- Kpress_latch: set em qualquer burst de Kpress
+    --               reset quando volta a STANDING_BY
+    kpress_latch_ff: component FFD
+    port map (
+        CLK   => clk,
+        RESET => '0',
+        SET   => Kpress,
+        D     => '0',
+        EN    => '0',
+        Q     => Kpress_latch
+    );
+
+    -- Kack_received: set quando software envia Kack em READING_DATA
+    --                reset quando volta a STANDING_BY
+    kack_received_ff: component FFD
+    port map (
+        CLK   => clk,
+        RESET => '0',
+        SET   => Kack,
+        D     => '0',
+        EN    => '0',
+        Q     => Kack_received
+    );
+
     DetectRise: process (clk, reset) is
     begin
         if reset = '1' then
@@ -60,26 +95,31 @@ begin
         end if;
     end process StateRegister;
 
-    GenerateNextState: process (CurrentState, Kpress, Kack, clk_out_rise) is
+    GenerateNextState: process (CurrentState, Kpress_latch, Kack_received, clk_out_rise) is
     begin
         case CurrentState is
 
             when STANDING_BY =>
-                if (Kpress = '1') then
+                if (Kpress_latch = '1') then
                     NextState <= READING_DATA;
                 else
                     NextState <= STANDING_BY;
                 end if;
 
             when READING_DATA =>
-                if (Kack = '1') then
+                if (Kack_received = '1') then
                     NextState <= DATA_ACCEPTED;
                 else
                     NextState <= READING_DATA;
                 end if;
 
             when DATA_ACCEPTED =>
-                if (clk_out_rise = '1') or (Kack = '1' and Kpress = '0') then
+                if (clk_out_rise = '1' and Kpress_latch = '1') then
+                    -- Key repeat: tecla ainda premida
+                    NextState <= READING_DATA;
+                elsif (clk_out_rise = '1' and Kpress_latch = '0') or
+                      (Kack_received = '1' and Kpress_latch = '0') then
+                    -- Tempo expirou sem tecla, ou software leu e tecla libertada
                     NextState <= STANDING_BY;
                 else
                     NextState <= DATA_ACCEPTED;
@@ -88,8 +128,8 @@ begin
         end case;
     end process GenerateNextState;
 
-	 clko <= clk_out;
-    Kscan <= '1' when (CurrentState = STANDING_BY)   else '0';
-    Kval  <= '1' when (CurrentState = READING_DATA)  else '0';
+    clko <= clk_out;
+    Kscan <= '1' when (CurrentState = STANDING_BY)  else '0';
+    Kval  <= '1' when (CurrentState = READING_DATA) else '0';
 
 end architecture behavioral;

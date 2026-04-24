@@ -41,6 +41,14 @@ architecture logicFunction of TicketMachine is
             Q                   : out std_logic_vector(9 downto 0)
         );
     end component PELCD;
+	 
+    component PETD is
+        port (
+            SDX, CLK, SS, RESET : in  std_logic;
+            Q                   : out std_logic_vector(9 downto 0);
+				Prt 					  : out std_logic
+        );
+    end component PETD;
 
   	 signal inputPort  : std_logic_vector(7 downto 0);
     signal outputPort : std_logic_vector(7 downto 0);
@@ -50,6 +58,9 @@ architecture logicFunction of TicketMachine is
 
     signal lcd_frame  : std_logic_vector(9 downto 0);
 	 signal clko_1		 : std_logic;
+	 
+	 signal PETD_D 	 : std_logic_vector(8 downto 0);
+	 signal Prt_out	 : std_logic;
 
 begin
 
@@ -84,9 +95,34 @@ begin
         SS    => outputPort(2),   -- slave select (LCD_MASK   bit 2)
         Q     => lcd_frame
     );
+	 
+    ticket_serial: component PETD
+    port map (
+        RESET => RESET,
+        CLK   => ,   
+        SDX   => ,   
+        SS    => ,   
+        D     => PETD_D,
+		  Prt	  => Prt_out
+    );
+	 
+	 ticketdispenser: component TICKET_DISPENSER
+	 port map(
+		 RT				=> , 
+		 Prt 				=> , 
+		 CollectTicket => ,
+		 O 				=> , 
+		 D					=> ,
+		 Fn 				=> ,
+		 HEX0 			=> , 
+		 HEX1 			=> , 
+		 HEX2				=> , 
+		 HEX3 			=> , 
+		 HEX4 			=> , 
+		 HEX5 			=>
 
     LCD_RS   <= lcd_frame(9);              -- bit 0  = RS
-    LCD_DATA(0) <= lcd_frame(8);     	 -- bits 8:1 = data byte
+    LCD_DATA(0) <= lcd_frame(8);     	 	 -- bits 8:1 = data byte
 	 LCD_DATA(1) <= lcd_frame(7);
 	 LCD_DATA(2) <= lcd_frame(6);
 	 LCD_DATA(3) <= lcd_frame(5);
@@ -94,7 +130,7 @@ begin
 	 LCD_DATA(5) <= lcd_frame(3);
 	 LCD_DATA(6) <= lcd_frame(2);
 	 LCD_DATA(7) <= lcd_frame(1);
-    LCD_EN  	 <= lcd_frame(0);              -- bit 9  = E (enable)
+    LCD_EN  	 <= lcd_frame(0);           -- bit 9  = E (enable)
 
 	 INPUT(0) <= clko_1;
 	
