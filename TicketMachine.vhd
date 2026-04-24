@@ -25,7 +25,7 @@ architecture logicFunction of TicketMachine is
         port (
             Kack, RESET, CLK : in  std_logic;
             Tdelay           : in  std_logic_vector(1 downto 0);
-            Kval			     : out std_logic;
+            Kval		        : out std_logic;
             K                : out std_logic_vector(3 downto 0);
             Keys_Vertical    : out std_logic_vector(3 downto 0);
             Keys_Horizontal  : in  std_logic_vector(3 downto 0)
@@ -113,7 +113,7 @@ begin
         RESET => RESET,
         CLK   => outputPort(1),   
         SDX   => outputPort(0),   
-        SS    => outputPort(2),
+        SS    => outputPort(3),
         D     => PETD_D,
   		  Rt	  => Rt_out,
   		  Prt	  => Prt_out
@@ -134,6 +134,7 @@ begin
 		 HEX4 			=> HEX4, 
 		 HEX5 			=> HEX5);
 		 
+		 INPUT <= PETD_D;
     LCD_RS                <= lcd_frame(9); -- bit 0  = RS
     LCD_DATA(0)           <= lcd_frame(8); -- bits 8:1 = data byte
     LCD_DATA(1)           <= lcd_frame(7);
