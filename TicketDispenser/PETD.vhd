@@ -25,7 +25,6 @@ serial: component SerialReceiver port map(
 	CLK 				=> CLK,
 	SS 				=> SS,
 	RESET 			=> RESET,
-	 
    Q(1)    			=> D(7),
    Q(2)   			=> D(6),
    Q(3)   			=> D(5),
