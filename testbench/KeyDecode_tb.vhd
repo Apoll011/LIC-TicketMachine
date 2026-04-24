@@ -45,9 +45,9 @@ begin
 
     clk_gen: process
     begin
-        clk_tb <= '0';
+        clk_tb             <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb <= '1';
+        clk_tb             <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
@@ -114,6 +114,6 @@ begin
         wait;
     end process stimulus;
 
-	 -- 10 us
-	 
+    -- 10 us
+
 end architecture behavioral;

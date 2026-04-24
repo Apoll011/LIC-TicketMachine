@@ -43,9 +43,9 @@ begin
     DetectRise: process (clk, reset) is
     begin
         if reset = '1' then
-            clk_out_prev <= '0';
+            clk_out_prev      <= '0';
         elsif rising_edge(clk) then
-            clk_out_prev <= clk_out;
+            clk_out_prev      <= clk_out;
         end if;
     end process DetectRise;
 
@@ -54,9 +54,9 @@ begin
     StateRegister: process (clk, reset) is
     begin
         if reset = '1' then
-            CurrentState <= STANDING_BY;
+            CurrentState      <= STANDING_BY;
         elsif rising_edge(clk) then
-            CurrentState <= NextState;
+            CurrentState      <= NextState;
         end if;
     end process StateRegister;
 

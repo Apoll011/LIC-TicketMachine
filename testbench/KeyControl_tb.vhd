@@ -17,13 +17,13 @@ architecture behavioral of KeyControl_tb is
     constant MCLK_PERIOD      : time := 1 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal reset_tb  : std_logic;
-    signal clk_tb    : std_logic;
-    signal Kpress_tb : std_logic;
-    signal Kack_tb   : std_logic;
-    signal Tdelay_tb : std_logic_vector(1 downto 0);
-    signal Kval_tb   : std_logic;
-    signal Kscan_tb  : std_logic;
+    signal reset_tb           : std_logic;
+    signal clk_tb             : std_logic;
+    signal Kpress_tb          : std_logic;
+    signal Kack_tb            : std_logic;
+    signal Tdelay_tb          : std_logic_vector(1 downto 0);
+    signal Kval_tb            : std_logic;
+    signal Kscan_tb           : std_logic;
 
 begin
 
@@ -40,9 +40,9 @@ begin
 
     clk_gen: process
     begin
-        clk_tb <= '0';
+        clk_tb    <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb <= '1';
+        clk_tb    <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
@@ -74,7 +74,7 @@ begin
 
         wait;
     end process stimulus;
-	 
-	 -- 31 ns
+
+    -- 31 ns
 
 end architecture behavioral;

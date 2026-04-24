@@ -12,12 +12,12 @@ end entity PETD;
 architecture logicFunction of PETD is
 
     component SerialReceiver is
-    port (
-        SDX, CLK, SS, RESET : in  std_logic;
-        Q            		 : out std_logic_vector(9 downto 0)
-    );
+        port (
+            SDX, CLK, SS, RESET : in  std_logic;
+            Q                   : out std_logic_vector(9 downto 0)
+        );
     end component SerialReceiver;
-	 
+
 begin
 
 serial: component SerialReceiver port map(

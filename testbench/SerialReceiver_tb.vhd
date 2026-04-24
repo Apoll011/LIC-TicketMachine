@@ -16,11 +16,11 @@ architecture behavioral of SerialReceiver_tb is
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal reset_tb : std_logic;
-    signal clk_tb   : std_logic;
-    signal SDX_tb   : std_logic;
-    signal SS_tb    : std_logic;
-    signal Q_tb     : std_logic_vector(9 downto 0);
+    signal reset_tb           : std_logic;
+    signal clk_tb             : std_logic;
+    signal SDX_tb             : std_logic;
+    signal SS_tb              : std_logic;
+    signal Q_tb               : std_logic_vector(9 downto 0);
 
 begin
 
@@ -35,9 +35,9 @@ begin
 
     clk_gen: process
     begin
-        clk_tb <= '0';
+        clk_tb         <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb <= '1';
+        clk_tb         <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
@@ -47,28 +47,28 @@ begin
         -- Os bits sao enviados LSB primeiro
         procedure send_serial(data : std_logic_vector(9 downto 0)) is
         begin
-            SS_tb <= '0';
+            SS_tb      <= '0';
             wait for MCLK_PERIOD;
             for i in 0 to 9 loop
                 SDX_tb <= data(i);
                 wait for MCLK_PERIOD;
             end loop;
-            SDX_tb <= '0';
+            SDX_tb     <= '0';
             -- SS sobe -> HoldRegister captura o resultado
-            SS_tb  <= '1';
+            SS_tb      <= '1';
             wait for MCLK_PERIOD * 2;
-            SS_tb  <= '0';
+            SS_tb      <= '0';
             wait for MCLK_PERIOD;
-        end procedure;
+        end procedure send_serial;
 
     begin
         -- Reset
-        reset_tb <= '1';
-        SS_tb    <= '0';
-        SDX_tb   <= '0';
+        reset_tb       <= '1';
+        SS_tb          <= '0';
+        SDX_tb         <= '0';
         wait for MCLK_PERIOD * 6;
 
-        reset_tb <= '0';
+        reset_tb       <= '0';
         wait for MCLK_PERIOD * 4;
 
         -- Teste 1: envia "0101010101" -> Q deve ser "0101010101"
@@ -93,19 +93,19 @@ begin
 
         -- Teste 6: reset a meio de uma transmissao
         -- Q deve voltar a "0000000000"
-        SS_tb    <= '0';
-        SDX_tb   <= '1';
+        SS_tb          <= '0';
+        SDX_tb         <= '1';
         wait for MCLK_PERIOD * 4;
-        reset_tb <= '1';
+        reset_tb       <= '1';
         wait for MCLK_PERIOD * 4;
-        reset_tb <= '0';
-        SS_tb    <= '0';
-        SDX_tb   <= '0';
+        reset_tb       <= '0';
+        SS_tb          <= '0';
+        SDX_tb         <= '0';
         wait for MCLK_PERIOD * 4;
 
         wait;
     end process stimulus;
-	 
-	 -- 2400 ns
+
+    -- 2400 ns
 
 end architecture behavioral;
