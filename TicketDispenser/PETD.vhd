@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 entity PETD is
     port (
         SDX, CLK, SS, RESET : in  std_logic;
-        D            		 : out std_logic_vector(8 downto 0);
-		  Prt						 : out std_logic
+        D            		 : out std_logic_vector(7 downto 0);
+		  Prt, Rt				 : out std_logic
     );
 end entity PETD;
 
@@ -25,8 +25,9 @@ serial: component SerialReceiver port map(
 	CLK 				=> CLK,
 	SS 				=> SS,
 	RESET 			=> RESET,
-	Q(8 downto 0)  => D,
-	Q(9) 				=> Prt
+	Q(8 downto 1)  => D,
+	Q(9) 				=> Prt,
+	Q(0)				=> Rt
 	
 );
 end architecture logicFunction;
