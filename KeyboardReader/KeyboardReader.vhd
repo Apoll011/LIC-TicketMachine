@@ -1,31 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- ============================================================
--- KeyboardReader
---
--- Top-level block connecting the keyboard decoder with the
--- serial transmitter.
---
--- For now the connection is direct (no ring buffer):
---   - Kval  from Key_Decode drives Load  on KeyTransmitter
---   - KBfree from KeyTransmitter feeds back as Kack to Key_Decode
---   - K (4-bit key code) goes straight into DataIn
---
--- When a ring buffer is added later, it will sit between
--- Key_Decode and KeyTransmitter on the DataIn/Load/KBfree path.
---
--- Ports:
---   CLK             : system clock
---   RESET           : active-high synchronous reset
---   Tdelay          : key debounce delay select (see Key_Decode)
---   Keys_Vertical   : column drives to the keypad
---   Keys_Horizontal : row reads from the keypad
---   TXclk           : serial transmission clock (from host)
---   TXD             : serial data output to host
--- ============================================================
-
-
 entity KeyboardReader is
     port (
         CLK             : in  STD_LOGIC;
@@ -57,6 +32,17 @@ architecture logicFunction of KeyboardReader is
         );
     end component Key_Decode;
 
+    component KeyInterface is
+        port (
+            CLK    : in  STD_LOGIC;
+            RESET  : in  STD_LOGIC;
+            Kval   : in  STD_LOGIC;
+            KBfree : in  STD_LOGIC;
+            Load   : out STD_LOGIC;
+            Kack   : out STD_LOGIC
+        );
+    end component KeyInterface;
+
     component KeyTransmitter is
         port (
             CLK    : in  STD_LOGIC;
@@ -69,29 +55,23 @@ architecture logicFunction of KeyboardReader is
         );
     end component KeyTransmitter;
 
-    -- --------------------------------------------------------
-    -- Internal signals
-    -- --------------------------------------------------------
 
     signal KEY_CODE_LINK : STD_LOGIC_VECTOR(3 downto 0);
-    signal KVAL_LINK     : STD_LOGIC;
-    signal KBFREE_LINK   : STD_LOGIC;
+    signal KVAL_LINK     : STD_LOGIC;  -- Kval level from Key_Decode
+    signal KACK_LINK     : STD_LOGIC;  -- Kack pulse back to Key_Decode
+    signal LOAD_LINK     : STD_LOGIC;  -- single-cycle Load to KeyTransmitter
+    signal KBFREE_LINK   : STD_LOGIC;  -- transmitter idle / done
 
 begin
 
-    -- Drive output ports from internal signals
     Kval <= KVAL_LINK;
     K    <= KEY_CODE_LINK;
 
-    -- --------------------------------------------------------
-    -- Keyboard decoder
-    -- Kack driven by KBfree: transmitter free = key accepted
-    -- --------------------------------------------------------
     DECODE : component Key_Decode
     port map (
         CLK             => CLK,
         RESET           => RESET,
-        Kack            => KBFREE_LINK,
+        Kack            => KACK_LINK,
         Tdelay          => Tdelay,
         Kval            => KVAL_LINK,
         K               => KEY_CODE_LINK,
@@ -99,23 +79,22 @@ begin
         Keys_Horizontal => Keys_Horizontal
     );
 
-    -- --------------------------------------------------------
-    -- Serial transmitter
-    -- KBfree feeds back to decoder as Kack.
-    --
-    -- TODO: insert ring buffer here between DECODE and
-    --       TRANSMITTER when ready. The buffer will:
-    --         - accept (KEY_CODE_LINK, KVAL_LINK) from DECODE
-    --         - present (BUF_DATA, BUF_LOAD) to TRANSMITTER
-    --         - feed (BUF_FREE) back to DECODE as Kack
-    --         - use (KBFREE_LINK) from TRANSMITTER internally
-    -- --------------------------------------------------------
-    TRANSMITTER : component KeyTransmitter
+    IFACE : component KeyInterface
+    port map (
+        CLK    => CLK,
+        RESET  => RESET,
+        Kval   => KVAL_LINK,     -- from Key_Decode
+        KBfree => KBFREE_LINK,   -- from KeyTransmitter
+        Load   => LOAD_LINK,     -- to   KeyTransmitter
+        Kack   => KACK_LINK      -- to   Key_Decode
+    );
+
+   TRANSMITTER : component KeyTransmitter
     port map (
         CLK    => CLK,
         RESET  => RESET,
         DataIn => KEY_CODE_LINK,
-        Load   => KVAL_LINK,
+        Load   => LOAD_LINK,
         KBfree => KBFREE_LINK,
         TXclk  => TXclk,
         TXD    => TXD
