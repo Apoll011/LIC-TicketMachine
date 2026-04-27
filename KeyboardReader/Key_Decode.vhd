@@ -5,7 +5,7 @@ entity Key_Decode is
     port (
         Kack, RESET, CLK : in  std_logic;
         Tdelay           : in  std_logic_vector(1 downto 0);
-        Kval             : out std_logic;
+        Kval, Kpress     : out std_logic;
         K                : out std_logic_vector(3 downto 0);
         Keys_Vertical    : out std_logic_vector(3 downto 0);
         Keys_Horizontal  : in  std_logic_vector(3 downto 0)
