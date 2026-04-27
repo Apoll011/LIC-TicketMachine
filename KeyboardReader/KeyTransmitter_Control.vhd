@@ -100,7 +100,7 @@ begin
     RESET_C  <= '1' when CurrentState = STATE_IDLE else '0';
 
     -- Inform Key Decode the key has been accepted
-    DAC      <= '1' when CurrentState = STATE_ACK or CurrentState = STATE_SEND else '0';
+    DAC      <= '0' when CurrentState = STATE_ACK or CurrentState = STATE_SEND else '1';
 
     -- Pull TXD low while the frame is being transmitted
     TXD_INIT <= '0' when CurrentState = STATE_SEND else '1';
