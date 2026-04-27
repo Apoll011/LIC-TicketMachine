@@ -123,7 +123,7 @@ begin
     );
 
     -- Expose the input byte on the top-level port for debugging
-    INPUT <= INPUT_PORT_LINK;
+    INPUT <= OUTPUT_PORT_LINK;
 
     -- --------------------------------------------------------
     -- Keyboard reader

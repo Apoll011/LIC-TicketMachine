@@ -1,4 +1,4 @@
-object KBD {
+object KBDSerial {
     private const val KVAL_MASK = 0x80
     private const val KCODE_MASK = 0x0F
 
@@ -81,7 +81,7 @@ object KBD {
 }
 
 
-object KBDSerial {
+object KBD {
 
     // ----------------------------------------------------------
     // Key definitions
@@ -144,7 +144,7 @@ object KBDSerial {
 
     fun readKey(): Key {
         var clockCounter = 0
-        var rawCode = INVALID_KEYCODE
+        var rawCode = -1
 
         // Check INIT bit: TXD must be LOW to indicate a frame is starting
         if (!HAL.isBit(RXD_MASK)) {
@@ -175,7 +175,7 @@ object KBDSerial {
             }
         }
 
-        return if (rawCode != INVALID_KEYCODE && rawCode in 0..15)
+        return if (rawCode != -1 && rawCode in 0..15)
             convertToKey(rawCode)
         else
             Key.KEY_NONE

@@ -12,11 +12,27 @@ architecture sim of keytransmitter_tb is
     signal kbfree_tb : std_logic;
     signal txclk_tb  : std_logic := '0';
     signal txd_tb    : std_logic;
+	 
+	 
+    component KeyTransmitter is
+    port (
+        CLK    : in  STD_LOGIC;
+        RESET  : in  STD_LOGIC;
+
+        DataIn : in  STD_LOGIC_VECTOR(3 downto 0);  -- 4-bit key code
+        Load   : in  STD_LOGIC;                     -- pulse: key is valid
+        KBfree : out STD_LOGIC;                     -- '1' when ready for next key
+
+        TXclk  : in  STD_LOGIC;                     -- serial clock (from host)
+        TXD    : out STD_LOGIC                       -- serial data output
+    );
+    end component KeyTransmitter;
+	 
 begin
 
     -- Estas duas linhas TÊM de estar aqui, fora de qualquer process
     clk_tb   <= not clk_tb   after 5 ns;
-    txclk_tb <= not txclk_tb after 100 ns;   -- <-- fora do process!
+    txclk_tb <= not txclk_tb after 10 ns;   -- <-- fora do process!
 
     uut: component KeyTransmitter
         port map (
@@ -40,6 +56,7 @@ begin
         load_tb   <= '1';
         wait for 10 ns;
         load_tb   <= '0';
+		  
 
         wait until kbfree_tb = '1';
         wait for 500 ns;
