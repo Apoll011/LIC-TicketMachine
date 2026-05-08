@@ -28,16 +28,18 @@ architecture logicFunction of KeyboardReader is
         );
     end component Key_Decode;
 
-    component KeyInterface is
+    component RingBuffer is
         port (
-            CLK    : in  STD_LOGIC;
-            RESET  : in  STD_LOGIC;
-            Kval   : in  STD_LOGIC;
-            KBfree : in  STD_LOGIC;
-            Load   : out STD_LOGIC;
-            Kack   : out STD_LOGIC
+			  CLK   		: in  std_logic;
+			  RESET 		: in  std_logic;
+			  CTS 		: in  std_logic;
+			  DAV 		: in  std_logic;
+			  D	      : in std_logic_vector(3 downto 0);
+			  Q	      : out std_logic_vector(3 downto 0);
+			  Wreg	   : out  std_logic;
+			  DAC		   : out  std_logic
         );
-    end component KeyInterface;
+    end component RingBuffer;
 
     component KeyTransmitter is
         port (
@@ -52,7 +54,7 @@ architecture logicFunction of KeyboardReader is
     end component KeyTransmitter;
 
 
-    signal KEY_CODE_LINK : STD_LOGIC_VECTOR(3 downto 0);
+    signal KEY_CODE_LINK, KEY_VALUE : STD_LOGIC_VECTOR(3 downto 0);
     signal KVAL_LINK     : STD_LOGIC;  -- Kval level from Key_Decode
     signal KACK_LINK     : STD_LOGIC;  -- Kack pulse back to Key_Decode
     signal LOAD_LINK     : STD_LOGIC;  -- single-cycle Load to KeyTransmitter
@@ -73,21 +75,23 @@ begin
         Keys_Horizontal => Keys_Horizontal
     );
 
-    IFACE : component KeyInterface
+    buff: component RingBuffer
     port map (
         CLK    => CLK,
         RESET  => RESET,
-        Kval   => KVAL_LINK,     -- from Key_Decode
-        KBfree => KBFREE_LINK,   -- from KeyTransmitter
-        Load   => LOAD_LINK,     -- to   KeyTransmitter
-        Kack   => KACK_LINK      -- to   Key_Decode
+        CTS		=> KBFREE_LINK,
+		  DAV		=> KVAL_LINK,
+		  D		=> KEY_CODE_LINK,
+		  Q		=> KEY_VALUE,
+		  Wreg	=> LOAD_LINK,
+		  DAC 	=> KACK_LINK
     );
 
    TRANSMITTER : component KeyTransmitter
     port map (
         CLK    => CLK,
         RESET  => RESET,
-        DataIn => KEY_CODE_LINK,
+        DataIn => KEY_VALUE,
         Load   => LOAD_LINK,
         KBfree => KBFREE_LINK,
         TXclk  => TXclk,

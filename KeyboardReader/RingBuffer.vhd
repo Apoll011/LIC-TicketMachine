@@ -37,11 +37,42 @@ architecture logicFunction of RingBuffer is
      );
     end component;
 	 
+	 component RBC is	port (
+		  CLK      		: in  std_logic;
+        RESET    		: in  std_logic;
+        DAV, CTS 		: in  std_logic; 
+        full, empty	: in  std_logic;
+
+        Wr  		   : out std_logic;
+		  selPnG  		: out std_logic;
+		  Wreg  		   : out std_logic;
+		  DAC  		   : out std_logic;
+		  incP, incG 	: out std_logic
+     );
+    end component;
+	 
 
 	 signal addrRam : std_logic_vector(3 downto 0);
 	 
 	 signal fullS, emptyS, incPutS, incGetS, putNgetS, wrS 	: std_logic;
 begin
+
+	
+	control: component RBC
+   port map (
+		  CLK  	=> CLK,
+        RESET  => RESET,
+        DAV		=> DAV,
+        CTS		=> CTS,
+        full	=> fullS,
+        empty	=> emptyS,
+        Wr		=> wrS,
+		  selPnG	=> putNgetS,
+		  Wreg	=> Wreg,
+		  DAC		=> DAC,
+		  incP	=> incPutS,
+		  incG	=> incGetS
+   );
 	
 	memControl: component MAC
    port map (
@@ -64,4 +95,5 @@ begin
         din		=> D,
 		  dout	=> Q
    );
+
 end architecture logicFunction;
