@@ -17,10 +17,7 @@ entity TicketMachine is
 
         CollectTicket   : in  std_logic;
 
-        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0);
-
-        TXclk           : in  std_logic;
-        TXD             : out std_logic
+        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0)
     );
 end entity TicketMachine;
 
@@ -38,10 +35,7 @@ architecture logicFunction of TicketMachine is
             Keys_Vertical   : out std_logic_vector(3 downto 0);
             Keys_Horizontal : in  std_logic_vector(3 downto 0);
             TXclk           : in  std_logic;
-            TXD             : out std_logic;
-            -- Exposed for USB input byte construction
-            Kval            : out std_logic;
-            K               : out std_logic_vector(3 downto 0)
+            TXD             : out std_logic
         );
     end component KeyboardReader;
 
@@ -85,7 +79,7 @@ architecture logicFunction of TicketMachine is
     signal OUTPUT_PORT_LINK : std_logic_vector(7 downto 0);
 
     -- Keyboard
-    signal KVAL_LINK        : std_logic;
+    signal KVAL_LINK, TXD, TXclk: std_logic;
     signal KEY_CODE_LINK    : std_logic_vector(3 downto 0);
 
     -- LCD serial frame
@@ -110,11 +104,9 @@ begin
     --   [4]     = Fn    (ticket dispenser finished flag)
     --   [3..0]  = K     (4-bit key code)
     -- --------------------------------------------------------
-    INPUT_PORT_LINK(7)          <= KVAL_LINK;
-    INPUT_PORT_LINK(6)          <= '0';
-    INPUT_PORT_LINK(5)          <= '0';
-    INPUT_PORT_LINK(4)          <= FN_LINK;
-    INPUT_PORT_LINK(3 downto 0) <= KEY_CODE_LINK;
+    INPUT_PORT_LINK(4)  <= FN_LINK;
+	 INPUT_PORT_LINK(1)  <= TXD;
+	 TXclk         		<= OUTPUT_PORT_LINK(4);
 
     USB : component UsbPort
     port map (
@@ -144,9 +136,7 @@ begin
         Keys_Vertical   => Keys_Vertical,
         Keys_Horizontal => Keys_Horizontal,
         TXclk           => TXclk,
-        TXD             => TXD,
-        Kval            => KVAL_LINK,
-        K               => KEY_CODE_LINK
+        TXD             => TXD
     );
 
     -- --------------------------------------------------------

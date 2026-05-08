@@ -11,10 +11,6 @@ entity KeyboardReader is
         Keys_Vertical   : out STD_LOGIC_VECTOR(3 downto 0);
         Keys_Horizontal : in  STD_LOGIC_VECTOR(3 downto 0);
 
-        -- Exposed for parent block (e.g. USB byte construction)
-        Kval            : out STD_LOGIC;
-        K               : out STD_LOGIC_VECTOR(3 downto 0);
-
         TXclk           : in  STD_LOGIC;
         TXD             : out STD_LOGIC
     );
@@ -64,8 +60,6 @@ architecture logicFunction of KeyboardReader is
 
 begin
 
-    Kval <= KVAL_LINK;
-    K    <= KEY_CODE_LINK;
 
     DECODE : component Key_Decode
     port map (

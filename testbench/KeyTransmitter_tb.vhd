@@ -55,11 +55,18 @@ begin
         datain_tb <= "1010";
         load_tb   <= '1';
         wait for 10 ns;
-        load_tb   <= '0';
+		  load_tb   <= '0';
 		  
+		  wait for 100 ns;
+		  datain_tb <= "0101";
+		  
+		  wait for 50 ns;
+		  datain_tb <= "1101";
 
         wait until kbfree_tb = '1';
         wait for 500 ns;
+        
+
         wait;
     end process;
 
