@@ -27,15 +27,13 @@ architecture logicFunction of RingBuffer is
      );
     end component;
 	 
-	 component RAM is generic (
-			ADDRESS_WIDTH : natural := 4;
-			DATA_WIDTH : natural := 4
-      );
-		port (
-        	address : in std_logic_vector(ADDRESS_WIDTH - 1 downto 0);
-			wr: in std_logic;
-			din: in std_logic_vector(DATA_WIDTH - 1 downto 0);
-			dout: out std_logic_vector(DATA_WIDTH - 1 downto 0)
+	 component RAM is	port (
+        CLK     : in  std_logic;
+        RESET   : in  std_logic;
+        address : in  std_logic_vector(3 downto 0);
+        wr      : in  std_logic;
+        din     : in  std_logic_vector(3 downto 0);
+        dout    : out std_logic_vector(3 downto 0)
      );
     end component;
 	 
@@ -59,6 +57,8 @@ begin
 	
 	mem: component RAM
    port map (
+		  CLK  	=> CLK,
+        RESET  => RESET,
         address=> addrRam,
         wr		=> wrS,
         din		=> D,
