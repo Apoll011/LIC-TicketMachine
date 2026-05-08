@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 
 entity sumador_4bit is
     port (
-        A, B : in  STD_LOGIC_VECTOR(3 downto 0);
-        R    : out STD_LOGIC_VECTOR(3 downto 0);
-        Ci   : in  STD_LOGIC;
-        Co   : out STD_LOGIC
+        A, B : in  std_logic_vector(3 downto 0);
+        R    : out std_logic_vector(3 downto 0);
+        Ci   : in  std_logic;
+        Co   : out std_logic
     );
 end entity sumador_4bit;
 
