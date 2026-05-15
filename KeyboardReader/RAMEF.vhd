@@ -43,20 +43,10 @@ architecture structural of RAMEF is
     signal count_q      : std_logic_vector(3 downto 0);
     signal addsub		   : std_logic_vector(3 downto 0);
     signal next_count   : std_logic_vector(3 downto 0);
-    signal is_full      : std_logic;
-    signal is_empty     : std_logic;
     signal en_reg       : std_logic;
 
 
 begin
-
-    -- full = 15 = "1111", empty = 0 = "0000"
-    is_full  <= count_q(3) and count_q(2) and count_q(1) and count_q(0);
-    is_empty <= (not count_q(3)) and (not count_q(2)) and (not count_q(1)) and (not count_q(0));
-
-    full  <= is_full;
-    empty <= is_empty;
-
     U_C: AdderSubtrator
         port map (
             A    => count_q,
@@ -84,5 +74,8 @@ begin
             EN    => en_reg,
             Q     => count_q
         );
-
+	
+	
+    full  <= count_q(3) and count_q(2) and count_q(1) and count_q(0);
+    empty <= (not count_q(3)) and (not count_q(2)) and (not count_q(1)) and (not count_q(0));
 end architecture structural;
