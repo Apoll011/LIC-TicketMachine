@@ -16,11 +16,6 @@ object LCDv2 {
     private const val CGRAM_BASE_ADDR = 0x40
     private const val CGRAM_CELL_SIZE = 8
 
-    const val RIGHT_ARROW = 0x7E
-    const val LEFT_ARROW  = 0x7F
-    const val LEFT_PARANTHESIS = 0x5B
-    const val RIGHT_PARANTHESIS = 0x5D
-
     enum class Line { UPPER, LOWER }
 
 
@@ -46,7 +41,7 @@ object LCDv2 {
         else Thread.sleep(1L)
     }
 
-    private fun writeDATA(data: Int) {
+    private fun writeData(data: Int) {
         writeByte(true, data)
         Thread.sleep(2L)
     }
@@ -79,7 +74,7 @@ object LCDv2 {
         writeCMD(commands["display_on"]!!) // display on
     }
 
-    fun write(c: Char) = writeDATA(c.code)
+    fun write(c: Char) = writeData(c.code)
 
     fun write(text: String) = text.forEach { write(it) }
 
@@ -97,7 +92,7 @@ object LCDv2 {
     fun loadIcon(char: Icons, slot: Int) {
         val cgramAddr = CGRAM_BASE_ADDR + slot * CGRAM_CELL_SIZE
         writeCMD(cgramAddr)
-        for (p in char.pattern) writeDATA(p)
+        for (p in char.pattern) writeData(p)
         cursor(0, 0)
     }
 
@@ -105,6 +100,10 @@ object LCDv2 {
         val slot = LCDRam.slotFor(char)
         loadIcon(char, slot)
         //writeData(slot)
+    }
+
+    fun writeIcon(char: RomIcons) {
+        writeData(char.addr)
     }
 
     fun enableCursor(status: Boolean) = writeCMD(if (status) commands["cursor_on"]!! else commands["cursor_off"]!!)
