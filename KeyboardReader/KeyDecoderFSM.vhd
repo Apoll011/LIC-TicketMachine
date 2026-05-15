@@ -79,7 +79,7 @@ begin
                 end if;
 
             when DATA_ACCEPTED =>
-                if (clk_out_rise = '1') or (Kack = '1' and Kpress = '0') then
+                if clk_out_rise = '1' or Kpress = '0' then
                     NextState <= STANDING_BY;
                 else
                     NextState <= DATA_ACCEPTED;
