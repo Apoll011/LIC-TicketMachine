@@ -39,12 +39,16 @@ architecture logicFunction of MAC is
         F  	: out std_logic_vector(3 downto 0)
 		);
 	 end component;
+	 
+	 component RAMEF is port (
+        CLK         : in  std_logic;
+        RESET       : in  std_logic;
+        inc, dec    : in  std_logic;
+        full, empty : out std_logic
+    );
+	 end component;
 
 	 signal putI, putIAdder, getI, getIAdder : std_logic_vector(3 downto 0);
-	 
-	 signal putIPlusOne     : std_logic_vector(3 downto 0);
-	 signal eqBits          : std_logic_vector(3 downto 0);
-	 signal eqBitsFull      : std_logic_vector(3 downto 0);
 begin
 	
 	incPutSum: component sumador_4bit
@@ -87,23 +91,14 @@ begin
 		 F		=> Addr
 	);
 	
-	 putIPlusOneSum: component sumador_4bit
-    port map (
-        A  => putI,
-        B  => "0000",
-        R  => putIPlusOne,
-        Ci => '1'
-    );
+	ef: component RAMEF port map (
+		CLK 	=> CLK,
+		RESET	=> RESET,
+		inc 	=> incPut,
+		dec	=> incGet,
+		full 	=> full,
+		empty => empty
+	);
 
-	eqBits(0) <= putI(0) xnor getI(0);
-	eqBits(1) <= putI(1) xnor getI(1);
-	eqBits(2) <= putI(2) xnor getI(2);
-	eqBits(3) <= putI(3) xnor getI(3);
-	empty <= eqBits(0) and eqBits(1) and eqBits(2) and eqBits(3);
-
-	eqBitsFull(0) <= putIPlusOne(0) xnor getI(0);
-	eqBitsFull(1) <= putIPlusOne(1) xnor getI(1);
-	eqBitsFull(2) <= putIPlusOne(2) xnor getI(2);
-	eqBitsFull(3) <= putIPlusOne(3) xnor getI(3);
-	full <= eqBitsFull(0) and eqBitsFull(1) and eqBitsFull(2) and eqBitsFull(3);
+	
 end architecture logicFunction;
