@@ -1,4 +1,4 @@
-object LCDv2 {
+object LCD {
     private const val RS_MASK = 0x1
     private const val E_MASK = 0x200
 
@@ -9,7 +9,7 @@ object LCDv2 {
         "display_on"        to 0x0c,
         "clear"             to 0x01,
         "entry_mode"        to 0x06,
-        "cursor_on"         to 0x0F
+        "cursor_on"         to 0x0F,
         "cursor_off"        to 0x0C
     )
 
@@ -54,29 +54,27 @@ object LCDv2 {
         initSequence()
 
         initCommands()
-
-        cursor(0, 0)
     }
 
     fun initSequence() {
         repeat(3) {
-            writeByte(false, commands["init_mode_error"]!!) // init_mode_error para que ocorra um erro de 8 bits
+            writeByte(false, 0x30) // 0x30 para que ocorra um erro de 8 bits
             Thread.sleep(5)
         }
     }
 
     fun initCommands() {
-        writeCMD(commands["init_mode_error"]!!) // 8 bits
-        writeCMD(commands["display_off"]!!) // display off
-        clear()
+        writeCMD(0x38) // 8 bits
+        writeCMD(0x08) // display off
+        writeCMD(0x01) // clear
         Thread.sleep(5)
-        writeCMD(commands["entry_mode"]!!) // entry mode set
-        writeCMD(commands["display_on"]!!) // display on
+        writeCMD(0x06) // entry mode set
+        writeCMD(0x0C) // display on
     }
 
-    fun write(c: Char) = writeData(c.code)
+    fun writeChar(c: Char) = writeData(c.code)
 
-    fun write(text: String) = text.forEach { write(it) }
+    fun write(text: String) = text.forEach { writeChar(it) }
 
     fun cursor(line: Int, column: Int) {
         var data = column.or(0x80)
@@ -98,8 +96,9 @@ object LCDv2 {
 
     fun writeIcon(char: Icons) {
         val slot = LCDRam.slotFor(char)
+        println(slot)
         loadIcon(char, slot)
-        //writeData(slot)
+        writeData(slot)
     }
 
     fun writeIcon(char: RomIcons) {

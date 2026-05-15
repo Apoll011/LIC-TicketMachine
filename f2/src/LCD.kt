@@ -1,4 +1,4 @@
-object LCD {
+object LCDv0 {
     private const val LINES = 2
     private const val COLS = 16
 

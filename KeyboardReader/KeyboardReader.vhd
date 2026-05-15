@@ -12,7 +12,7 @@ entity KeyboardReader is
         Keys_Horizontal : in  STD_LOGIC_VECTOR(3 downto 0);
 
         TXclk           : in  STD_LOGIC;
-        TXD             : out STD_LOGIC
+        TXD      , clk_out, clk_out_rise       : out STD_LOGIC
     );
 end entity KeyboardReader;
 
@@ -21,7 +21,7 @@ architecture logicFunction of KeyboardReader is
         port (
             Kack, RESET, CLK : in  STD_LOGIC;
             Tdelay           : in  STD_LOGIC_VECTOR(1 downto 0);
-            Kval             : out STD_LOGIC;
+            Kval           , clk_out, clk_out_rise  : out STD_LOGIC;
             K                : out STD_LOGIC_VECTOR(3 downto 0);
             Keys_Vertical    : out STD_LOGIC_VECTOR(3 downto 0);
             Keys_Horizontal  : in  STD_LOGIC_VECTOR(3 downto 0)
@@ -72,7 +72,9 @@ begin
         Kval            => KVAL_LINK,
         K               => KEY_CODE_LINK,
         Keys_Vertical   => Keys_Vertical,
-        Keys_Horizontal => Keys_Horizontal
+        Keys_Horizontal => Keys_Horizontal,
+		  clk_out => clk_out, 
+		  clk_out_rise => clk_out_rise 
     );
 
     buff: component RingBuffer

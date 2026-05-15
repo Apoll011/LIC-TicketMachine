@@ -5,7 +5,7 @@ entity Key_Control is
     port (
         Kack, Kpress, RESET, CLK : in  std_logic;
         Tdelay                   : in  std_logic_vector(1 downto 0);
-        Kval, Kscan		         : out std_logic
+        Kval, Kscan	, clk_out, clk_out_rise	         : out std_logic
     );
 end entity Key_Control;
 
@@ -17,7 +17,7 @@ architecture logicFunction of Key_Control is
             clk               : in  std_logic;
             Kpress, Kack      : in  std_logic;
             Tdelay            : in  std_logic_vector(1 downto 0);
-            Kval, Kscan			: out std_logic
+            Kval, Kscan	, clk_out, clk_out_rise		: out std_logic
         );
     end component KeyDecoderFSM;
 
@@ -31,6 +31,8 @@ begin
         Kack   => Kack,
         Tdelay => Tdelay,
         Kval   => Kval,
-        Kscan  => Kscan
+        Kscan  => Kscan,
+		  clk_out => clk_out, 
+		  clk_out_rise => clk_out_rise
     );
 end architecture logicFunction;

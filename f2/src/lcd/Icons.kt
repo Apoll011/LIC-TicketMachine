@@ -19,7 +19,7 @@ enum class Icons(val pattern: List<Int>) {
 
 enum class RomIcons(val addr: Int) {
     RIGHT_ARROW(0x7E),
-    LEFT_ARROW(0x7F)
-    LEFT_PARANTHESIS(0x5B)
+    LEFT_ARROW(0x7F),
+    LEFT_PARANTHESIS(0x5B),
     RIGHT_PARANTHESIS(0x5D)
 }

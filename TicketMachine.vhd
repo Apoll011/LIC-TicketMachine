@@ -35,7 +35,7 @@ architecture logicFunction of TicketMachine is
             Keys_Vertical   : out std_logic_vector(3 downto 0);
             Keys_Horizontal : in  std_logic_vector(3 downto 0);
             TXclk           : in  std_logic;
-            TXD             : out std_logic
+            TXD   , clk_out, clk_out_rise          : out std_logic
         );
     end component KeyboardReader;
 
@@ -91,7 +91,7 @@ architecture logicFunction of TicketMachine is
     signal RT_LINK          : std_logic;
 
     -- Ticket dispenser
-    signal FN_LINK          : std_logic;
+    signal FN_LINK    ,clk_out, clk_out_rise        : std_logic;
 
 begin
 
@@ -115,8 +115,8 @@ begin
     );
 
     -- Expose the input byte on the top-level port for debugging
-    INPUT <= OUTPUT_PORT_LINK;
-
+    INPUT(0) <= clk_out;
+	 INPUT(1) <= clk_out_rise;
     -- --------------------------------------------------------
     -- Keyboard reader
     -- Tdelay = "11" -> 2000 ms debounce (same as original)
@@ -132,11 +132,13 @@ begin
     port map (
         CLK             => CLK,
         RESET           => RESET,
-        Tdelay          => "11",
+        Tdelay          => "00",
         Keys_Vertical   => Keys_Vertical,
         Keys_Horizontal => Keys_Horizontal,
         TXclk           => TXclk,
-        TXD             => TXD
+        TXD             => TXD,
+		  clk_out => clk_out, 
+		  clk_out_rise => clk_out_rise 
     );
 
     -- --------------------------------------------------------

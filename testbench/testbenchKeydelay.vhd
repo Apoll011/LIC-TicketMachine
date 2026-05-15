@@ -6,13 +6,13 @@ end entity KeyDelay_tb;
 
 architecture behavioral of KeyDelay_tb is
 
-    component KeyDelayTime is
+    component KeyDelay is
         port (
             CLK     : in  std_logic;
             Tdelay  : in  std_logic_vector(1 downto 0);
             CLK_Out : out std_logic
         );
-    end component KeyDelayTime;
+    end component KeyDelay;
 
     -- 1 ns clock: dividers fire in microseconds, not milliseconds
     constant MCLK_PERIOD      : time := 1 ns;
@@ -24,7 +24,7 @@ architecture behavioral of KeyDelay_tb is
 
 begin
 
-    UUT: component KeyDelayTime
+    UUT: component KeyDelay
     port map (
         CLK     => clk_tb,
         Tdelay  => Tdelay_tb,
