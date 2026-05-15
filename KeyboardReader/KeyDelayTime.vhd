@@ -36,7 +36,7 @@ begin
 
     Clk_div_00: component CLKDIV
     generic map (
-        500000
+        31250 
     )
     port map (
         clk_in  => CLK,
@@ -45,7 +45,7 @@ begin
 
     Clk_div_01: component CLKDIV
     generic map (
-        1000000
+        62500
     )
     port map (
         clk_in  => CLK,
@@ -54,7 +54,7 @@ begin
 
     Clk_div_10: component CLKDIV
     generic map (
-        1500000
+        93750
     )
     port map (
         clk_in  => CLK,
@@ -63,7 +63,7 @@ begin
 
     Clk_div_11: component CLKDIV
     generic map (
-        2000000
+        125000
     )
     port map (
         clk_in  => CLK,

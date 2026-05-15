@@ -57,7 +57,7 @@ begin
 	 Count: component Counter 
     port map (
         CE    => CE,
-        CLK   => CLK_Divider,
+        CLK   => ClkDelay,
         Q     => Q,
         RESET => RESET
     );
