@@ -41,7 +41,7 @@ object LCD {
 
     private fun writeData(data: Int) {
         writeByte(true, data)
-        Thread.sleep(2L)
+        Thread.sleep(1L)
     }
 
 

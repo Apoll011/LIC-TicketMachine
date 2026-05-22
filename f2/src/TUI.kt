@@ -10,7 +10,7 @@ object TUI {
         LCD.clear()
     }
 
-    fun cursor(line: LCD.Line, col: Int) {
+    fun cursor(line: Int, col: Int) {
         LCD.cursor(line, col)
     }
 
