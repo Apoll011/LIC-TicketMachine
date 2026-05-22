@@ -106,8 +106,8 @@ begin
     --   [3..0]  = K     (4-bit key code)
     -- --------------------------------------------------------
     INPUT_PORT_LINK(4)  <= FN_LINK;
-	 INPUT_PORT_LINK(1)  <= TXD;
-	 TXclk         		<= OUTPUT_PORT_LINK(4);
+	 INPUT_PORT_LINK(7)  <= TXD;
+	 TXclk         		<= OUTPUT_PORT_LINK(7);
 
     USB : component UsbPort
     port map (

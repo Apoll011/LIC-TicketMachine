@@ -38,13 +38,13 @@ object KBD {
         KEY_NONE('\u0000')
     }
 
-    private const val RXD_MASK   = 0b00000010  // input  port bit 1: TXD from hardware
-    private const val RXCLK_MASK = 0b00010000  // output port bit 3: serial clock to hardware
+    private const val TXD_MASK  = 0b10000000  // input  port bit 1: TXD from hardware
+    private const val TXCLK     = 0b10000000  // output port bit 3: serial clock to hardware
 
     private const val MAX_CLOCKS = 7
 
     fun init() {
-        HAL.clrBits(RXCLK_MASK)
+        HAL.clrBits(TXCLK)
         while (readKey() != Key.KEY_NONE) {
             println("ignored key")
         }
@@ -67,24 +67,24 @@ object KBD {
         var rawCode = -1
 
         // Check INIT bit: TXD must be LOW to indicate a frame is starting
-        if (!HAL.isBit(RXD_MASK)) {
+        if (!HAL.isBit(TXD_MASK)) {
             clockCycle(clockCounter++)     // Slot 0: INIT - advance past the low
 
             // Check START bit: TXD must be HIGH
-            if (HAL.isBit(RXD_MASK)) {
+            if (HAL.isBit(TXD_MASK)) {
                 clockCycle(clockCounter++) // Slot 1: START bit confirmed
                 rawCode = 0
 
                 // Read 4 data bits, LSB first (K[0]..K[3])
                 for (i in 0..3) {
-                    if (HAL.isBit(RXD_MASK)) {
+                    if (HAL.isBit(TXD_MASK)) {
                         rawCode = rawCode or (1 shl i)
                     }
                     clockCycle(clockCounter++) // Slots 2..5: data bits
                 }
 
                 // Check STOP bit: TXD should be LOW
-                if (!HAL.isBit(RXD_MASK)) {
+                if (!HAL.isBit(TXD_MASK)) {
                     clockCycle(clockCounter++) // Slot 6: STOP bit
                 }
             }
@@ -102,8 +102,8 @@ object KBD {
     }
     
     private fun clockCycle(count: Int) {
-        HAL.setBits(RXCLK_MASK)
-        HAL.clrBits(RXCLK_MASK)
+        HAL.setBits(TXCLK)
+        HAL.clrBits(TXCLK)
     }
 
     private fun convertToKey(code: Int): Key = when (code) {
