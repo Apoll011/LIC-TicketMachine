@@ -89,7 +89,8 @@ object LCD {
         val cgramAddr = CGRAM_BASE_ADDR + slot * CGRAM_CELL_SIZE
         writeCMD(cgramAddr)
         for (p in char.pattern) writeData(p)
-        cursor(0, 0)
+        cursor(1, 5)
+        //writeData(slot)
     }
 
     fun writeIcon(char: Icons) {

@@ -41,6 +41,7 @@ class App {
     }
 
     fun listDestinys() {
+        TUI.clear()
         val station = Stations.getStation(currentDestiny)
         if (station == null) return
         printDestiny(station, true, true, 0)
@@ -51,7 +52,7 @@ class App {
         TUI.cursor(1, 0)
         
         if (withId) {
-            TUI.write(String.format("%02d", station))
+            TUI.write(String.format("%02d", station.id))
         }
 
         TUI.writeIcon(Icons.UPWARDS_ARROW)
