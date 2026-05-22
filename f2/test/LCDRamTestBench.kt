@@ -6,22 +6,10 @@ object LCDRamTestBench {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println("TEST: [START]   LCDRam test bench")
-
-        LCDRam.clear()
-        val allIcons = Icons.entries
-
-        for (i in 0 until 8) {
-            val slot = LCDRam.slotFor(allIcons[i])
-            assertEquals("Slot sequencial #$i", i, slot)
+        println("TEST: [START]   LCD slots test bench")
+        for ((index, icon) in Icons.entries.withIndex()) {
+            assertEquals("Slot fixo para ${icon.name}", index, icon.slot)
         }
-
-        val reused = LCDRam.slotFor(allIcons[0])
-        assertEquals("Reutilização de ícone já carregado", 0, reused)
-
-        val ninthSlot = LCDRam.slotFor(allIcons[8])
-        println("TEST: [INFO]    Slot atribuído ao 9º ícone (substituição LRU): $ninthSlot")
-
-        println("TEST: [END]     LCDRam test bench finalizado")
+        println("TEST: [END]     LCD slots test bench finalizado")
     }
 }

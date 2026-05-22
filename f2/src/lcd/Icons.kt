@@ -1,7 +1,7 @@
-enum class Icons(val pattern: List<Int>) {
-    EURO_SIGN(listOf(0b00110, 0b01001, 0b11100, 0b01000, 0b11100, 0b01001, 0b00110, 0b00000)),
-    DOWNWARDS_ARROW(listOf(0b00100, 0b00100, 0b00100, 0b00100, 0b10101, 0b01110, 0b00100, 0b00000)),
-    UPWARDS_ARROW(listOf(0b00100, 0b01110, 0b10101, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000)),
+enum class Icons(val slot: Int, val pattern: List<Int>) {
+    EURO_SIGN(0, listOf(0b00110, 0b01001, 0b11100, 0b01000, 0b11100, 0b01001, 0b00110, 0b00000)),
+    DOWNWARDS_ARROW(1, listOf(0b00100, 0b00100, 0b00100, 0b00100, 0b10101, 0b01110, 0b00100, 0b00000)),
+    UPWARDS_ARROW(2, listOf(0b00100, 0b01110, 0b10101, 0b00100, 0b00100, 0b00100, 0b00100, 0b00000)),
 }
 
 enum class RomIcons(val addr: Int) {
