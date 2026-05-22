@@ -86,14 +86,14 @@ object LCD {
 
     // Helpers
 
-    private fun loadIcon(char: Icons, slot: Int) {
-        val cgramAddr = CGRAM_BASE_ADDR + slot * CGRAM_CELL_SIZE
+    private fun loadIcon(char: Icons) {
+        val cgramAddr = CGRAM_BASE_ADDR + char.slot * CGRAM_CELL_SIZE
         writeCMD(cgramAddr)
         for (p in char.pattern) writeData(p)
     }
 
     private fun initCustomIcons() {
-        for (icon in Icons.entries) loadIcon(icon, icon.slot)
+        for (icon in Icons.entries) loadIcon(icon)
         cursor(Line.UPPER.ordinal, 0)
     }
 
