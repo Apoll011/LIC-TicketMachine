@@ -94,7 +94,7 @@ object LCD {
 
     private fun initCustomIcons() {
         for (icon in Icons.entries) loadIcon(icon)
-        cursor(Line.UPPER.ordinal, 0)
+        writeCMD(0x80)
     }
 
     fun writeIcon(char: Icons) {
