@@ -16,10 +16,6 @@ class App {
         mainLoop()
     }
 
-    // ----------------------------------------------------------------
-    // Screens
-    // ----------------------------------------------------------------
-
     fun firstScreen() {
         TUI.clear()
         TUI.write(" Ticket to Ride")
@@ -38,10 +34,6 @@ class App {
             currentDestiny = 0
         }
     }
-
-    // ----------------------------------------------------------------
-    // Destination selection
-    // ----------------------------------------------------------------
 
     fun listDestinations() {
         var choosing = true
@@ -97,10 +89,6 @@ class App {
         }
         selectDestiny()
     }
-
-    // ----------------------------------------------------------------
-    // Payment flow
-    // ----------------------------------------------------------------
 
     fun selectDestiny() {
         val station = Stations.getStation(currentDestiny) ?: return
@@ -168,10 +156,6 @@ class App {
         Thread.sleep(2000L)
     }
 
-    // ----------------------------------------------------------------
-    // Ticket collection
-    // ----------------------------------------------------------------
-
     fun collectTicket(station: Station, roundTrip: Boolean) {
         Stations.addTicket(station.id)
         TicketDispenser.activatePrintingTicket(roundTrip, station.id, station.id)
@@ -184,10 +168,6 @@ class App {
 
         Thread.sleep(5000L)
     }
-
-    // ----------------------------------------------------------------
-    // Display helpers
-    // ----------------------------------------------------------------
 
     fun printCurrentDestinyMenu() {
         TUI.clear()
