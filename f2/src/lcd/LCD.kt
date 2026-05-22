@@ -52,6 +52,7 @@ object LCD {
         initSequence()
 
         initCommands()
+        initCustomIcons()
     }
 
     fun initSequence() {
@@ -85,19 +86,19 @@ object LCD {
 
     // Helpers
 
-    fun loadIcon(char: Icons, slot: Int) {
-        val cgramAddr = CGRAM_BASE_ADDR + slot * CGRAM_CELL_SIZE
+    private fun loadIcon(char: Icons) {
+        val cgramAddr = CGRAM_BASE_ADDR + char.slot * CGRAM_CELL_SIZE
         writeCMD(cgramAddr)
         for (p in char.pattern) writeData(p)
-        cursor(1, 5)
-        //writeData(slot)
+    }
+
+    private fun initCustomIcons() {
+        for (icon in Icons.entries) loadIcon(icon)
+        writeCMD(0x80)
     }
 
     fun writeIcon(char: Icons) {
-        val slot = LCDRam.slotFor(char)
-        println(slot)
-        loadIcon(char, slot)
-        writeData(slot)
+        writeData(char.slot)
     }
 
     fun writeIcon(char: RomIcons) {
