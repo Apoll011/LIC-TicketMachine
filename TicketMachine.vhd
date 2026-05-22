@@ -14,9 +14,15 @@ entity TicketMachine is
         LCD_EN          : out std_logic;
         LCD_DATA        : out std_logic_vector(7 downto 0);
 
-        INPUT           : out std_logic_vector(7 downto 0);
-
         CollectTicket   : in  std_logic;
+		  
+		  Coin				: in std_logic;
+		  CId					: in std_logic_vector(2 downto 0);
+		  
+		  Accept				: out std_logic;
+		  Eject				: out std_logic;
+		  Collect			: out std_logic;
+		  
 
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0)
     );
@@ -115,9 +121,7 @@ begin
         outputPort => OUTPUT_PORT_LINK
     );
 
-    -- Expose the input byte on the top-level port for debugging
-    INPUT(0) <= clk_out;
-	 INPUT(1) <= clk_out_rise;
+
     -- --------------------------------------------------------
     -- Keyboard reader
     -- Tdelay = "11" -> 2000 ms debounce (same as original)
@@ -214,4 +218,16 @@ begin
         HEX5          => HEX5
     );
 
+	 -- Coin Acceptor
+	 
+	 Coin 	<= INPUT_PORT_LINK(3);
+	 CId(0)  <= INPUT_PORT_LINK(0);
+	 CId(1)  <= INPUT_PORT_LINK(1);
+ 	 CId(2)  <= INPUT_PORT_LINK(2);
+	 
+	 Accept 	<= OUTPUT_PORT_LINK(4);
+	 Eject	<= OUTPUT_PORT_LINK(5);
+	 Collect	<= OUTPUT_PORT_LINK(6);
+
+	 
 end architecture logicFunction;
