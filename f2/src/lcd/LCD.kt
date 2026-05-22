@@ -76,9 +76,9 @@ object LCD {
 
     fun write(text: String) = text.forEach { writeChar(it) }
 
-    fun cursor(line: Int, column: Int) {
+    fun cursor(line: Line, column: Int) {
         var data = column.or(0x80)
-        if (line == Line.LOWER.ordinal) data = data.or(0x40)
+        if (line == Line.LOWER) data = data.or(0x40)
         writeCMD(data)
     }
 
@@ -104,10 +104,6 @@ object LCD {
     fun writeIcon(char: RomIcons) {
         writeData(char.addr)
     }
-
-    fun enableCursor(status: Boolean) = writeCMD(if (status) commands["cursor_on"]!! else commands["cursor_off"]!!)
-
-    private fun enableDisplay(status: Boolean) = writeCMD(if (status) commands["display_on"]!! else commands["display_off"]!!)
 
     fun moveCursorToLineStart(line: Line) = cursor(line.ordinal, 0)
 

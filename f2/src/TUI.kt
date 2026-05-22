@@ -10,13 +10,21 @@ object TUI {
         LCD.clear()
     }
 
-    fun cursor(line: Int, col: Int) {
+    fun cursor(line: LCD.Line, col: Int) {
         LCD.cursor(line, col)
     }
 
     fun writeChar(char: Char) {
         LCD.writeChar(char)
     }
+
+    fun write(text: String) = LCD.write(text)
+
+    fun writeIcon(char: Icons) = LCD.writeIcon(char)
+
+    fun writeIcon(char: RomIcons) = LCD.writeIcon(char)
+
+    fun deleteText(line: LCD.Line, col1: Int, col2: Int) = LCD.deleteText(line, col1, col2)
 
     fun readKey(timeout: Long = 5000L): Char {
         return KBD.waitKey(timeout)
