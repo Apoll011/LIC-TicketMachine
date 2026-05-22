@@ -92,8 +92,8 @@ class App {
                 collectTicket(station, roundTrip)
                 chosed = false
             }
-
-            var key = TUI.readKey()
+            CoinAcceptor.acceptCoin()
+            var key = TUI.getKey()
             when (key) {
                 '*' -> {
                     roundTrip = !roundTrip
