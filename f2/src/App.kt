@@ -41,13 +41,46 @@ class App {
     }
 
     fun listDestinys() {
+        var chosing = true
+        while (chosing) {
+            printCurrentDestinyMenu()
+            var key = TUI.readKey()
+            when (key) {
+                in '0'..'9' -> {
+                    currentDestiny = key.digitToInt()
+                }
+                'A' -> {
+                    currentDestiny = (currentDestiny - 1 + 16) % 16
+                }
+
+                // Next (wrap 15 -> 0)
+                'B' -> {
+                    currentDestiny = (currentDestiny + 1) % 16
+                }
+                '#' -> chosing = false
+            }
+        }
+        selectDestiny()
+    }
+
+    fun selectDestiny() {
+
+    }
+
+    fun printCurrentDestinyMenu() {
         TUI.clear()
         val station = Stations.getStation(currentDestiny)
         if (station == null) return
         printDestiny(station, true, true, 0)
     }
 
+    fun calcularPaddingCentralizado(tamanhoTexto: Int): Int {
+        return ((16 - tamanhoTexto).coerceAtLeast(0)) / 2
+    }
+
     fun printDestiny(station: Station, withId: Boolean, roundTrip: Boolean, avaliableCurrency: Int) {
+        val l = calcularPaddingCentralizado(station.name.length)
+        TUI.cursor(0, l)
         TUI.write(station.name)
         TUI.cursor(1, 0)
         
@@ -56,7 +89,7 @@ class App {
         }
 
         TUI.writeIcon(Icons.UPWARDS_ARROW)
-        if (roundTrip) TUI.writeIcon(Icons.UPWARDS_ARROW)
+        if (roundTrip) TUI.writeIcon(Icons.DOWNWARDS_ARROW)
         
         val p = (if (roundTrip) station.price * 2 else station.price) - avaliableCurrency
 
