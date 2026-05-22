@@ -67,17 +67,18 @@ class App {
 
     fun selectDestiny() {
         var roundTrip = false
-        var chosed = true
+        var chosed = true 
+        
+        TUI.clear()
+
+        val station = Stations.getStation(currentDestiny)
+        if (station == null) return
+        
+        printDestiny(station, false, roundTrip, station.price)
 
         while(chosed) {
-            TUI.clear()
-
-            val station = Stations.getStation(currentDestiny)
-            if (station == null) return
             
             val p = (if (roundTrip) station.price * 2 else station.price)
-
-            printDestiny(station, false, roundTrip, p)
 
             if (p < 0) {
                 val l = calcularPaddingCentralizado(station.name.length)
@@ -92,7 +93,10 @@ class App {
 
             var key = TUI.readKey()
             when (key) {
-                '*' -> roundTrip = !roundTrip
+                '*' -> {
+                    roundTrip = !roundTrip
+                    printDestiny(station, false, roundTrip, p)
+                }
                 '#' -> {
                     TUI.clear()
                     TUI.write("VENDING ABORTED")
