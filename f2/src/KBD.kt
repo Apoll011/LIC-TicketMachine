@@ -62,7 +62,7 @@ object KBD {
     fun readKey(): Key {
         var clockCounter = 0
         var rawCode = -1
-        println(HAL.readBits(0xFFFF).toString(2))
+
         // Check INIT bit: TXD must be LOW to indicate a frame is starting
         if (!HAL.isBit(RXD_MASK)) {
             clockCycle(clockCounter++)     // Slot 0: INIT - advance past the low
