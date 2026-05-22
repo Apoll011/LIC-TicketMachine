@@ -29,14 +29,14 @@ class App {
 
         TUI.write(now.format(formatter))
         
-        while (TUI.getKey() == '\u0000')
-
+        while (TUI.getKey() == '\u0000') {}
         listDestinys()   
     }
 
     fun mainLoop() {
         while (true) {
             firstScreen()
+            currentDestiny = 0
         }
     }
 
@@ -77,52 +77,36 @@ class App {
         
         printDestiny(station, false, roundTrip, station.price)
 
-        while(chosed) {
-            
-            val p = (if (roundTrip) station.price * 2 else station.price) - CoinDeposit.ammoutInserted()
+        while(chosed) {       
+            var p = (if (roundTrip) station.price * 2 else station.price) - CoinDeposit.ammoutInserted()
 
-            if (p < 0) {
-                val l = calcularPaddingCentralizado(station.name.length)
-                TUI.cursor(0, l)
-                TUI.write(station.name)
-                TUI.cursor(1, 2)
-                CoinAcceptor.collectCoins()
+            if (p <= 0) {
+                TUI.deleteText(LCD.Line.LOWER, 0, 15)
+                TUI.cursor(1, 3)
                 TUI.write("LOADING...")
-                Thread.sleep(2000L)
+                CoinAcceptor.collectCoins()
                 collectTicket(station, roundTrip)
-                chosed = false
+                break
+            } 
+
+            if(CoinAcceptor.acceptCoin()) {
+                printLowerLine(p, roundTrip)
             }
-            
-            CoinAcceptor.acceptCoin()
-
-            TUI.cursor(1, 1)
-
-            if (roundTrip) {
-                TUI.writeIcon(Icons.DOWNWARDS_ARROW)
-            } else {
-                TUI.deleteText(1, 1, 2)
-            }
-
-            TUI.cursor(1, 11)
-            TUI.write(p)
-            TUI.writeIcon(Icons.EURO_SIGN)
 
             var key = TUI.getKey()
             when (key) {
                 '*' -> {
                     roundTrip = !roundTrip
+                    p = (if (roundTrip) station.price * 2 else station.price) - CoinDeposit.ammoutInserted()
+                    printLowerLine(p, roundTrip)
                 }
                 '#' -> {
                     TUI.clear()
                     TUI.write("VENDING ABORTED")
                     if (CoinDeposit.ammoutInserted() > 0) {
-                        TUI.cursor(1, 2)
-                        TUI.write("Return ")
-                        
-                        val price = String.format("%.2f", CoinDeposit.ammoutInserted() / 100.0)
-
-                        TUI.write(price)
-                        TUI.writeIcon(Icons.EURO_SIGN)
+                        TUI.cursor(1, 3)
+                        TUI.write("Return")
+                        printLowerLine(CoinDeposit.ammoutInserted(), false)
                         CoinAcceptor.ejectCoins()
                     } 
                     chosed = false
@@ -130,6 +114,20 @@ class App {
                 }
             }
         }    
+    }
+
+    fun printLowerLine(price: Int, roundTrip: Boolean) {
+        TUI.cursor(1, 1)
+
+        if (roundTrip) {
+            TUI.writeIcon(Icons.DOWNWARDS_ARROW)
+        } else {
+            TUI.deleteText(LCD.Line.LOWER, 1, 2)
+        }
+
+        TUI.cursor(1, 11)
+        TUI.write(String.format("%.2f", price / 100.0))
+        TUI.writeIcon(Icons.EURO_SIGN)
     }
 
     fun collectTicket(station: Station, roundTrip : Boolean) {

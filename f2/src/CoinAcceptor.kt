@@ -23,7 +23,7 @@ object CoinAcceptor {
 
     fun getCoinID(): Int? {
         if (hasCoin()) {
-            val value = HAL.readBits(CID_MASK).shr(2)
+            val value = HAL.readBits(CID_MASK)
 
             if (value in 0 until 6) {
                 return coinCode_List[value]
@@ -33,14 +33,18 @@ object CoinAcceptor {
         return null
     }
 
-    fun acceptCoin() {
+    fun acceptCoin(): Boolean {
         if (hasCoin()) {
+            val c = getCoinID()
             HAL.setBits(COIN_ACCEPT_MASK)
-            CoinDeposit.add(getCoinID()!!)
+
+            if (c != null) CoinDeposit.add(c)
             while (hasCoin());
             
             HAL.clrBits(COIN_ACCEPT_MASK)
+            return true
         }
+        return false
     }
 
     fun ejectCoins() {
