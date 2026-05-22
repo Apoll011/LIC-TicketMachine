@@ -74,9 +74,9 @@ object LCD {
 
     fun write(text: String) = text.forEach { writeChar(it) }
 
-    fun cursor(line: Line, column: Int) {
+    fun cursor(line: Int, column: Int) {
         var data = column.or(0x80)
-        if (line == Line.LOWER) data = data.or(0x40)
+        if (line == Line.LOWER.ordinal) data = data.or(0x40)
         writeCMD(data)
     }
 

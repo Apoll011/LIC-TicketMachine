@@ -14,7 +14,7 @@ class App {
 
     fun firstScreen() {
         TUI.write(" Ticket to Ride")
-        TUI.cursor(LCD.Line.LOWER, 1)
+        TUI.cursor(1, 1)
 
         val now = LocalDateTime.now()
 
