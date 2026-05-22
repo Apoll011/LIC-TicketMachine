@@ -220,10 +220,10 @@ begin
 
 	 -- Coin Acceptor
 	 
-	 Coin 	<= INPUT_PORT_LINK(3);
-	 CId(0)  <= INPUT_PORT_LINK(0);
-	 CId(1)  <= INPUT_PORT_LINK(1);
- 	 CId(2)  <= INPUT_PORT_LINK(2);
+	 INPUT_PORT_LINK(3) <= Coin;
+	 INPUT_PORT_LINK(0) <= CId(0);
+	 INPUT_PORT_LINK(1) <= CId(1);
+ 	 INPUT_PORT_LINK(2) <= CId(2);
 	 
 	 Accept 	<= OUTPUT_PORT_LINK(4);
 	 Eject	<= OUTPUT_PORT_LINK(5);
