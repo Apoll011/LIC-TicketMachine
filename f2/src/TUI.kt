@@ -30,6 +30,11 @@ object TUI {
         return KBD.waitKey(timeout)
     }
 
+
+    fun getKey(): Char {
+        return KBD.readKey().char
+    }
+
     fun echo() {
         var line = 0
         var col = 0
