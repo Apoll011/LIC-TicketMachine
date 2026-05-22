@@ -10,6 +10,7 @@ class App {
         TUI.init()
         TicketDispenser.init()
         Stations.init()
+        CoinAcceptor.init()
     }
 
     fun start() {
@@ -78,13 +79,14 @@ class App {
 
         while(chosed) {
             
-            val p = (if (roundTrip) station.price * 2 else station.price)
+            val p = (if (roundTrip) station.price * 2 else station.price) - CoinDeposit.ammoutInserted()
 
             if (p < 0) {
                 val l = calcularPaddingCentralizado(station.name.length)
                 TUI.cursor(0, l)
                 TUI.write(station.name)
                 TUI.cursor(1, 2)
+                CoinAcceptor.collectCoins()
                 TUI.write("LOADING...")
                 Thread.sleep(2000L)
                 collectTicket(station, roundTrip)
@@ -100,6 +102,16 @@ class App {
                 '#' -> {
                     TUI.clear()
                     TUI.write("VENDING ABORTED")
+                    if (CoinDeposit.ammoutInserted() > 0) {
+                        TUI.cursor(1, 2)
+                        TUI.write("Return ")
+                        
+                        val price = String.format("%.2f", CoinDeposit.ammoutInserted() / 100.0)
+
+                        TUI.write(price)
+                        TUI.writeIcon(Icons.EURO_SIGN)
+                        CoinAcceptor.ejectCoins()
+                    } 
                     chosed = false
                     Thread.sleep(2000L)
                 }
