@@ -46,20 +46,23 @@ class App {
 
     fun listDestinys() {
         var chosing = true
+        printCurrentDestinyMenu()
         while (chosing) {
-            printCurrentDestinyMenu()
-            var key = TUI.readKey()
+            var key = TUI.getKey()
             when (key) {
                 in '0'..'9' -> {
                     currentDestiny = key.digitToInt()
+                    printCurrentDestinyMenu()
                 }
                 'A' -> {
                     currentDestiny = (currentDestiny - 1 + 16) % 16
+                    printCurrentDestinyMenu()
                 }
 
                 // Next (wrap 15 -> 0)
                 'B' -> {
                     currentDestiny = (currentDestiny + 1) % 16
+                    printCurrentDestinyMenu()
                 }
                 '#' -> chosing = false
             }
@@ -73,9 +76,24 @@ class App {
 
         while(chosed) {
             TUI.clear()
+
             val station = Stations.getStation(currentDestiny)
             if (station == null) return
-            printDestiny(station, false, roundTrip, 0)
+            
+            val p = (if (roundTrip) station.price * 2 else station.price)
+
+            printDestiny(station, false, roundTrip, p)
+
+            if (p < 0) {
+                val l = calcularPaddingCentralizado(station.name.length)
+                TUI.cursor(0, l)
+                TUI.write(station.name)
+                TUI.cursor(1, 2)
+                TUI.write("LOADING...")
+                Thread.sleep(2000L)
+                collectTicket(station, roundTrip)
+                chosed = false
+            }
 
             var key = TUI.readKey()
             when (key) {
@@ -90,20 +108,31 @@ class App {
         }    
     }
 
+    fun collectTicket(station: Station, roundTrip : Boolean) {
+        TicketDispenser.activatePrintingTicket(roundTrip, station.id-1, station.id)
 
+        TUI.clear()
+        TUI.cursor(0, 4)
+        TUI.write("Thank You")
+        TUI.cursor(1, 1)
+        TUI.write("Have a Nice Trip!")
+        
+        Thread.sleep(5000L)
+    }
 
     fun printCurrentDestinyMenu() {
         TUI.clear()
         val station = Stations.getStation(currentDestiny)
         if (station == null) return
-        printDestiny(station, true, true, 0)
+        
+        printDestiny(station, true, true, station.price)
     }
 
     fun calcularPaddingCentralizado(tamanhoTexto: Int): Int {
         return ((16 - tamanhoTexto).coerceAtLeast(0)) / 2
     }
 
-    fun printDestiny(station: Station, withId: Boolean, roundTrip: Boolean, avaliableCurrency: Int) {
+    fun printDestiny(station: Station, withId: Boolean, roundTrip: Boolean, currency: Int) {
         val l = calcularPaddingCentralizado(station.name.length)
         TUI.cursor(0, l)
         TUI.write(station.name)
@@ -116,9 +145,8 @@ class App {
         TUI.writeIcon(Icons.UPWARDS_ARROW)
         if (roundTrip) TUI.writeIcon(Icons.DOWNWARDS_ARROW)
         
-        val p = (if (roundTrip) station.price * 2 else station.price) - avaliableCurrency
+        val price = String.format("%.2f", currency / 100.0)
 
-        val price = String.format("%.2f", p / 100.0)
         TUI.cursor(1, 11)
         TUI.write(price)
         TUI.writeIcon(Icons.EURO_SIGN)
