@@ -29,9 +29,9 @@ class App {
 
         TUI.write(now.format(formatter))
         
-        while (TUI.getKey() == '\u0000'){
-            listDestinys()
-        }
+        while (TUI.getKey() == '\u0000')
+
+        listDestinys()   
     }
 
     fun mainLoop() {
@@ -92,12 +92,25 @@ class App {
                 collectTicket(station, roundTrip)
                 chosed = false
             }
+            
             CoinAcceptor.acceptCoin()
+
+            TUI.cursor(1, 1)
+
+            if (roundTrip) {
+                TUI.writeIcon(Icons.DOWNWARDS_ARROW)
+            } else {
+                TUI.deleteText(1, 1, 2)
+            }
+
+            TUI.cursor(1, 11)
+            TUI.write(p)
+            TUI.writeIcon(Icons.EURO_SIGN)
+
             var key = TUI.getKey()
             when (key) {
                 '*' -> {
                     roundTrip = !roundTrip
-                    printDestiny(station, false, roundTrip, p)
                 }
                 '#' -> {
                     TUI.clear()
@@ -120,6 +133,7 @@ class App {
     }
 
     fun collectTicket(station: Station, roundTrip : Boolean) {
+        Stations.addTicket(station.id)
         TicketDispenser.activatePrintingTicket(roundTrip, station.id-1, station.id)
 
         TUI.clear()
@@ -161,5 +175,10 @@ class App {
         TUI.cursor(1, 11)
         TUI.write(price)
         TUI.writeIcon(Icons.EURO_SIGN)
+    }
+
+    fun writeFile() {
+        CoinDeposit.writeFile()
+        Stations.writeFile()
     }
 }
