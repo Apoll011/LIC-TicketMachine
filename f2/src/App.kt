@@ -29,7 +29,7 @@ class App {
 
         TUI.write(now.format(formatter))
         
-        while (TUI.getKey() != '\u0000'){
+        while (TUI.getKey() == '\u0000'){
             listDestinys()
         }
     }
