@@ -64,7 +64,11 @@ class App {
     }
 
     fun selectDestiny() {
-
+        val roundTrip = false
+        TUI.clear()
+        val station = Stations.getStation(currentDestiny)
+        if (station == null) return
+        printDestiny(station, false, roundTrip, 0)
     }
 
     fun printCurrentDestinyMenu() {
