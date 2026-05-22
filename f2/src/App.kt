@@ -28,19 +28,14 @@ class App {
 
         TUI.write(now.format(formatter))
         
-        menu()
+        while (TUI.getKey() != '\u0000'){
+            listDestinys()
+        }
     }
 
     fun mainLoop() {
         while (true) {
             firstScreen()
-        }
-    }
-
-    fun menu(){
-        val key = TUI.readKey()
-        if (key != '\u0000'){
-            listDestinys()
         }
     }
 
