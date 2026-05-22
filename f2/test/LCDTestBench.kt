@@ -12,10 +12,6 @@ object LCDTestBench {
         LCD.write("Linha 2")
         Thread.sleep(500)
 
-        LCD.enableCursor(true)
-        Thread.sleep(500)
-        LCD.enableCursor(false)
-
         LCD.writeIcon(RomIcons.LEFT_ARROW)
         LCD.writeIcon(RomIcons.RIGHT_ARROW)
         LCD.writeIcon(Icons.EURO_SIGN)
