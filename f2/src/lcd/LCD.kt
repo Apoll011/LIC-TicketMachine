@@ -23,8 +23,6 @@ object LCD {
         var frame = (data and 0xFF) shl 1
         if (rs) frame = frame or RS_MASK
 
-        SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
-        Thread.sleep(1)
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame or E_MASK, 10)
         Thread.sleep(1)
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)

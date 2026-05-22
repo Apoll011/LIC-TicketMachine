@@ -62,7 +62,12 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 # CLK  = 50 MHz onboard oscillator
 # -------------------------------------------------------------------------- #
 set_location_assignment PIN_P11 -to CLK
-set_location_assignment PIN_C12 -to RESET
+
+set_location_assignment PIN_F15 -to RESET
+
+set_location_assignment PIN_C10 -to Tdelay[0]
+set_location_assignment PIN_C11 -to Tdelay[1]
+
 
 # -------------------------------------------------------------------------- #
 # 4x4 Matrix Keypad
