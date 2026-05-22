@@ -8,6 +8,10 @@ class App {
         TicketDispenser.init()
     }
 
+    fun start() {
+        firstScreen()
+    }
+
     fun firstScreen() {
         TUI.write(" Ticket to Ride")
         TUI.cursor(LCD.Line.LOWER, 1)
