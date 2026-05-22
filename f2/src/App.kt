@@ -1,5 +1,6 @@
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.round
 
 
 class App {
@@ -17,6 +18,7 @@ class App {
     }
 
     fun firstScreen() {
+        TUI.clear()
         TUI.write(" Ticket to Ride")
         TUI.cursor(1, 0)
 
@@ -25,11 +27,13 @@ class App {
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
         TUI.write(now.format(formatter))
+        
+        menu()
     }
 
     fun mainLoop() {
         while (true) {
-            menu()
+            firstScreen()
         }
     }
 
@@ -64,12 +68,29 @@ class App {
     }
 
     fun selectDestiny() {
-        val roundTrip = false
-        TUI.clear()
-        val station = Stations.getStation(currentDestiny)
-        if (station == null) return
-        printDestiny(station, false, roundTrip, 0)
+        var roundTrip = false
+        var chosed = true
+
+        while(chosed) {
+            TUI.clear()
+            val station = Stations.getStation(currentDestiny)
+            if (station == null) return
+            printDestiny(station, false, roundTrip, 0)
+
+            var key = TUI.readKey()
+            when (key) {
+                '*' -> roundTrip = !roundTrip
+                '#' -> {
+                    TUI.clear()
+                    TUI.write("VENDING ABORTED")
+                    chosed = false
+                    Thread.sleep(2000L)
+                }
+            }
+        }    
     }
+
+
 
     fun printCurrentDestinyMenu() {
         TUI.clear()
