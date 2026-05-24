@@ -29,14 +29,22 @@ begin
 
     stimulus: process
     begin
-        ewr_tb <= "11111111"; d_tb <= "0000"; wait for 20 ns;
-        d_tb <= "0001"; wait for 20 ns;
-        d_tb <= "1010"; wait for 20 ns;
-        d_tb <= "1111"; wait for 20 ns;
+        ewr_tb <= "11111111";
+        d_tb   <= "0000";
+        wait for 20 ns;
+        d_tb   <= "0001";
+        wait for 20 ns;
+        d_tb   <= "1010";
+        wait for 20 ns;
+        d_tb   <= "1111";
+        wait for 20 ns;
 
         -- override direto por ewr
-        ewr_tb <= "00110011"; wait for 20 ns;
-        ewr_tb <= "11111111"; d_tb <= "0101"; wait for 20 ns;
+        ewr_tb <= "00110011";
+        wait for 20 ns;
+        ewr_tb <= "11111111";
+        d_tb   <= "0101";
+        wait for 20 ns;
         wait;
     end process stimulus;
 

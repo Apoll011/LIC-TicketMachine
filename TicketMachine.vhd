@@ -3,26 +3,26 @@ use ieee.std_logic_1164.all;
 
 entity TicketMachine is
     port (
-        CLK             : in  std_logic;
-        RESET           : in  std_logic;
+        CLK                                : in  std_logic;
+        RESET                              : in  std_logic;
 
-        Keys_Vertical   : out std_logic_vector(3 downto 0);
-        Keys_Horizontal : in  std_logic_vector(3 downto 0);
-		  Tdelay 			: in 	std_logic_vector(1 downto 0);
-		  
-        LCD_RS          : out std_logic;
-        LCD_EN          : out std_logic;
-        LCD_DATA        : out std_logic_vector(7 downto 0);
+        Keys_Vertical                      : out std_logic_vector(3 downto 0);
+        Keys_Horizontal                    : in  std_logic_vector(3 downto 0);
+        Tdelay                             : in  std_logic_vector(1 downto 0);
 
-        CollectTicket   : in  std_logic;
-		  
-		  Coin				: in std_logic;
-		  CId					: in std_logic_vector(2 downto 0);
-		  
-		  Accept				: out std_logic;
-		  Eject				: out std_logic;
-		  Collect			: out std_logic;
-		  
+        LCD_RS                             : out std_logic;
+        LCD_EN                             : out std_logic;
+        LCD_DATA                           : out std_logic_vector(7 downto 0);
+
+        CollectTicket                      : in  std_logic;
+
+        Coin                               : in  std_logic;
+        CId                                : in  std_logic_vector(2 downto 0);
+
+        Accept                             : out std_logic;
+        Eject                              : out std_logic;
+        Collect                            : out std_logic;
+
 
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0)
     );
@@ -36,13 +36,13 @@ architecture logicFunction of TicketMachine is
 
     component KeyboardReader is
         port (
-            CLK             : in  std_logic;
-            RESET           : in  std_logic;
-            Tdelay          : in  std_logic_vector(1 downto 0);
-            Keys_Vertical   : out std_logic_vector(3 downto 0);
-            Keys_Horizontal : in  std_logic_vector(3 downto 0);
-            TXclk           : in  std_logic;
-            TXD   , clk_out, clk_out_rise          : out std_logic
+            CLK                        : in  std_logic;
+            RESET                      : in  std_logic;
+            Tdelay                     : in  std_logic_vector(1 downto 0);
+            Keys_Vertical              : out std_logic_vector(3 downto 0);
+            Keys_Horizontal            : in  std_logic_vector(3 downto 0);
+            TXclk                      : in  std_logic;
+            TXD, clk_out, clk_out_rise : out std_logic
         );
     end component KeyboardReader;
 
@@ -70,9 +70,9 @@ architecture logicFunction of TicketMachine is
 
     component TICKET_DISPENSER is
         port (
-            RT, Prt, CollectTicket               : in  std_logic;
-            O, D                                 : in  std_logic_vector(3 downto 0);
-            Fn                                   : out std_logic;
+            RT, Prt, CollectTicket             : in  std_logic;
+            O, D                               : in  std_logic_vector(3 downto 0);
+            Fn                                 : out std_logic;
             HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0)
         );
     end component TICKET_DISPENSER;
@@ -82,23 +82,23 @@ architecture logicFunction of TicketMachine is
     -- --------------------------------------------------------
 
     -- USB bridge
-    signal INPUT_PORT_LINK  : std_logic_vector(7 downto 0);
-    signal OUTPUT_PORT_LINK : std_logic_vector(7 downto 0);
+    signal INPUT_PORT_LINK                : std_logic_vector(7 downto 0);
+    signal OUTPUT_PORT_LINK               : std_logic_vector(7 downto 0);
 
     -- Keyboard
-    signal KVAL_LINK, TXD, TXclk: std_logic;
-    signal KEY_CODE_LINK    : std_logic_vector(3 downto 0);
+    signal KVAL_LINK, TXD, TXclk          : std_logic;
+    signal KEY_CODE_LINK                  : std_logic_vector(3 downto 0);
 
     -- LCD serial frame
-    signal LCD_FRAME_LINK   : std_logic_vector(9 downto 0);
+    signal LCD_FRAME_LINK                 : std_logic_vector(9 downto 0);
 
     -- Ticket serial data
-    signal PETD_D_LINK      : std_logic_vector(7 downto 0);
-    signal PRT_LINK         : std_logic;
-    signal RT_LINK          : std_logic;
+    signal PETD_D_LINK                    : std_logic_vector(7 downto 0);
+    signal PRT_LINK                       : std_logic;
+    signal RT_LINK                        : std_logic;
 
     -- Ticket dispenser
-    signal FN_LINK    ,clk_out, clk_out_rise        : std_logic;
+    signal FN_LINK, clk_out, clk_out_rise : std_logic;
 
 begin
 
@@ -111,14 +111,14 @@ begin
     --   [4]     = Fn    (ticket dispenser finished flag)
     --   [3..0]  = K     (4-bit key code)
     -- --------------------------------------------------------
-    INPUT_PORT_LINK(4)  <= FN_LINK;
-	 INPUT_PORT_LINK(7)  <= TXD;
-	 TXclk         		<= OUTPUT_PORT_LINK(7);
+    INPUT_PORT_LINK(4) <= FN_LINK;
+    INPUT_PORT_LINK(7) <= TXD;
+    TXclk              <= OUTPUT_PORT_LINK(7);
 
-    USB : component UsbPort
+    USB: component UsbPort
     port map (
-        inputPort  => INPUT_PORT_LINK,
-        outputPort => OUTPUT_PORT_LINK
+        inputPort       => INPUT_PORT_LINK,
+        outputPort      => OUTPUT_PORT_LINK
     );
 
 
@@ -133,7 +133,7 @@ begin
     -- top-level ports, move those signals back here and wire
     -- Kack from a local KBfree signal instead.
     -- --------------------------------------------------------
-    KBD : component KeyboardReader
+    KBD: component KeyboardReader
     port map (
         CLK             => CLK,
         RESET           => RESET,
@@ -142,8 +142,8 @@ begin
         Keys_Horizontal => Keys_Horizontal,
         TXclk           => TXclk,
         TXD             => TXD,
-		  clk_out => clk_out, 
-		  clk_out_rise => clk_out_rise 
+        clk_out         => clk_out,
+        clk_out_rise    => clk_out_rise
     );
 
     -- --------------------------------------------------------
@@ -157,43 +157,43 @@ begin
     --   [7] = Kack (key acknowledge — only used in old design,
     --               now handled internally by KeyboardReader)
     -- --------------------------------------------------------
-    LCD_SERIAL : component PELCD
+    LCD_SERIAL: component PELCD
     port map (
-        RESET => RESET,
-        CLK   => OUTPUT_PORT_LINK(1),
-        SDX   => OUTPUT_PORT_LINK(0),
-        SS    => OUTPUT_PORT_LINK(2),
-        Q     => LCD_FRAME_LINK
+        RESET           => RESET,
+        CLK             => OUTPUT_PORT_LINK(1),
+        SDX             => OUTPUT_PORT_LINK(0),
+        SS              => OUTPUT_PORT_LINK(2),
+        Q               => LCD_FRAME_LINK
     );
 
     -- LCD frame bit assignment (matches original):
     --   Q[9]   = RS   (register select)
     --   Q[8:1] = DATA (data byte, bit 0 first in frame = Q[8] = DATA[0])
     --   Q[0]   = E    (enable strobe)
-    LCD_RS      <= LCD_FRAME_LINK(9);
-    LCD_DATA(0) <= LCD_FRAME_LINK(8);
-    LCD_DATA(1) <= LCD_FRAME_LINK(7);
-    LCD_DATA(2) <= LCD_FRAME_LINK(6);
-    LCD_DATA(3) <= LCD_FRAME_LINK(5);
-    LCD_DATA(4) <= LCD_FRAME_LINK(4);
-    LCD_DATA(5) <= LCD_FRAME_LINK(3);
-    LCD_DATA(6) <= LCD_FRAME_LINK(2);
-    LCD_DATA(7) <= LCD_FRAME_LINK(1);
-    LCD_EN      <= LCD_FRAME_LINK(0);
+    LCD_RS             <= LCD_FRAME_LINK(9);
+    LCD_DATA(0)        <= LCD_FRAME_LINK(8);
+    LCD_DATA(1)        <= LCD_FRAME_LINK(7);
+    LCD_DATA(2)        <= LCD_FRAME_LINK(6);
+    LCD_DATA(3)        <= LCD_FRAME_LINK(5);
+    LCD_DATA(4)        <= LCD_FRAME_LINK(4);
+    LCD_DATA(5)        <= LCD_FRAME_LINK(3);
+    LCD_DATA(6)        <= LCD_FRAME_LINK(2);
+    LCD_DATA(7)        <= LCD_FRAME_LINK(1);
+    LCD_EN             <= LCD_FRAME_LINK(0);
 
     -- --------------------------------------------------------
     -- Ticket serial decoder
     -- Same SDX/CLK lines as LCD, different slave select (bit 3)
     -- --------------------------------------------------------
-    TICKET_SERIAL : component PETD
+    TICKET_SERIAL: component PETD
     port map (
-        RESET => RESET,
-        CLK   => OUTPUT_PORT_LINK(1),
-        SDX   => OUTPUT_PORT_LINK(0),
-        SS    => OUTPUT_PORT_LINK(3),
-        D     => PETD_D_LINK,
-        Rt    => RT_LINK,
-        Prt   => PRT_LINK
+        RESET           => RESET,
+        CLK             => OUTPUT_PORT_LINK(1),
+        SDX             => OUTPUT_PORT_LINK(0),
+        SS              => OUTPUT_PORT_LINK(3),
+        D               => PETD_D_LINK,
+        Rt              => RT_LINK,
+        Prt             => PRT_LINK
     );
 
     -- --------------------------------------------------------
@@ -202,32 +202,32 @@ begin
     --   [3..0] = O  (ticket option / quantity low nibble)
     --   [7..4] = D  (ticket destination / quantity high nibble)
     -- --------------------------------------------------------
-    TICKET_DISP : component TICKET_DISPENSER
+    TICKET_DISP: component TICKET_DISPENSER
     port map (
-        RT            => RT_LINK,
-        Prt           => PRT_LINK,
-        CollectTicket => CollectTicket,
-        O             => PETD_D_LINK(3 downto 0),
-        D             => PETD_D_LINK(7 downto 4),
-        Fn            => FN_LINK,
-        HEX0          => HEX0,
-        HEX1          => HEX1,
-        HEX2          => HEX2,
-        HEX3          => HEX3,
-        HEX4          => HEX4,
-        HEX5          => HEX5
+        RT              => RT_LINK,
+        Prt             => PRT_LINK,
+        CollectTicket   => CollectTicket,
+        O               => PETD_D_LINK(3 downto 0),
+        D               => PETD_D_LINK(7 downto 4),
+        Fn              => FN_LINK,
+        HEX0            => HEX0,
+        HEX1            => HEX1,
+        HEX2            => HEX2,
+        HEX3            => HEX3,
+        HEX4            => HEX4,
+        HEX5            => HEX5
     );
 
-	 -- Coin Acceptor
-	 
-	 INPUT_PORT_LINK(3) <= Coin;
-	 INPUT_PORT_LINK(0) <= CId(0);
-	 INPUT_PORT_LINK(1) <= CId(1);
- 	 INPUT_PORT_LINK(2) <= CId(2);
-	 
-	 Accept 	<= OUTPUT_PORT_LINK(4);
-	 Eject	<= OUTPUT_PORT_LINK(5);
-	 Collect	<= OUTPUT_PORT_LINK(6);
+    -- Coin Acceptor
 
-	 
+    INPUT_PORT_LINK(3) <= Coin;
+    INPUT_PORT_LINK(0) <= CId(0);
+    INPUT_PORT_LINK(1) <= CId(1);
+    INPUT_PORT_LINK(2) <= CId(2);
+
+    Accept             <= OUTPUT_PORT_LINK(4);
+    Eject              <= OUTPUT_PORT_LINK(5);
+    Collect            <= OUTPUT_PORT_LINK(6);
+
+
 end architecture logicFunction;

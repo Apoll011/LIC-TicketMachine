@@ -20,12 +20,12 @@ architecture behavioral of ShiftReg4_tb is
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal CLK_tb   : std_logic;
-    signal RESET_tb : std_logic;
-    signal LOAD_tb  : std_logic;
-    signal EN_tb    : std_logic;
-    signal D_tb     : std_logic_vector(3 downto 0);
-    signal Q_out_tb : std_logic;
+    signal CLK_tb             : std_logic;
+    signal RESET_tb           : std_logic;
+    signal LOAD_tb            : std_logic;
+    signal EN_tb              : std_logic;
+    signal D_tb               : std_logic_vector(3 downto 0);
+    signal Q_out_tb           : std_logic;
 
 begin
 
@@ -41,22 +41,36 @@ begin
 
     clk_gen: process
     begin
-        CLK_tb <= '0';
+        CLK_tb   <= '0';
         wait for MCLK_HALF_PERIOD;
-        CLK_tb <= '1';
+        CLK_tb   <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
-        RESET_tb <= '1'; LOAD_tb <= '0'; EN_tb <= '0'; D_tb <= "0000"; wait for MCLK_PERIOD * 2;
-        RESET_tb <= '0'; EN_tb <= '1'; LOAD_tb <= '1'; D_tb <= "1011"; wait for MCLK_PERIOD * 2;
+        RESET_tb <= '1';
+        LOAD_tb  <= '0';
+        EN_tb    <= '0';
+        D_tb     <= "0000";
+        wait for MCLK_PERIOD * 2;
+        RESET_tb <= '0';
+        EN_tb    <= '1';
+        LOAD_tb  <= '1';
+        D_tb     <= "1011";
+        wait for MCLK_PERIOD * 2;
 
-        LOAD_tb <= '0'; wait for MCLK_PERIOD * 6;
+        LOAD_tb  <= '0';
+        wait for MCLK_PERIOD * 6;
 
-        EN_tb <= '0'; wait for MCLK_PERIOD * 2;
-        EN_tb <= '1'; LOAD_tb <= '1'; D_tb <= "0101"; wait for MCLK_PERIOD * 2;
-        LOAD_tb <= '0'; wait for MCLK_PERIOD * 4;
+        EN_tb    <= '0';
+        wait for MCLK_PERIOD * 2;
+        EN_tb    <= '1';
+        LOAD_tb  <= '1';
+        D_tb     <= "0101";
+        wait for MCLK_PERIOD * 2;
+        LOAD_tb  <= '0';
+        wait for MCLK_PERIOD * 4;
         wait;
     end process stimulus;
 

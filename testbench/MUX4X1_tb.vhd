@@ -29,14 +29,30 @@ begin
 
     stimulus: process
     begin
-        A_tb  <= "0001"; OP_tb <= "00"; wait for 20 ns;
-        A_tb  <= "0010"; OP_tb <= "01"; wait for 20 ns;
-        A_tb  <= "0100"; OP_tb <= "10"; wait for 20 ns;
-        A_tb  <= "1000"; OP_tb <= "11"; wait for 20 ns;
-        A_tb  <= "1010"; OP_tb <= "00"; wait for 20 ns;
-        A_tb  <= "1010"; OP_tb <= "01"; wait for 20 ns;
-        A_tb  <= "1010"; OP_tb <= "10"; wait for 20 ns;
-        A_tb  <= "1010"; OP_tb <= "11"; wait for 20 ns;
+        A_tb  <= "0001";
+        OP_tb <= "00";
+        wait for 20 ns;
+        A_tb  <= "0010";
+        OP_tb <= "01";
+        wait for 20 ns;
+        A_tb  <= "0100";
+        OP_tb <= "10";
+        wait for 20 ns;
+        A_tb  <= "1000";
+        OP_tb <= "11";
+        wait for 20 ns;
+        A_tb  <= "1010";
+        OP_tb <= "00";
+        wait for 20 ns;
+        A_tb  <= "1010";
+        OP_tb <= "01";
+        wait for 20 ns;
+        A_tb  <= "1010";
+        OP_tb <= "10";
+        wait for 20 ns;
+        A_tb  <= "1010";
+        OP_tb <= "11";
+        wait for 20 ns;
         wait;
     end process stimulus;
 

@@ -32,17 +32,27 @@ begin
 
     stimulus: process
     begin
-        clear_tb <= '0'; ewr_tb <= "11111111"; A_tb <= "0000"; wait for 20 ns;
-        A_tb <= "1001"; wait for 20 ns;
-        A_tb <= "1111"; wait for 20 ns;
+        clear_tb <= '0';
+        ewr_tb   <= "11111111";
+        A_tb     <= "0000";
+        wait for 20 ns;
+        A_tb     <= "1001";
+        wait for 20 ns;
+        A_tb     <= "1111";
+        wait for 20 ns;
 
         -- ewr override
-        ewr_tb <= "01010101"; wait for 20 ns;
-        ewr_tb <= "11111111"; A_tb <= "0011"; wait for 20 ns;
+        ewr_tb   <= "01010101";
+        wait for 20 ns;
+        ewr_tb   <= "11111111";
+        A_tb     <= "0011";
+        wait for 20 ns;
 
         -- clear força display apagado
-        clear_tb <= '1'; wait for 20 ns;
-        clear_tb <= '0'; wait for 20 ns;
+        clear_tb <= '1';
+        wait for 20 ns;
+        clear_tb <= '0';
+        wait for 20 ns;
         wait;
     end process stimulus;
 

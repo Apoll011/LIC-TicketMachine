@@ -40,79 +40,109 @@ begin
 
     clk_gen: process
     begin
-        clk_tb <= '0';
+        clk_tb   <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb <= '1';
+        clk_tb   <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
         reset_tb <= '1';
-        SS_tb <= '0';
-        SDX_tb <= '0';
+        SS_tb    <= '0';
+        SDX_tb   <= '0';
         wait for MCLK_PERIOD * 6;
 
         reset_tb <= '0';
         wait for MCLK_PERIOD * 4;
 
         -- Expected: Prt=1, D=0x55, Rt=0
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0';
-        SS_tb <= '1';
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        SS_tb    <= '1';
         wait for MCLK_PERIOD * 2;
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
         -- Expected: Prt=0, D=0xF0, Rt=1
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0';
-        SS_tb <= '1';
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        SS_tb    <= '1';
         wait for MCLK_PERIOD * 2;
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
         -- Expected: Prt=1, D=0x00, Rt=1
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '0'; wait for MCLK_PERIOD;
-        SDX_tb <= '1'; wait for MCLK_PERIOD;
-        SDX_tb <= '0';
-        SS_tb <= '1';
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '1';
+        wait for MCLK_PERIOD;
+        SDX_tb   <= '0';
+        SS_tb    <= '1';
         wait for MCLK_PERIOD * 2;
-        SS_tb <= '0';
+        SS_tb    <= '0';
         wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 

@@ -26,10 +26,14 @@ begin
 
     stimulus: process
     begin
-        S_tb <= "00"; wait for 20 ns;
-        S_tb <= "01"; wait for 20 ns;
-        S_tb <= "10"; wait for 20 ns;
-        S_tb <= "11"; wait for 20 ns;
+        S_tb <= "00";
+        wait for 20 ns;
+        S_tb <= "01";
+        wait for 20 ns;
+        S_tb <= "10";
+        wait for 20 ns;
+        S_tb <= "11";
+        wait for 20 ns;
         wait;
     end process stimulus;
 

@@ -18,10 +18,10 @@ architecture behavioral of EdgeDetect_tb is
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal CLK_tb    : std_logic;
-    signal RESET_tb  : std_logic;
-    signal SIG_IN_tb : std_logic;
-    signal RISE_tb   : std_logic;
+    signal CLK_tb             : std_logic;
+    signal RESET_tb           : std_logic;
+    signal SIG_IN_tb          : std_logic;
+    signal RISE_tb            : std_logic;
 
 begin
 
@@ -35,24 +35,34 @@ begin
 
     clk_gen: process
     begin
-        CLK_tb <= '0';
+        CLK_tb    <= '0';
         wait for MCLK_HALF_PERIOD;
-        CLK_tb <= '1';
+        CLK_tb    <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
-        RESET_tb <= '1'; SIG_IN_tb <= '0'; wait for MCLK_PERIOD * 2;
-        RESET_tb <= '0'; wait for MCLK_PERIOD * 2;
+        RESET_tb  <= '1';
+        SIG_IN_tb <= '0';
+        wait for MCLK_PERIOD * 2;
+        RESET_tb  <= '0';
+        wait for MCLK_PERIOD * 2;
 
-        SIG_IN_tb <= '1'; wait for MCLK_PERIOD * 2;
-        SIG_IN_tb <= '1'; wait for MCLK_PERIOD * 2;
-        SIG_IN_tb <= '0'; wait for MCLK_PERIOD * 2;
-        SIG_IN_tb <= '1'; wait for MCLK_PERIOD * 2;
+        SIG_IN_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SIG_IN_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SIG_IN_tb <= '0';
+        wait for MCLK_PERIOD * 2;
+        SIG_IN_tb <= '1';
+        wait for MCLK_PERIOD * 2;
 
-        RESET_tb <= '1'; wait for MCLK_PERIOD;
-        RESET_tb <= '0'; SIG_IN_tb <= '0'; wait for MCLK_PERIOD * 2;
+        RESET_tb  <= '1';
+        wait for MCLK_PERIOD;
+        RESET_tb  <= '0';
+        SIG_IN_tb <= '0';
+        wait for MCLK_PERIOD * 2;
         wait;
     end process stimulus;
 

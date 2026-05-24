@@ -8,7 +8,7 @@ architecture behavioral of CLKDIV_tb is
 
     component CLKDIV is
         generic (
-            div : natural := 50000000
+            div     :     natural := 50000000
         );
         port (
             clk_in  : in  std_logic;
@@ -19,14 +19,14 @@ architecture behavioral of CLKDIV_tb is
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal clk_in_tb  : std_logic;
-    signal clk_out_tb : std_logic;
+    signal clk_in_tb          : std_logic;
+    signal clk_out_tb         : std_logic;
 
 begin
 
     UUT: component CLKDIV
     generic map (
-        div => 10
+        div     => 10
     )
     port map (
         clk_in  => clk_in_tb,

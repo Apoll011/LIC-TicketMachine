@@ -1,5 +1,5 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- ============================================================
 -- Mux8x3
@@ -27,13 +27,10 @@ architecture logicFunction of Mux8x3 is
 
 begin
 
-    O <= (A(0) and not S(2) and not S(1) and not S(0)) or
-         (A(1) and not S(2) and not S(1) and     S(0)) or
-         (A(2) and not S(2) and     S(1) and not S(0)) or
-         (A(3) and not S(2) and     S(1) and     S(0)) or
-         (A(4) and     S(2) and not S(1) and not S(0)) or
-         (A(5) and     S(2) and not S(1) and     S(0)) or
-         (A(6) and     S(2) and     S(1) and not S(0)) or
-         (A(7) and     S(2) and     S(1) and     S(0));
+    O <=
+        (A(0) and not S(2) and not S(1) and not S(0)) or (A(1) and not S(2) and not S(1) and S(0)) or
+            (A(2) and not S(2) and S(1) and not S(0)) or (A(3) and not S(2) and S(1) and S(0)) or
+            (A(4) and S(2) and not S(1) and not S(0)) or (A(5) and S(2) and not S(1) and S(0)) or
+            (A(6) and S(2) and S(1) and not S(0)) or (A(7) and S(2) and S(1) and S(0));
 
 end architecture logicFunction;

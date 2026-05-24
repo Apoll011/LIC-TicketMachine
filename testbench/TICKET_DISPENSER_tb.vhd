@@ -48,17 +48,17 @@ begin
 
     stimulus: process
     begin
-        RT_tb <= '0';
-        Prt_tb <= '0';
+        RT_tb            <= '0';
+        Prt_tb           <= '0';
         CollectTicket_tb <= '0';
-        O_tb <= "0000";
-        D_tb <= "0000";
+        O_tb             <= "0000";
+        D_tb             <= "0000";
         wait for 40 ns;
 
-        Prt_tb <= '1';
-        RT_tb <= '1';
-        O_tb <= "0011";
-        D_tb <= "1001";
+        Prt_tb           <= '1';
+        RT_tb            <= '1';
+        O_tb             <= "0011";
+        D_tb             <= "1001";
         wait for 40 ns;
 
         CollectTicket_tb <= '1';
@@ -66,18 +66,18 @@ begin
         CollectTicket_tb <= '0';
         wait for 20 ns;
 
-        RT_tb <= '0';
-        O_tb <= "0101";
-        D_tb <= "1110";
+        RT_tb            <= '0';
+        O_tb             <= "0101";
+        D_tb             <= "1110";
         wait for 40 ns;
 
-        Prt_tb <= '0';
+        Prt_tb           <= '0';
         wait for 40 ns;
 
-        Prt_tb <= '1';
-        RT_tb <= '1';
-        O_tb <= "0001";
-        D_tb <= "0100";
+        Prt_tb           <= '1';
+        RT_tb            <= '1';
+        O_tb             <= "0001";
+        D_tb             <= "0100";
         wait for 40 ns;
 
         wait;

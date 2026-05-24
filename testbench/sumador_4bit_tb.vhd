@@ -34,11 +34,26 @@ begin
 
     stimulus: process
     begin
-        A_tb <= "0000"; B_tb <= "0000"; Ci_tb <= '0'; wait for 20 ns;
-        A_tb <= "0001"; B_tb <= "0001"; Ci_tb <= '0'; wait for 20 ns;
-        A_tb <= "0011"; B_tb <= "0100"; Ci_tb <= '0'; wait for 20 ns;
-        A_tb <= "1111"; B_tb <= "0001"; Ci_tb <= '0'; wait for 20 ns;
-        A_tb <= "1010"; B_tb <= "0101"; Ci_tb <= '1'; wait for 20 ns;
+        A_tb  <= "0000";
+        B_tb  <= "0000";
+        Ci_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= "0001";
+        B_tb  <= "0001";
+        Ci_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= "0011";
+        B_tb  <= "0100";
+        Ci_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= "1111";
+        B_tb  <= "0001";
+        Ci_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= "1010";
+        B_tb  <= "0101";
+        Ci_tb <= '1';
+        wait for 20 ns;
         wait;
     end process stimulus;
 

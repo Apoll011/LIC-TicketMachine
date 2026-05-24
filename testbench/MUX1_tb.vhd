@@ -32,13 +32,34 @@ begin
 
     stimulus: process
     begin
-        A_tb  <= '0'; B_tb <= '0'; OP_tb <= '0'; wait for 20 ns;
-        A_tb  <= '1'; B_tb <= '0'; OP_tb <= '0'; wait for 20 ns;
-        A_tb  <= '0'; B_tb <= '1'; OP_tb <= '0'; wait for 20 ns;
-        A_tb  <= '0'; B_tb <= '1'; OP_tb <= '1'; wait for 20 ns;
-        A_tb  <= '1'; B_tb <= '0'; OP_tb <= '1'; wait for 20 ns;
-        A_tb  <= '1'; B_tb <= '1'; OP_tb <= '0'; wait for 20 ns;
-        A_tb  <= '1'; B_tb <= '1'; OP_tb <= '1'; wait for 20 ns;
+        A_tb  <= '0';
+        B_tb  <= '0';
+        OP_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= '1';
+        B_tb  <= '0';
+        OP_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= '0';
+        B_tb  <= '1';
+        OP_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= '0';
+        B_tb  <= '1';
+        OP_tb <= '1';
+        wait for 20 ns;
+        A_tb  <= '1';
+        B_tb  <= '0';
+        OP_tb <= '1';
+        wait for 20 ns;
+        A_tb  <= '1';
+        B_tb  <= '1';
+        OP_tb <= '0';
+        wait for 20 ns;
+        A_tb  <= '1';
+        B_tb  <= '1';
+        OP_tb <= '1';
+        wait for 20 ns;
         wait;
     end process stimulus;
 

@@ -38,15 +38,35 @@ begin
     stimulus: process
     begin
         -- soma
-        A_tb <= "0011"; B_tb <= "0001"; CBi_tb <= '0'; OPau_tb <= '0'; wait for 20 ns;
-        A_tb <= "1111"; B_tb <= "0001"; CBi_tb <= '0'; OPau_tb <= '0'; wait for 20 ns;
+        A_tb    <= "0011";
+        B_tb    <= "0001";
+        CBi_tb  <= '0';
+        OPau_tb <= '0';
+        wait for 20 ns;
+        A_tb    <= "1111";
+        B_tb    <= "0001";
+        CBi_tb  <= '0';
+        OPau_tb <= '0';
+        wait for 20 ns;
 
         -- subtracao (A - B)
-        A_tb <= "0101"; B_tb <= "0011"; CBi_tb <= '1'; OPau_tb <= '1'; wait for 20 ns;
-        A_tb <= "0011"; B_tb <= "0101"; CBi_tb <= '1'; OPau_tb <= '1'; wait for 20 ns;
+        A_tb    <= "0101";
+        B_tb    <= "0011";
+        CBi_tb  <= '1';
+        OPau_tb <= '1';
+        wait for 20 ns;
+        A_tb    <= "0011";
+        B_tb    <= "0101";
+        CBi_tb  <= '1';
+        OPau_tb <= '1';
+        wait for 20 ns;
 
         -- subtracao com borrow in
-        A_tb <= "1000"; B_tb <= "0001"; CBi_tb <= '0'; OPau_tb <= '1'; wait for 20 ns;
+        A_tb    <= "1000";
+        B_tb    <= "0001";
+        CBi_tb  <= '0';
+        OPau_tb <= '1';
+        wait for 20 ns;
         wait;
     end process stimulus;
 

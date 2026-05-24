@@ -3,12 +3,12 @@ use ieee.std_logic_1164.all;
 
 entity Key_Decode is
     port (
-        Kack, RESET, CLK : in  std_logic;
-        Tdelay           : in  std_logic_vector(1 downto 0);
-        Kval			, clk_out, clk_out_rise    : out std_logic;
-        K                : out std_logic_vector(3 downto 0);
-        Keys_Vertical    : out std_logic_vector(3 downto 0);
-        Keys_Horizontal  : in  std_logic_vector(3 downto 0)
+        Kack, RESET, CLK            : in  std_logic;
+        Tdelay                      : in  std_logic_vector(1 downto 0);
+        Kval, clk_out, clk_out_rise : out std_logic;
+        K                           : out std_logic_vector(3 downto 0);
+        Keys_Vertical               : out std_logic_vector(3 downto 0);
+        Keys_Horizontal             : in  std_logic_vector(3 downto 0)
     );
 end entity Key_Decode;
 
@@ -16,9 +16,9 @@ architecture logicFunction of Key_Decode is
 
     component Key_Control is
         port (
-            CLK, RESET, Kack, Kpress : in  std_logic;
-            Tdelay                   : in  std_logic_vector(1 downto 0);
-            Kval, Kscan   , clk_out, clk_out_rise           : out std_logic
+            CLK, RESET, Kack, Kpress           : in  std_logic;
+            Tdelay                             : in  std_logic_vector(1 downto 0);
+            Kval, Kscan, clk_out, clk_out_rise : out std_logic
         );
     end component Key_Control;
 
@@ -34,7 +34,7 @@ architecture logicFunction of Key_Decode is
 
     component CLKDIV is
         generic (
-            div : natural := 50000000
+            div     :     natural := 50000000
         );
         port (
             clk_in  : in  std_logic;
@@ -46,14 +46,16 @@ architecture logicFunction of Key_Decode is
 
 begin
 
-    Clk_div : component CLKDIV
-    generic map (50)
+    Clk_div: component CLKDIV
+    generic map (
+        50
+    )
     port map (
-        clk_in  => CLK,
-        clk_out => CLK_Divider
+        clk_in          => CLK,
+        clk_out         => CLK_Divider
     );
 
-    scan : component Key_Scan
+    scan: component Key_Scan
     port map (
         RESET           => RESET,
         CLK             => CLK_Divider,
@@ -64,17 +66,17 @@ begin
         Keys_Horizontal => Keys_Horizontal
     );
 
-    control : component Key_Control
+    control: component Key_Control
     port map (
-        RESET  => RESET,
-        CLK    => CLK,
-        Kpress => Kpress,
-        Kack   => Kack,
-        Tdelay => Tdelay,
-        Kval   => Kval,
-        Kscan  => Kscan,
-		  clk_out => clk_out, 
-		  clk_out_rise => clk_out_rise  
+        RESET           => RESET,
+        CLK             => CLK,
+        Kpress          => Kpress,
+        Kack            => Kack,
+        Tdelay          => Tdelay,
+        Kval            => Kval,
+        Kscan           => Kscan,
+        clk_out         => clk_out,
+        clk_out_rise    => clk_out_rise
     );
-	 
+
 end architecture logicFunction;

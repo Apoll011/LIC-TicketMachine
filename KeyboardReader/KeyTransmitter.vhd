@@ -1,5 +1,5 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- ============================================================
 -- KeyTransmitter
@@ -31,12 +31,12 @@ entity KeyTransmitter is
         CLK    : in  STD_LOGIC;
         RESET  : in  STD_LOGIC;
 
-        DataIn : in  STD_LOGIC_VECTOR(3 downto 0);  -- 4-bit key code
-        Load   : in  STD_LOGIC;                     -- pulse: key is valid
-        KBfree : out STD_LOGIC;                     -- '1' when ready for next key
+        DataIn : in  STD_LOGIC_VECTOR(3 downto 0); -- 4-bit key code
+        Load   : in  STD_LOGIC; -- pulse: key is valid
+        KBfree : out STD_LOGIC; -- '1' when ready for next key
 
-        TXclk  : in  STD_LOGIC;                     -- serial clock (from host)
-        TXD    : out STD_LOGIC                       -- serial data output
+        TXclk  : in  STD_LOGIC; -- serial clock (from host)
+        TXD    : out STD_LOGIC -- serial data output
     );
 
 end entity KeyTransmitter;
@@ -122,12 +122,12 @@ begin
     -- Terminal count: frame complete when counter reaches 7
     -- and TXclk is LOW (matches Francisco's original condition)
     -- --------------------------------------------------------
-    C_FLAG <= (O_LINK(2) and O_LINK(1) and O_LINK(0)) and not TXclk;
+    C_FLAG             <= (O_LINK(2) and O_LINK(1) and O_LINK(0)) and not TXclk;
 
     -- --------------------------------------------------------
     -- Control FSM
     -- --------------------------------------------------------
-    M0 : component KeyTransmitter_Control
+    M0: component KeyTransmitter_Control
     port map (
         CLK      => CLK,
         RESET    => RESET,
@@ -144,13 +144,13 @@ begin
     -- Data register: latches DataIn when ENR is asserted
     -- Uses Common/Reg.vhd (replaces Francisco's REGISTER4BITS)
     -- --------------------------------------------------------
-    M1 : component Reg
+    M1: component Reg
     port map (
-        CLK   => CLK,
-        RESET => RESET,
-        D     => DataIn,
-        EN    => ENR_LINK,
-        Q     => Q_LINK
+        CLK      => CLK,
+        RESET    => RESET,
+        D        => DataIn,
+        EN       => ENR_LINK,
+        Q        => Q_LINK
     );
 
     -- --------------------------------------------------------
@@ -160,12 +160,12 @@ begin
     -- RESET driven by RESET_C (active-high, matches Common/Counter)
     -- CE driven by ENC (enabled only during STATE_SEND)
     -- --------------------------------------------------------
-    M2 : component Counter
+    M2: component Counter
     port map (
-        CLK   => TXclk,
-        RESET => RESET_C_LINK,
-        CE    => ENC_LINK,
-        Q     => O_LINK
+        CLK      => TXclk,
+        RESET    => RESET_C_LINK,
+        CE       => ENC_LINK,
+        Q        => O_LINK
     );
 
     -- --------------------------------------------------------
@@ -176,23 +176,23 @@ begin
     -- --------------------------------------------------------
     -- Serial frame definition (8 slots)
     -- --------------------------------------------------------
-    M_LINK(0) <= TXD_INIT_LINK;  -- Slot 0 : INIT bit  ('0' while sending)
-    M_LINK(1) <= '1';             -- Slot 1 : START bit
-    M_LINK(2) <= Q_LINK(0);      -- Slot 2 : D(0) / LSB
-    M_LINK(3) <= Q_LINK(1);      -- Slot 3 : D(1)
-    M_LINK(4) <= Q_LINK(2);      -- Slot 4 : D(2)
-    M_LINK(5) <= Q_LINK(3);      -- Slot 5 : D(3) / MSB
-    M_LINK(6) <= '0';             -- Slot 6 : STOP bit
-    M_LINK(7) <= '1';             -- Slot 7 : placeholder / frame guard
+    M_LINK(0)          <= TXD_INIT_LINK; -- Slot 0 : INIT bit  ('0' while sending)
+    M_LINK(1)          <= '1';           -- Slot 1 : START bit
+    M_LINK(2)          <= Q_LINK(0);     -- Slot 2 : D(0) / LSB
+    M_LINK(3)          <= Q_LINK(1);     -- Slot 3 : D(1)
+    M_LINK(4)          <= Q_LINK(2);     -- Slot 4 : D(2)
+    M_LINK(5)          <= Q_LINK(3);     -- Slot 5 : D(3) / MSB
+    M_LINK(6)          <= '0';           -- Slot 6 : STOP bit
+    M_LINK(7)          <= '1';           -- Slot 7 : placeholder / frame guard
 
     -- --------------------------------------------------------
     -- Output mux: selects the correct frame slot onto TXD
     -- --------------------------------------------------------
-    M3 : component Mux8x3
+    M3: component Mux8x3
     port map (
-        A => M_LINK,
-        S => S_LINK,
-        O => TXD
+        A        => M_LINK,
+        S        => S_LINK,
+        O        => TXD
     );
 
 end architecture behavioral;

@@ -20,12 +20,12 @@ architecture behavioral of RAM_tb is
     constant MCLK_PERIOD      : time := 20 ns;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal CLK_tb     : std_logic;
-    signal RESET_tb   : std_logic;
-    signal address_tb : std_logic_vector(3 downto 0);
-    signal wr_tb      : std_logic;
-    signal din_tb     : std_logic_vector(3 downto 0);
-    signal dout_tb    : std_logic_vector(3 downto 0);
+    signal CLK_tb             : std_logic;
+    signal RESET_tb           : std_logic;
+    signal address_tb         : std_logic_vector(3 downto 0);
+    signal wr_tb              : std_logic;
+    signal din_tb             : std_logic_vector(3 downto 0);
+    signal dout_tb            : std_logic_vector(3 downto 0);
 
 begin
 
@@ -41,34 +41,52 @@ begin
 
     clk_gen: process
     begin
-        CLK_tb <= '0';
+        CLK_tb     <= '0';
         wait for MCLK_HALF_PERIOD;
-        CLK_tb <= '1';
+        CLK_tb     <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
-        RESET_tb <= '1'; wr_tb <= '0'; address_tb <= "0000"; din_tb <= "0000"; wait for MCLK_PERIOD * 2;
-        RESET_tb <= '0'; wait for MCLK_PERIOD * 2;
+        RESET_tb   <= '1';
+        wr_tb      <= '0';
+        address_tb <= "0000";
+        din_tb     <= "0000";
+        wait for MCLK_PERIOD * 2;
+        RESET_tb   <= '0';
+        wait for MCLK_PERIOD * 2;
 
         -- escreve em 0x0
-        address_tb <= "0000"; din_tb <= "1010"; wr_tb <= '1'; wait for MCLK_PERIOD * 2;
-        wr_tb <= '0'; wait for MCLK_PERIOD * 2;
+        address_tb <= "0000";
+        din_tb     <= "1010";
+        wr_tb      <= '1';
+        wait for MCLK_PERIOD * 2;
+        wr_tb      <= '0';
+        wait for MCLK_PERIOD * 2;
 
         -- escreve em 0x5
-        address_tb <= "0101"; din_tb <= "0011"; wr_tb <= '1'; wait for MCLK_PERIOD * 2;
-        wr_tb <= '0'; wait for MCLK_PERIOD * 2;
+        address_tb <= "0101";
+        din_tb     <= "0011";
+        wr_tb      <= '1';
+        wait for MCLK_PERIOD * 2;
+        wr_tb      <= '0';
+        wait for MCLK_PERIOD * 2;
 
         -- lê 0x0
-        address_tb <= "0000"; wait for MCLK_PERIOD * 2;
+        address_tb <= "0000";
+        wait for MCLK_PERIOD * 2;
 
         -- lê 0x5
-        address_tb <= "0101"; wait for MCLK_PERIOD * 2;
+        address_tb <= "0101";
+        wait for MCLK_PERIOD * 2;
 
         -- reset limpa memória
-        RESET_tb <= '1'; wait for MCLK_PERIOD;
-        RESET_tb <= '0'; address_tb <= "0000"; wait for MCLK_PERIOD * 2;
+        RESET_tb   <= '1';
+        wait for MCLK_PERIOD;
+        RESET_tb   <= '0';
+        address_tb <= "0000";
+        wait for MCLK_PERIOD * 2;
         wait;
     end process stimulus;
 

@@ -38,39 +38,39 @@ begin
 
     clk_gen: process
     begin
-        clk_tb <= '0';
+        clk_tb   <= '0';
         wait for MCLK_HALF_PERIOD;
-        clk_tb <= '1';
+        clk_tb   <= '1';
         wait for MCLK_HALF_PERIOD;
     end process clk_gen;
 
     stimulus: process
     begin
         reset_tb <= '1';
-        en_tb <= '0';
-        d_tb <= (others => '0');
+        en_tb    <= '0';
+        d_tb     <= (others => '0');
         wait for MCLK_PERIOD * 4;
 
         reset_tb <= '0';
-        d_tb <= "0101010101";
-        en_tb <= '1';
+        d_tb     <= "0101010101";
+        en_tb    <= '1';
         wait for MCLK_PERIOD * 2;
 
-        en_tb <= '0';
-        d_tb <= "1111100000";
+        en_tb    <= '0';
+        d_tb     <= "1111100000";
         wait for MCLK_PERIOD * 3;
 
-        en_tb <= '1';
+        en_tb    <= '1';
         wait for MCLK_PERIOD * 2;
 
-        d_tb <= "1000000001";
+        d_tb     <= "1000000001";
         wait for MCLK_PERIOD * 2;
 
         reset_tb <= '1';
         wait for MCLK_PERIOD * 2;
         reset_tb <= '0';
-        en_tb <= '1';
-        d_tb <= "1111111111";
+        en_tb    <= '1';
+        d_tb     <= "1111111111";
         wait for MCLK_PERIOD * 2;
 
         wait;

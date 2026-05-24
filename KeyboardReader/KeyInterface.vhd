@@ -1,5 +1,5 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.all;
 
 -- ============================================================
 -- KeyInterface
@@ -42,16 +42,16 @@ entity KeyInterface is
         RESET  : in  std_logic;
 
         -- From Key_Decode
-        Kval   : in  std_logic;   -- level: high while a key is valid
+        Kval   : in  std_logic; -- level: high while a key is valid
 
         -- From KeyTransmitter
-        KBfree : in  std_logic;   -- high when transmitter is idle/done
+        KBfree : in  std_logic; -- high when transmitter is idle/done
 
         -- To KeyTransmitter
-        Load   : out std_logic;   -- single-cycle pulse: latch and send
+        Load   : out std_logic; -- single-cycle pulse: latch and send
 
         -- To Key_Decode
-        Kack   : out std_logic    -- high for one cycle once TX is done
+        Kack   : out std_logic -- high for one cycle once TX is done
     );
 end entity KeyInterface;
 
@@ -76,7 +76,7 @@ begin
     -- Detect the rising edge of Kval (Key_Decode just entered
     -- READING_DATA), and convert it to a single-cycle pulse.
     -- --------------------------------------------------------
-    ed : component EdgeDetect
+    ed: component EdgeDetect
     port map (
         CLK    => CLK,
         RESET  => RESET,
@@ -94,12 +94,12 @@ begin
     process (CLK, RESET) is
     begin
         if RESET = '1' then
-            busy <= '0';
+            busy     <= '0';
         elsif rising_edge(CLK) then
             if kval_rise = '1' then
-                busy <= '1';          -- new key event: mark as busy
+                busy <= '1'; -- new key event: mark as busy
             elsif KBfree = '1' then
-                busy <= '0';          -- transmission complete: release
+                busy <= '0'; -- transmission complete: release
             end if;
         end if;
     end process;
@@ -109,12 +109,12 @@ begin
     -- --------------------------------------------------------
 
     -- Single-cycle pulse to KeyTransmitter: latch DataIn and begin TX
-    Load <= kval_rise;
+    Load             <= kval_rise;
 
     -- Acknowledge to Key_Decode: high for exactly one cycle when
     -- transmission ends (KBfree='1' AND we were actually busy).
     -- This prevents a spurious ack at startup when KBfree is
     -- already '1' but no key has been sent yet.
-    Kack <= KBfree and busy;
+    Kack             <= KBfree and busy;
 
 end architecture behavioral;
