@@ -16,9 +16,7 @@ end entity CoinAcceptor;
 architecture logicFunction of CoinAcceptor is
 begin
     INPUT_PORT_LINK(3) <= Coin;
-    INPUT_PORT_LINK(0) <= CId(0);
-    INPUT_PORT_LINK(1) <= CId(1);
-    INPUT_PORT_LINK(2) <= CId(2);
+    INPUT_PORT_LINK(2 downto 0) <= CId;
 
     Accept             <= OUTPUT_PORT_LINK(4);
     Eject              <= OUTPUT_PORT_LINK(5);
