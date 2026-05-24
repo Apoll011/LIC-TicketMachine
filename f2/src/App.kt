@@ -87,7 +87,7 @@ class App {
         renderFullDestinationScreen(station, roundTrip)
 
         while (true) {
-            val remaining = priceFor(station, roundTrip) - CoinAcceptor.ammoutInserted()
+            val remaining = priceFor(station, roundTrip) - CoinAcceptor.amountInserted()
 
             if (remaining <= 0) {
                 dispenseTicket(station, roundTrip)
@@ -95,7 +95,7 @@ class App {
             }
 
             if (CoinAcceptor.acceptCoin()) {
-                renderRemainingAmount(priceFor(station, roundTrip) - CoinAcceptor.ammoutInserted(), roundTrip)
+                renderRemainingAmount(priceFor(station, roundTrip) - CoinAcceptor.amountInserted(), roundTrip)
             }
 
             when (TUI.getKey()) {
@@ -134,7 +134,7 @@ class App {
         TUI.clear()
         TUI.write("VENDING ABORTED")
 
-        val inserted = CoinAcceptor.ammoutInserted()
+        val inserted = CoinAcceptor.amountInserted()
         if (inserted > 0) {
             TUI.cursor(1, 0)
             TUI.write("Returning ")
@@ -161,7 +161,7 @@ class App {
     private fun renderFullDestinationScreen(station: Station, roundTrip: Boolean) {
         TUI.clear()
         renderDestinationRow(station, showId = false, roundTrip = roundTrip, price = priceFor(station, roundTrip))
-        renderRemainingAmount(priceFor(station, roundTrip) - CoinAcceptor.ammoutInserted(), roundTrip)
+        renderRemainingAmount(priceFor(station, roundTrip) - CoinAcceptor.amountInserted(), roundTrip)
     }
 
     private fun renderDestinationRow(station: Station, showId: Boolean, roundTrip: Boolean, price: Int) {

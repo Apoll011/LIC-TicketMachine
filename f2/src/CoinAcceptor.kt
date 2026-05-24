@@ -86,9 +86,12 @@ object CoinAcceptor {
         }
     }
 
-    fun ammoutInserted(): Int {
+    fun amountInserted(): Int {
         return insertedCoins.sumOf { it.type * it.currentCount }
     }
+
+    @Deprecated("Use amountInserted()")
+    fun ammoutInserted(): Int = amountInserted()
 
     fun ejectInsertedCoins() {
         insertedCoins.forEach { it.currentCount = 0 }
