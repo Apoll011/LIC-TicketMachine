@@ -77,6 +77,18 @@ architecture logicFunction of TicketMachine is
         );
     end component TICKET_DISPENSER;
 
+    component CoinAcceptor is
+        port (
+            Coin             : in  std_logic;
+            CId              : in  std_logic_vector(2 downto 0);
+            OUTPUT_PORT_LINK : in  std_logic_vector(7 downto 0);
+            INPUT_PORT_LINK  : out std_logic_vector(3 downto 0);
+            Accept           : out std_logic;
+            Eject            : out std_logic;
+            Collect          : out std_logic
+        );
+    end component CoinAcceptor;
+
     -- --------------------------------------------------------
     -- Internal signals
     -- --------------------------------------------------------
@@ -99,6 +111,7 @@ architecture logicFunction of TicketMachine is
 
     -- Ticket dispenser
     signal FN_LINK, clk_out, clk_out_rise : std_logic;
+    signal COIN_INPUT_LINK                 : std_logic_vector(3 downto 0);
 
 begin
 
@@ -112,6 +125,7 @@ begin
     --   [3..0]  = K     (4-bit key code)
     -- --------------------------------------------------------
     INPUT_PORT_LINK(4) <= FN_LINK;
+    INPUT_PORT_LINK(3 downto 0) <= COIN_INPUT_LINK;
     INPUT_PORT_LINK(7) <= TXD;
     TXclk              <= OUTPUT_PORT_LINK(7);
 
@@ -219,15 +233,16 @@ begin
     );
 
     -- Coin Acceptor
-
-    INPUT_PORT_LINK(3) <= Coin;
-    INPUT_PORT_LINK(0) <= CId(0);
-    INPUT_PORT_LINK(1) <= CId(1);
-    INPUT_PORT_LINK(2) <= CId(2);
-
-    Accept             <= OUTPUT_PORT_LINK(4);
-    Eject              <= OUTPUT_PORT_LINK(5);
-    Collect            <= OUTPUT_PORT_LINK(6);
+    COIN_ACCEPTOR: component CoinAcceptor
+    port map (
+        Coin             => Coin,
+        CId              => CId,
+        OUTPUT_PORT_LINK => OUTPUT_PORT_LINK,
+        INPUT_PORT_LINK  => COIN_INPUT_LINK,
+        Accept           => Accept,
+        Eject            => Eject,
+        Collect          => Collect
+    );
 
 
 end architecture logicFunction;
