@@ -23,8 +23,6 @@ object CoinAcceptor {
     }
 
     private fun loadStoredCoins() {
-        storedCoins.clear()
-        insertedCoins.clear()
         readFile("CoinDeposit.txt").forEachIndexed { index, line ->
             val (type, count) = line.split(";")
             storedCoins.add(Coin(type.toInt(), count.toInt(), index))
