@@ -45,15 +45,6 @@ begin
     end process clk_gen;
 
     stimulus: process
-        procedure shift_serial(data : std_logic_vector(9 downto 0)) is
-        begin
-            for i in 0 to 9 loop
-                s_tb <= data(i);
-                wait for MCLK_PERIOD;
-            end loop;
-            s_tb <= '0';
-            wait for MCLK_PERIOD;
-        end procedure shift_serial;
     begin
         reset_tb <= '1';
         en_tb <= '0';
@@ -62,7 +53,18 @@ begin
 
         reset_tb <= '0';
         en_tb <= '1';
-        shift_serial("0101010101");
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 2;
 
         en_tb <= '0';
@@ -70,14 +72,36 @@ begin
         wait for MCLK_PERIOD * 4;
 
         en_tb <= '1';
-        shift_serial("1111100000");
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 2;
 
         reset_tb <= '1';
         wait for MCLK_PERIOD * 2;
         reset_tb <= '0';
         en_tb <= '1';
-        shift_serial("1000000001");
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '0'; wait for MCLK_PERIOD;
+        s_tb <= '1'; wait for MCLK_PERIOD;
+        s_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 2;
 
         wait;

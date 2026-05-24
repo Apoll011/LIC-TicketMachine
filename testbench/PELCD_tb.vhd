@@ -42,22 +42,6 @@ begin
     end process clk_gen;
 
     stimulus: process
-
-        procedure send_serial(data : std_logic_vector(9 downto 0)) is
-        begin
-            SS_tb <= '0';
-            wait for MCLK_PERIOD;
-            for i in 0 to 9 loop
-                SDX_tb <= data(i);
-                wait for MCLK_PERIOD;
-            end loop;
-            SDX_tb <= '0';
-            SS_tb <= '1';
-            wait for MCLK_PERIOD * 2;
-            SS_tb <= '0';
-            wait for MCLK_PERIOD;
-        end procedure send_serial;
-
     begin
         reset_tb <= '1';
         SS_tb <= '0';
@@ -67,19 +51,99 @@ begin
         reset_tb <= '0';
         wait for MCLK_PERIOD * 4;
 
-        send_serial("0101010101");
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0';
+        SS_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        send_serial("1111100000");
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0';
+        SS_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        send_serial("1000000001");
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0';
+        SS_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        send_serial("0000000000");
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0'; wait for MCLK_PERIOD;
+        SDX_tb <= '0';
+        SS_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        send_serial("1111111111");
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '1'; wait for MCLK_PERIOD;
+        SDX_tb <= '0';
+        SS_tb <= '1';
+        wait for MCLK_PERIOD * 2;
+        SS_tb <= '0';
+        wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
         SS_tb <= '0';
