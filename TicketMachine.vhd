@@ -79,15 +79,15 @@ architecture logicFunction of TicketMachine is
 
     component CoinAcceptor is
         port (
-            Coin            : in  std_logic;
-            CId             : in  std_logic_vector(2 downto 0);
-            CoinInputBits   : out std_logic_vector(3 downto 0);
-            AcceptCmd       : in  std_logic;
-            EjectCmd        : in  std_logic;
-            CollectCmd      : in  std_logic;
-            Accept          : out std_logic;
-            Eject           : out std_logic;
-            Collect         : out std_logic
+            Coin          : in  std_logic;
+            CId           : in  std_logic_vector(2 downto 0);
+            CoinInputBits : out std_logic_vector(3 downto 0);
+            AcceptCmd     : in  std_logic;
+            EjectCmd      : in  std_logic;
+            CollectCmd    : in  std_logic;
+            Accept        : out std_logic;
+            Eject         : out std_logic;
+            Collect       : out std_logic
         );
     end component CoinAcceptor;
 
@@ -113,7 +113,7 @@ architecture logicFunction of TicketMachine is
 
     -- Ticket dispenser
     signal FN_LINK, clk_out, clk_out_rise : std_logic;
-    signal COIN_INPUT_LINK                 : std_logic_vector(3 downto 0);
+    signal COIN_INPUT_LINK                : std_logic_vector(3 downto 0);
 
 begin
 
@@ -126,10 +126,10 @@ begin
     --   [4]     = Fn    (ticket dispenser finished flag)
     --   [3..0]  = K     (4-bit key code)
     -- --------------------------------------------------------
-    INPUT_PORT_LINK(4) <= FN_LINK;
+    INPUT_PORT_LINK(4)          <= FN_LINK;
     INPUT_PORT_LINK(3 downto 0) <= COIN_INPUT_LINK;
-    INPUT_PORT_LINK(7) <= TXD;
-    TXclk              <= OUTPUT_PORT_LINK(7);
+    INPUT_PORT_LINK(7)          <= TXD;
+    TXclk                       <= OUTPUT_PORT_LINK(7);
 
     USB: component UsbPort
     port map (
@@ -186,16 +186,16 @@ begin
     --   Q[9]   = RS   (register select)
     --   Q[8:1] = DATA (data byte, bit 0 first in frame = Q[8] = DATA[0])
     --   Q[0]   = E    (enable strobe)
-    LCD_RS             <= LCD_FRAME_LINK(9);
-    LCD_DATA(0)        <= LCD_FRAME_LINK(8);
-    LCD_DATA(1)        <= LCD_FRAME_LINK(7);
-    LCD_DATA(2)        <= LCD_FRAME_LINK(6);
-    LCD_DATA(3)        <= LCD_FRAME_LINK(5);
-    LCD_DATA(4)        <= LCD_FRAME_LINK(4);
-    LCD_DATA(5)        <= LCD_FRAME_LINK(3);
-    LCD_DATA(6)        <= LCD_FRAME_LINK(2);
-    LCD_DATA(7)        <= LCD_FRAME_LINK(1);
-    LCD_EN             <= LCD_FRAME_LINK(0);
+    LCD_RS                      <= LCD_FRAME_LINK(9);
+    LCD_DATA(0)                 <= LCD_FRAME_LINK(8);
+    LCD_DATA(1)                 <= LCD_FRAME_LINK(7);
+    LCD_DATA(2)                 <= LCD_FRAME_LINK(6);
+    LCD_DATA(3)                 <= LCD_FRAME_LINK(5);
+    LCD_DATA(4)                 <= LCD_FRAME_LINK(4);
+    LCD_DATA(5)                 <= LCD_FRAME_LINK(3);
+    LCD_DATA(6)                 <= LCD_FRAME_LINK(2);
+    LCD_DATA(7)                 <= LCD_FRAME_LINK(1);
+    LCD_EN                      <= LCD_FRAME_LINK(0);
 
     -- --------------------------------------------------------
     -- Ticket serial decoder
