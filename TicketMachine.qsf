@@ -213,6 +213,11 @@ set_global_assignment -name VHDL_FILE testbench/Counter_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/ShiftReg4_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/RAM_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/EdgeDetect_tb.vhd
+set_global_assignment -name VHDL_FILE testbench/PELCD_tb.vhd
+set_global_assignment -name VHDL_FILE testbench/ShiftRegister_tb.vhd
+set_global_assignment -name VHDL_FILE testbench/HoldRegister_tb.vhd
+set_global_assignment -name VHDL_FILE testbench/PETD_tb.vhd
+set_global_assignment -name VHDL_FILE testbench/TICKET_DISPENSER_tb.vhd
 set_global_assignment -name VHDL_FILE TicketDispenser/PETD.vhd
 set_global_assignment -name VHDL_FILE Common/ShiftReg4.vhd
 set_global_assignment -name VHDL_FILE Common/EdgeDetect.vhd
