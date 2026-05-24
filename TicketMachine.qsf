@@ -194,6 +194,7 @@ set_global_assignment -name VHDL_FILE Common/addersubtractor.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/KeyDecoderFSM.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Scan.vhd
 set_global_assignment -name VHDL_FILE TicketMachine.vhd
+set_global_assignment -name VHDL_FILE CoinAcceptor.vhd
 set_global_assignment -name VHDL_FILE KeyboardReader/Key_Control.vhd
 set_global_assignment -name VHDL_FILE testbench/SerialReceiver_tb.vhd
 set_global_assignment -name VHDL_FILE testbench/MUX1_tb.vhd
