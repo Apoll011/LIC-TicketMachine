@@ -79,13 +79,15 @@ architecture logicFunction of TicketMachine is
 
     component CoinAcceptor is
         port (
-            Coin             : in  std_logic;
-            CId              : in  std_logic_vector(2 downto 0);
-            OUTPUT_PORT_LINK : in  std_logic_vector(7 downto 0);
-            INPUT_PORT_LINK  : out std_logic_vector(3 downto 0);
-            Accept           : out std_logic;
-            Eject            : out std_logic;
-            Collect          : out std_logic
+            Coin            : in  std_logic;
+            CId             : in  std_logic_vector(2 downto 0);
+            CoinInputBits   : out std_logic_vector(3 downto 0);
+            AcceptCmd       : in  std_logic;
+            EjectCmd        : in  std_logic;
+            CollectCmd      : in  std_logic;
+            Accept          : out std_logic;
+            Eject           : out std_logic;
+            Collect         : out std_logic
         );
     end component CoinAcceptor;
 
@@ -235,13 +237,15 @@ begin
     -- Coin Acceptor
     COIN_ACCEPTOR: component CoinAcceptor
     port map (
-        Coin             => Coin,
-        CId              => CId,
-        OUTPUT_PORT_LINK => OUTPUT_PORT_LINK,
-        INPUT_PORT_LINK  => COIN_INPUT_LINK,
-        Accept           => Accept,
-        Eject            => Eject,
-        Collect          => Collect
+        Coin            => Coin,
+        CId             => CId,
+        CoinInputBits   => COIN_INPUT_LINK,
+        AcceptCmd       => OUTPUT_PORT_LINK(4),
+        EjectCmd        => OUTPUT_PORT_LINK(5),
+        CollectCmd      => OUTPUT_PORT_LINK(6),
+        Accept          => Accept,
+        Eject           => Eject,
+        Collect         => Collect
     );
 
 
