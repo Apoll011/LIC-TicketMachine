@@ -53,6 +53,7 @@ begin
         wait for MCLK_PERIOD * 4;
 
         -- Teste 1: envia "0101010101" -> Q deve ser "0101010101"
+        -- Sequencia abaixo enviada LSB primeiro
         SS_tb <= '0';
         wait for MCLK_PERIOD;
         SDX_tb <= '1'; wait for MCLK_PERIOD;

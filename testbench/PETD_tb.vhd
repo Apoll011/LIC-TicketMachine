@@ -56,7 +56,7 @@ begin
         reset_tb <= '0';
         wait for MCLK_PERIOD * 4;
 
-        -- [Prt=1][D=01010101][Rt=0]
+        -- Expected: Prt=1, D=01010101, Rt=0
         SS_tb <= '0';
         wait for MCLK_PERIOD;
         SDX_tb <= '1'; wait for MCLK_PERIOD;
@@ -76,7 +76,7 @@ begin
         wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        -- [Prt=0][D=11110000][Rt=1]
+        -- Expected: Prt=0, D=11110000, Rt=1
         SS_tb <= '0';
         wait for MCLK_PERIOD;
         SDX_tb <= '0'; wait for MCLK_PERIOD;
@@ -96,7 +96,7 @@ begin
         wait for MCLK_PERIOD;
         wait for MCLK_PERIOD * 4;
 
-        -- [Prt=1][D=00000000][Rt=1]
+        -- Expected: Prt=1, D=00000000, Rt=1
         SS_tb <= '0';
         wait for MCLK_PERIOD;
         SDX_tb <= '1'; wait for MCLK_PERIOD;
