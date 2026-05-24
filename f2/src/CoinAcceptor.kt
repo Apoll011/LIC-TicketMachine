@@ -99,8 +99,11 @@ object CoinAcceptor {
         storedCoins.forEach { it.currentCount = 0 }
     }
 
-    fun writeFile() {
+    fun saveCoinState() {
         val output = storedCoins.map { "${it.type};${it.currentCount}" }
         writeFile(fileName = "CoinDeposit.txt", dataArray = output.toTypedArray())
     }
+
+    @Deprecated("Use saveCoinState()")
+    fun writeFile() = saveCoinState()
 }

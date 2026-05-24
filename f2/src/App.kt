@@ -201,7 +201,7 @@ class App {
         String.format("%.2f", cents / 100.0)
 
     fun writeFile() {
-        CoinAcceptor.writeFile()
+        CoinAcceptor.saveCoinState()
         Stations.writeFile()
     }
 }
