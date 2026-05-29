@@ -95,6 +95,7 @@ class App {
             }
 
             if (CoinAcceptor.acceptCoin()) {
+                if (priceFor(station, roundTrip) - CoinDeposit.ammoutInserted() < 0) continue
                 renderRemainingAmount(priceFor(station, roundTrip) - CoinDeposit.ammoutInserted(), roundTrip, 0)
             }
             val f = TUI.getKey()
@@ -120,7 +121,7 @@ class App {
 
     private fun collectTicket(station: Station, roundTrip: Boolean) {
         Stations.addTicket(station.id)
-        TicketDispenser.activatePrintingTicket(roundTrip, station.id, station.id)
+        TicketDispenser.activatePrintingTicket(roundTrip, 0, station.id)
 
         TUI.clear()
         TUI.cursor(0, 4)

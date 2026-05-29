@@ -24,7 +24,6 @@ object LCD {
         if (rs) frame = frame or RS_MASK
 
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame or E_MASK, 10)
-        Thread.sleep(1)
         SerialEmitter.send(SerialEmitter.Peripheral.LCD, frame, 10)
     }
 
@@ -35,19 +34,19 @@ object LCD {
     private fun writeCMD(data: Int) {
         writeByte(false, data)
 
-        if (data == 0b00000001) Thread.sleep(3L)
-        else Thread.sleep(1L)
+        if (data == 0b00000001) sleep(3L)
+        else sleep(1L)
     }
 
     private fun writeData(data: Int) {
         writeByte(true, data)
-        Thread.sleep(1L)
+        sleep(1L)
     }
 
 
     fun init() {
         SerialEmitter.init()
-        Thread.sleep(50)
+        sleep(50)
 
         initSequence()
 
@@ -58,7 +57,7 @@ object LCD {
     fun initSequence() {
         repeat(3) {
             writeByte(false, 0x30) // 0x30 para que ocorra um erro de 8 bits
-            Thread.sleep(5)
+            sleep(5)
         }
     }
 
@@ -66,7 +65,7 @@ object LCD {
         writeCMD(0x38) // 8 bits
         writeCMD(0x08) // display off
         writeCMD(0x01) // clear
-        Thread.sleep(5)
+        sleep(5)
         writeCMD(0x06) // entry mode set
         writeCMD(0x0C) // display on
     }

@@ -17,7 +17,7 @@ object TicketDispenser{
         SerialEmitter.send(SerialEmitter.Peripheral.TICKET, frame, 10)
 
         while (!HAL.isBit(FN_MASK)) {
-            Thread.sleep(10)
+            sleep(10)
         }
     }
 }

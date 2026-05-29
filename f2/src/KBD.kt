@@ -57,7 +57,7 @@ object KBD {
         while (System.currentTimeMillis() < stopTime) {
             val key = getKey()
             if (key != Key.KEY_NONE.char) return key
-            Thread.sleep(1)
+            sleep(1)
         }
         return Key.KEY_NONE.char
     }

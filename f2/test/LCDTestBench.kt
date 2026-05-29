@@ -6,11 +6,11 @@ object LCDTestBench {
         LCD.clear()
 
         LCD.write("LCD OK")
-        Thread.sleep(500)
+        sleep(500)
 
         LCD.cursor(1, 0)
         LCD.write("Linha 2")
-        Thread.sleep(500)
+        sleep(500)
 
         LCD.writeIcon(RomIcons.LEFT_ARROW)
         LCD.writeIcon(RomIcons.RIGHT_ARROW)
