@@ -148,10 +148,19 @@ class App {
         Thread.sleep(ABORT_DISPLAY_MS)
     }
 
-    private fun showLoading() {
+    private fun showLoading(size: Int, completed: Int) {
         TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
-        TUI.cursor(1, 3)
-        TUI.write("LOADING...")
+        //TUI.write("LOADING...")
+		val start =centeredPadding(size+2)
+        TUI.cursor(1, start)
+		TUI.writeIcon(Icons.LEFT_PROGRESSBAR_ICON)
+		repeat(completed) {
+			TUI.writeIcon(Icons.MIDDLE_FULL_PROGRESSBAR_ICON)
+		}
+		repeat(size - completed) {
+			TUI.writeIcon(Icons.MIDDLE_EMPTY_PROGRESSBAR_ICON)
+		}
+		TUI.writeIcon(Icons.RIGTH_PROGRESSBAR_ICON)
     }
 
     private fun showCollectTicket() {
