@@ -22,7 +22,8 @@ entity TicketMachine is
         Accept                             : out std_logic;
         Eject                              : out std_logic;
         Collect                            : out std_logic;
-
+		  
+		  M		                            : out std_logic;
 
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5 : out std_logic_vector(7 downto 0)
     );
@@ -247,6 +248,7 @@ begin
         Eject           => Eject,
         Collect         => Collect
     );
-
+		
+	 M <= INPUT_PORT_LINK(6);
 
 end architecture logicFunction;

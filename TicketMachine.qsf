@@ -63,7 +63,9 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 # -------------------------------------------------------------------------- #
 set_location_assignment PIN_P11 -to CLK
 
-set_location_assignment PIN_F15 -to RESET
+# -------------------------------------------------------------------------- #
+# SW
+# -------------------------------------------------------------------------- #
 
 set_location_assignment PIN_C10 -to Tdelay[0]
 set_location_assignment PIN_C11 -to Tdelay[1]
@@ -74,6 +76,9 @@ set_location_assignment PIN_A12 -to CId[2]
 set_location_assignment PIN_B12 -to Coin
 set_location_assignment PIN_A13 -to CollectTicket
 
+#set_location_assignment PIN_A14 -to SW[7]
+set_location_assignment PIN_B14 -to M
+set_location_assignment PIN_F15 -to RESET
 
 
 # -------------------------------------------------------------------------- #
