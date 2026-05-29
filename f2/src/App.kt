@@ -9,7 +9,7 @@ private const val DATE_FORMAT = "dd/MM/yyyy HH:mm"
 private const val LCD_WIDTH = 16
 private const val M_MASK = 0b01000000
 
-private const val MAINT_SCROLL_MS = 500L
+private const val MAINT_SCROLL_MS = 1000L
 
 class App {
 
@@ -50,8 +50,7 @@ class App {
         TUI.write("Maintenance")
         renderScrollLine(menuItems[itemIndex])
 
-        while (true) {
-            // Non-blocking scroll
+        while (HAL.isBit(M_MASK)) {
             val now = System.currentTimeMillis()
             if (now - lastScrollTime >= MAINT_SCROLL_MS) {
                 itemIndex = (itemIndex + 1) % menuItems.size
@@ -67,9 +66,6 @@ class App {
                 'D' -> maintShutdown()
             }
 
-            // Restore line 0 header in case a sub-menu cleared the screen
-            // (each sub-menu returns here; re-draw happens at top of next iteration
-            //  but we need the header intact when we come back)
             TUI.cursor(0, centeredPadding("Maintenance".length))
             TUI.write("Maintenance")
         }
