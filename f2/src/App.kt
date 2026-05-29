@@ -9,6 +9,8 @@ private const val DATE_FORMAT = "dd/MM/yyyy HH:mm"
 private const val LCD_WIDTH = 16
 private const val M_MASK = 0b01000000
 
+private const val MAINT_SCROLL_MS = 500L
+
 class App {
 
     private var currentDestiny = 0
@@ -22,13 +24,256 @@ class App {
 
     fun start() {
         while (true) {
-            if (HAL.isBit(M_MASK)){
-                //maintenance
-            }
-            else{
+            if (HAL.isBit(M_MASK)) {
+                maintenanceMode()
+            } else {
                 showSplashScreen()
                 currentDestiny = 0
                 listDestinations()
+            }
+        }
+    }
+
+    private fun maintenanceMode() {
+        val menuItems = listOf(
+            "#-Print ticket",
+            "A-Station Count",
+            "B-Coin Count",
+            "C-Sys Reset",
+            "D-Shutdown"
+        )
+        var itemIndex = 0
+        var lastScrollTime = System.currentTimeMillis()
+
+        TUI.clear()
+        TUI.cursor(0, centeredPadding("Maintenance".length))
+        TUI.write("Maintenance")
+        renderScrollLine(menuItems[itemIndex])
+
+        while (true) {
+            // Non-blocking scroll
+            val now = System.currentTimeMillis()
+            if (now - lastScrollTime >= MAINT_SCROLL_MS) {
+                itemIndex = (itemIndex + 1) % menuItems.size
+                renderScrollLine(menuItems[itemIndex])
+                lastScrollTime = now
+            }
+
+            when (TUI.getKey()) {
+                '#' -> maintTestPrint()
+                'A' -> maintStationCounters()
+                'B' -> maintCoinCounters()
+                'C' -> maintSystemReset()
+                'D' -> maintShutdown()
+            }
+
+            // Restore line 0 header in case a sub-menu cleared the screen
+            // (each sub-menu returns here; re-draw happens at top of next iteration
+            //  but we need the header intact when we come back)
+            TUI.cursor(0, centeredPadding("Maintenance".length))
+            TUI.write("Maintenance")
+        }
+    }
+
+    private fun renderScrollLine(text: String) {
+        TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+        TUI.cursor(1, 0)
+        TUI.write(text)
+    }
+
+    private fun maintTestPrint() {
+        currentDestiny = 0
+        maintSelectDestinationForTest()
+
+        // Restore maintenance header after returning
+        TUI.clear()
+        TUI.cursor(0, centeredPadding("Maintenance".length))
+        TUI.write("Maintenance")
+    }
+
+    private fun maintSelectDestinationForTest() {
+        var firstDigit: Int? = null
+        var digitTime = 0L
+
+        renderDestinationMenu()
+
+        while (true) {
+            if (firstDigit != null &&
+                (System.currentTimeMillis() - digitTime > DIGIT_TIMEOUT_MS || firstDigit != 1)
+            ) {
+                currentDestiny = firstDigit!!
+                firstDigit = null
+                renderDestinationMenu()
+            }
+
+            when (val key = TUI.getKey()) {
+                in '0'..'9' -> {
+                    val digit = key.digitToInt()
+                    if (firstDigit == null) {
+                        firstDigit = digit
+                        digitTime = System.currentTimeMillis()
+                    } else {
+                        val combined = firstDigit!! * 10 + digit
+                        currentDestiny = if (combined in 0 until STATION_COUNT) combined else firstDigit!!
+                        firstDigit = null
+                        renderDestinationMenu()
+                    }
+                }
+                'A' -> {
+                    firstDigit = null
+                    currentDestiny = (currentDestiny - 1 + STATION_COUNT) % STATION_COUNT
+                    renderDestinationMenu()
+                }
+                'B' -> {
+                    firstDigit = null
+                    currentDestiny = (currentDestiny + 1) % STATION_COUNT
+                    renderDestinationMenu()
+                }
+                '#' -> {
+                    firstDigit = null
+                    // Enter test-print confirmation screen
+                    val station = Stations.getStation(currentDestiny) ?: return
+                    maintTestPrintConfirm(station)
+                    return
+                }
+            }
+        }
+    }
+
+    private fun maintTestPrintConfirm(station: Station) {
+        TUI.clear()
+        TUI.cursor(0, centeredPadding(station.name.length))
+        TUI.write(station.name)
+        TUI.cursor(1, 0)
+        TUI.write("* - to print")
+
+        while (true) {
+            when (TUI.getKey()) {
+                '*' -> {
+                    // Test print: skip coin collection and Stations.addTicket
+                    TicketDispenser.activatePrintingTicket(false, 15, station.id)
+                    TUI.clear()
+                    TUI.cursor(0, 4)
+                    TUI.write("Thank You!")
+                    TUI.cursor(1, 0)
+                    TUI.write("Have a Nice Trip!")
+                    Thread.sleep(THANK_YOU_DISPLAY_MS)
+                    return
+                }
+                '#' -> {
+                    abortVending()
+                    return
+                }
+            }
+        }
+    }
+	
+    private fun maintStationCounters() {
+        var idx = 0
+        renderStationCounterScreen(idx)
+
+        while (true) {
+            when (TUI.getKey()) {
+                'A' -> {
+                    idx = (idx - 1 + STATION_COUNT) % STATION_COUNT
+                    renderStationCounterScreen(idx)
+                }
+                'B' -> {
+                    idx = (idx + 1) % STATION_COUNT
+                    renderStationCounterScreen(idx)
+                }
+                '#' -> return
+            }
+        }
+    }
+
+    private fun renderStationCounterScreen(idx: Int) {
+        val station = Stations.getStation(idx) ?: return
+        TUI.clear()
+        // Line 0: station name centered
+        TUI.cursor(0, centeredPadding(station.name.length))
+        TUI.write(station.name)
+        // Line 1: station id (left, 2 digits) + ticket count (right)
+        TUI.cursor(1, 0)
+        TUI.write(String.format("%02d", station.id))
+        val countStr = station.currentTicketCount.toString()
+        TUI.cursor(1, LCD_WIDTH - countStr.length)
+        TUI.write(countStr)
+    }
+
+    private val coinValues = listOf(5, 10, 20, 50, 100, 200)
+
+    private fun maintCoinCounters() {
+        var idx = 0
+        renderCoinCounterScreen(idx)
+
+        while (true) {
+            when (TUI.getKey()) {
+                'A' -> {
+                    idx = (idx - 1 + coinValues.size) % coinValues.size
+                    renderCoinCounterScreen(idx)
+                }
+                'B' -> {
+                    idx = (idx + 1) % coinValues.size
+                    renderCoinCounterScreen(idx)
+                }
+                '#' -> return
+            }
+        }
+    }
+
+    private fun renderCoinCounterScreen(idx: Int) {
+        val coinCents = coinValues[idx]
+        val label = "${formatCurrency(coinCents)} \u20AC"   // e.g. "0.05 €"
+        val coin = CoinDeposit.storedCoins.getOrNull(idx)
+        val count = coin?.currentCount ?: 0
+
+        TUI.clear()
+        // Line 0: coin value centered
+        TUI.cursor(0, centeredPadding(label.length))
+        TUI.write(label)
+        // Line 1: index (2 digits, left) + count (right)
+        TUI.cursor(1, 0)
+        TUI.write(String.format("%02d", idx))
+        val countStr = count.toString()
+        TUI.cursor(1, LCD_WIDTH - countStr.length)
+        TUI.write(countStr)
+    }
+
+    private fun maintSystemReset() {
+        TUI.clear()
+        TUI.cursor(0, centeredPadding("Reset System".length))
+        TUI.write("Reset System")
+        TUI.cursor(1, 0)
+        TUI.write("* - Yes  Other-No")
+
+        when (TUI.getKey()) {
+            '*' -> {
+                TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+                TUI.cursor(1, 0)
+                TUI.write("Resetting...")
+                reset()
+                Thread.sleep(1500)
+            }
+        }
+    }
+
+    private fun maintShutdown() {
+        TUI.clear()
+        TUI.cursor(0, centeredPadding("Shutdown?".length))
+        TUI.write("Shutdown?")
+        TUI.cursor(1, 0)
+        TUI.write("* - Yes  Other-No")
+
+        when (TUI.getKey()) {
+            '*' -> {
+                writeFile()
+                TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+                TUI.cursor(1, 0)
+                TUI.write("Shutting down...")
+                Thread.sleep(1500)
+                TUI.clear()
+                kotlin.system.exitProcess(0)
             }
         }
     }
@@ -49,7 +294,7 @@ class App {
 
         while (true) {
             if (firstDigit != null && System.currentTimeMillis() - digitTime > DIGIT_TIMEOUT_MS || firstDigit != null && firstDigit != 1) {
-                currentDestiny = firstDigit
+                currentDestiny = firstDigit!!
                 firstDigit = null
                 renderDestinationMenu()
             }
@@ -120,12 +365,12 @@ class App {
 
     private fun dispenseTicket(station: Station, roundTrip: Boolean) {
         showLoading(2, 0)
-		sleep(1500)
-		showLoading(2, 1)
+        sleep(1500)
+        showLoading(2, 1)
         CoinAcceptor.collectCoins()
         showLoading(2, 2)
-		sleep(1500)
-		showCollectTicket()
+        sleep(1500)
+        showCollectTicket()
         collectTicket(station, roundTrip)
     }
 
@@ -160,17 +405,16 @@ class App {
 
     private fun showLoading(size: Int, completed: Int) {
         TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
-        //TUI.write("LOADING...")
-		val start =centeredPadding(size+2)
+        val start = centeredPadding(size + 2)
         TUI.cursor(1, start)
-		TUI.writeIcon(Icons.LEFT_PROGRESSBAR_ICON)
-		repeat(completed) {
-			TUI.writeIcon(Icons.MIDDLE_FULL_PROGRESSBAR_ICON)
-		}
-		repeat(size - completed) {
-			TUI.writeIcon(Icons.MIDDLE_EMPTY_PROGRESSBAR_ICON)
-		}
-		TUI.writeIcon(Icons.RIGHT_PROGRESSBAR_ICON)
+        TUI.writeIcon(Icons.LEFT_PROGRESSBAR_ICON)
+        repeat(completed) {
+            TUI.writeIcon(Icons.MIDDLE_FULL_PROGRESSBAR_ICON)
+        }
+        repeat(size - completed) {
+            TUI.writeIcon(Icons.MIDDLE_EMPTY_PROGRESSBAR_ICON)
+        }
+        TUI.writeIcon(Icons.RIGHT_PROGRESSBAR_ICON)
     }
 
     private fun showCollectTicket() {
