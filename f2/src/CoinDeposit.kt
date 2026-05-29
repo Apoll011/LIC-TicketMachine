@@ -27,10 +27,7 @@ object CoinDeposit {
         storedCoins.zip(insertedCoins).forEach { (stored, inserted) ->
             stored.currentCount += inserted.currentCount
         }
-
         resetCoinCounters()
-        println(storedCoins)
-        println(insertedCoins)
     }
 
     fun ammoutInserted(): Int {
@@ -43,6 +40,10 @@ object CoinDeposit {
 
     fun resetCoinCounters() {
         insertedCoins.forEach { it.currentCount = 0 }
+    }
+
+    fun resetCoinDeposit() {
+        storedCoins.forEach { it.currentCount = 0 }
     }
 
     fun writeFile() {

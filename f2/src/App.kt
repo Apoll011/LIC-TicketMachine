@@ -7,6 +7,7 @@ private const val ABORT_DISPLAY_MS = 2000L
 private const val THANK_YOU_DISPLAY_MS = 5000L
 private const val DATE_FORMAT = "dd/MM/yyyy HH:mm"
 private const val LCD_WIDTH = 16
+private const val M_MASK = 0b01000000
 
 class App {
 
@@ -21,9 +22,14 @@ class App {
 
     fun start() {
         while (true) {
-            showSplashScreen()
-            currentDestiny = 0
-            listDestinations()
+            if (HAL.isBit(M_MASK)){
+                //maintenance
+            }
+            else{
+                showSplashScreen()
+                currentDestiny = 0
+                listDestinations()
+            }
         }
     }
 
@@ -114,18 +120,18 @@ class App {
 
     private fun dispenseTicket(station: Station, roundTrip: Boolean) {
         showLoading(2, 0)
-		sleep(2)
+		sleep(1500)
 		showLoading(2, 1)
         CoinAcceptor.collectCoins()
         showLoading(2, 2)
-		sleep(1)
+		sleep(1500)
 		showCollectTicket()
         collectTicket(station, roundTrip)
     }
 
     private fun collectTicket(station: Station, roundTrip: Boolean) {
         Stations.addTicket(station.id)
-        TicketDispenser.activatePrintingTicket(roundTrip, 0, station.id)
+        TicketDispenser.activatePrintingTicket(roundTrip, 15, station.id)
 
         TUI.clear()
         TUI.cursor(0, 4)
@@ -164,7 +170,7 @@ class App {
 		repeat(size - completed) {
 			TUI.writeIcon(Icons.MIDDLE_EMPTY_PROGRESSBAR_ICON)
 		}
-		TUI.writeIcon(Icons.RIGTH_PROGRESSBAR_ICON)
+		TUI.writeIcon(Icons.RIGHT_PROGRESSBAR_ICON)
     }
 
     private fun showCollectTicket() {
@@ -219,5 +225,11 @@ class App {
     fun writeFile() {
         CoinDeposit.writeFile()
         Stations.writeFile()
+    }
+
+    fun reset() {
+        Stations.resetTicketCounters()
+        CoinDeposit.resetCoinCounters()
+        CoinDeposit.resetCoinDeposit()
     }
 }
