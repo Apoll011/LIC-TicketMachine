@@ -113,9 +113,13 @@ class App {
     }
 
     private fun dispenseTicket(station: Station, roundTrip: Boolean) {
-        showLoading()
+        showLoading(2, 0)
+		sleep(2)
+		showLoading(2, 1)
         CoinAcceptor.collectCoins()
-        showCollectTicket()
+        showLoading(2, 2)
+		sleep(1)
+		showCollectTicket()
         collectTicket(station, roundTrip)
     }
 
