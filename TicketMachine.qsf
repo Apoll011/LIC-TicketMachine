@@ -72,6 +72,7 @@ set_location_assignment PIN_D12 -to CId[0]
 set_location_assignment PIN_C12 -to CId[1]
 set_location_assignment PIN_A12 -to CId[2]
 set_location_assignment PIN_B12 -to Coin
+set_location_assignment PIN_A13 -to CollectTicket
 
 
 
@@ -160,8 +161,6 @@ set_location_assignment PIN_M20 -to HEX5[4]
 set_location_assignment PIN_N19 -to HEX5[5]
 set_location_assignment PIN_N20 -to HEX5[6]
 set_location_assignment PIN_L19 -to HEX5[7]
-
-set_location_assignment PIN_B8 -to CollectTicket
 
 set_global_assignment -name VHDL_FILE Common/DecoderBuffer.vhd
 set_global_assignment -name VHDL_FILE testbench/KeyTransmitter_tb.vhd

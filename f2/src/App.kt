@@ -1,8 +1,16 @@
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+private const val STATION_COUNT = 16
+private const val DIGIT_TIMEOUT_MS = 500L
+private const val ABORT_DISPLAY_MS = 2000L
+private const val THANK_YOU_DISPLAY_MS = 5000L
+private const val DATE_FORMAT = "dd/MM/yyyy HH:mm"
+private const val LCD_WIDTH = 16
+
 class App {
-    var currentDestiny = 0
+
+    private var currentDestiny = 0
 
     fun init() {
         TUI.init()
@@ -12,175 +20,105 @@ class App {
     }
 
     fun start() {
-        firstScreen()
-        mainLoop()
+        while (true) {
+            showSplashScreen()
+            currentDestiny = 0
+            listDestinations()
+        }
     }
 
-    // ----------------------------------------------------------------
-    // Screens
-    // ----------------------------------------------------------------
-
-    fun firstScreen() {
+    private fun showSplashScreen() {
         TUI.clear()
         TUI.write(" Ticket to Ride")
         TUI.cursor(1, 0)
-
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-        TUI.write(LocalDateTime.now().format(formatter))
-
+        TUI.write(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
         while (TUI.getKey() == '\u0000') {}
-        listDestinations()
     }
 
-    fun mainLoop() {
-        while (true) {
-            firstScreen()
-            currentDestiny = 0
-        }
-    }
-
-    // ----------------------------------------------------------------
-    // Destination selection
-    // ----------------------------------------------------------------
-
-    fun listDestinations() {
-        var choosing = true
+    private fun listDestinations() {
         var firstDigit: Int? = null
-        var digitTime: Long = 0
+        var digitTime = 0L
 
-        printCurrentDestinyMenu()
+        renderDestinationMenu()
 
-        while (choosing) {
-            // Timeout: commit single buffered digit after 500ms
-            if (firstDigit != 1 || firstDigit != null && System.currentTimeMillis() - digitTime > 500) {
-                currentDestiny = firstDigit!!
+        while (true) {
+            if (firstDigit != null && System.currentTimeMillis() - digitTime > DIGIT_TIMEOUT_MS || firstDigit != null && firstDigit != 1) {
+                currentDestiny = firstDigit
                 firstDigit = null
-                printCurrentDestinyMenu()
+                renderDestinationMenu()
             }
 
-            val key = TUI.getKey()
-            when {
-                key in '0'..'9' -> {
+            when (val key = TUI.getKey()) {
+                in '0'..'9' -> {
                     val digit = key.digitToInt()
-
                     if (firstDigit == null) {
-                        // Buffer first digit and start timer
                         firstDigit = digit
                         digitTime = System.currentTimeMillis()
                     } else {
-                        // Second digit arrived — try to combine
-                        val saved = firstDigit!!
+                        val combined = firstDigit!! * 10 + digit
+                        currentDestiny = if (combined in 0 until STATION_COUNT) combined else firstDigit!!
                         firstDigit = null
-                        val combined = saved * 10 + digit
-                        currentDestiny = if (combined in 0..15) combined else saved
-                        printCurrentDestinyMenu()
+                        renderDestinationMenu()
                     }
                 }
-
-                key == 'A' -> {
+                'A' -> {
                     firstDigit = null
-                    currentDestiny = (currentDestiny - 1 + 16) % 16
-                    printCurrentDestinyMenu()
+                    currentDestiny = (currentDestiny - 1 + STATION_COUNT) % STATION_COUNT
+                    renderDestinationMenu()
                 }
-
-                key == 'B' -> {
+                'B' -> {
                     firstDigit = null
-                    currentDestiny = (currentDestiny + 1) % 16
-                    printCurrentDestinyMenu()
+                    currentDestiny = (currentDestiny + 1) % STATION_COUNT
+                    renderDestinationMenu()
                 }
-
-                key == '#' -> {
+                '#' -> {
                     firstDigit = null
-                    choosing = false
+                    selectDestiny()
+                    return
                 }
             }
         }
-        selectDestiny()
     }
 
-    // ----------------------------------------------------------------
-    // Payment flow
-    // ----------------------------------------------------------------
-
-    fun selectDestiny() {
+    private fun selectDestiny() {
         val station = Stations.getStation(currentDestiny) ?: return
 
         var roundTrip = false
-        var active = true
+        renderFullDestinationScreen(station, roundTrip)
 
-        TUI.clear()
-        printDestiny(station, false, roundTrip, currentPrice(station, roundTrip))
-
-        while (active) {
-            val remaining = currentPrice(station, roundTrip) - CoinDeposit.ammoutInserted()
+        while (true) {
+            val remaining = priceFor(station, roundTrip) - CoinDeposit.ammoutInserted()
 
             if (remaining <= 0) {
-                showLoading()
-                CoinAcceptor.collectCoins()
-                showCollectTicket()
-				collectTicket(station, roundTrip)
-				active = false
-                break
+                dispenseTicket(station, roundTrip)
+                return
             }
 
             if (CoinAcceptor.acceptCoin()) {
-                printLowerLine(
-                    currentPrice(station, roundTrip) - CoinDeposit.ammoutInserted(),
-                    roundTrip
-                )
+                renderRemainingAmount(priceFor(station, roundTrip) - CoinDeposit.ammoutInserted(), roundTrip, 0)
             }
-
-            when (TUI.getKey()) {
+            val f = TUI.getKey()
+            when (f) {
                 '*' -> {
                     roundTrip = !roundTrip
-                    //printDestiny(station, false, roundTrip, currentPrice(station, roundTrip))
-                    printLowerLine(
-                        currentPrice(station, roundTrip) - CoinDeposit.ammoutInserted(),
-                        roundTrip
-                    )
+                    renderRemainingAmount(priceFor(station, roundTrip) - CoinDeposit.ammoutInserted(), roundTrip, 0)
                 }
                 '#' -> {
                     abortVending()
-                    active = false
+                    return
                 }
             }
         }
     }
 
-    private fun currentPrice(station: Station, roundTrip: Boolean): Int =
-        if (roundTrip) station.price * 2 else station.price
-
-    private fun showLoading() {
-        TUI.deleteText(LCD.Line.LOWER, 0, 15)
-        TUI.cursor(1, 3)
-        TUI.write("LOADING...")
+    private fun dispenseTicket(station: Station, roundTrip: Boolean) {
+        showLoading()
+        CoinAcceptor.collectCoins()
+        showCollectTicket()
+        collectTicket(station, roundTrip)
     }
 
-    private fun showCollectTicket() {
-        TUI.deleteText(LCD.Line.LOWER, 0, 15)
-        TUI.cursor(1, 2)
-        TUI.write("Collect Ticket")
-    }
-
-    private fun abortVending() {
-        TUI.clear()
-        TUI.write("VENDING ABORTED")
-        val inserted = CoinDeposit.ammoutInserted()
-        if (inserted > 0) {
-            TUI.cursor(1, 0)
-            TUI.write("Returning ")
-            TUI.write(String.format("%.2f", inserted / 100.0))
-            TUI.writeIcon(Icons.EURO_SIGN)
-            CoinAcceptor.ejectCoins()
-        }
-        Thread.sleep(2000L)
-    }
-
-    // ----------------------------------------------------------------
-    // Ticket collection
-    // ----------------------------------------------------------------
-
-    fun collectTicket(station: Station, roundTrip: Boolean) {
+    private fun collectTicket(station: Station, roundTrip: Boolean) {
         Stations.addTicket(station.id)
         TicketDispenser.activatePrintingTicket(roundTrip, station.id, station.id)
 
@@ -190,53 +128,79 @@ class App {
         TUI.cursor(1, 0)
         TUI.write("Have a Nice Trip!")
 
-        Thread.sleep(5000L)
+        Thread.sleep(THANK_YOU_DISPLAY_MS)
     }
 
-    // ----------------------------------------------------------------
-    // Display helpers
-    // ----------------------------------------------------------------
-
-    fun printCurrentDestinyMenu() {
+    private fun abortVending() {
         TUI.clear()
-        val station = Stations.getStation(currentDestiny) ?: return
-        printDestiny(station, true, false, station.price)
+        TUI.write("VENDING ABORTED")
+
+        val inserted = CoinDeposit.ammoutInserted()
+        if (inserted > 0) {
+            TUI.cursor(1, 0)
+            TUI.write("Returning ")
+            TUI.write(formatCurrency(inserted))
+            TUI.writeIcon(Icons.EURO_SIGN)
+            CoinAcceptor.ejectCoins()
+        }
+
+        Thread.sleep(ABORT_DISPLAY_MS)
     }
 
-    fun printDestiny(station: Station, withId: Boolean, roundTrip: Boolean, currency: Int) {
-        val padding = centeredPadding(station.name.length)
-        TUI.cursor(0, padding)
+    private fun showLoading() {
+        TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+        TUI.cursor(1, 3)
+        TUI.write("LOADING...")
+    }
+
+    private fun showCollectTicket() {
+        TUI.deleteText(LCD.Line.LOWER, 0, 15)
+        TUI.cursor(1, 1)
+        TUI.write("Collect Ticket")
+    }
+
+    private fun renderDestinationMenu() {
+        val station = Stations.getStation(currentDestiny) ?: return
+        TUI.clear()
+        renderDestinationRow(station, showId = true)
+        renderRemainingAmount(priceFor(station, false), true, 2)
+    }
+
+    private fun renderFullDestinationScreen(station: Station, roundTrip: Boolean) {
+        TUI.clear()
+        renderDestinationRow(station, showId = false)
+        renderRemainingAmount(priceFor(station, roundTrip) - CoinDeposit.ammoutInserted(), roundTrip, 0)
+    }
+
+    private fun renderDestinationRow(station: Station, showId: Boolean) {
+        TUI.cursor(0, centeredPadding(station.name.length))
         TUI.write(station.name)
 
         TUI.cursor(1, 0)
-        if (withId) TUI.write(String.format("%02d", station.id))
-
-        TUI.writeIcon(Icons.UPWARDS_ARROW)
-        if (roundTrip) TUI.writeIcon(Icons.DOWNWARDS_ARROW)
-
-        TUI.cursor(1, 11)
-        TUI.write(String.format("%.2f", currency / 100.0))
-        TUI.writeIcon(Icons.EURO_SIGN)
+        if (showId) TUI.write(String.format("%02d", station.id))
     }
 
-    fun printLowerLine(price: Int, roundTrip: Boolean) {
-        TUI.cursor(1, 1)
+    private fun renderRemainingAmount(remaining: Int, roundTrip: Boolean, startC: Int = 1) {
+        TUI.cursor(1, startC)
+        TUI.writeIcon(Icons.UPWARDS_ARROW)
         if (roundTrip) {
             TUI.writeIcon(Icons.DOWNWARDS_ARROW)
         } else {
             TUI.deleteText(LCD.Line.LOWER, 1, 2)
         }
         TUI.cursor(1, 11)
-        TUI.write(String.format("%.2f", price / 100.0))
+        TUI.write(formatCurrency(remaining))
         TUI.writeIcon(Icons.EURO_SIGN)
     }
 
-    private fun centeredPadding(textLength: Int): Int =
-        ((16 - textLength).coerceAtLeast(0)) / 2
+    private fun priceFor(station: Station, roundTrip: Boolean): Int =
+        if (roundTrip) station.price * 2 else station.price
 
-    // ----------------------------------------------------------------
-    // Persistence
-    // ----------------------------------------------------------------
+    private fun centeredPadding(textLength: Int): Int =
+        (LCD_WIDTH - textLength).coerceAtLeast(0) / 2
+
+    private fun formatCurrency(cents: Int): String =
+        String.format("%.2f", cents / 100.0)
 
     fun writeFile() {
         CoinDeposit.writeFile()
