@@ -97,7 +97,7 @@ class App {
             if (firstDigit != null &&
                 (System.currentTimeMillis() - digitTime > DIGIT_TIMEOUT_MS || firstDigit != 1)
             ) {
-                currentDestiny = firstDigit!!
+                currentDestiny = firstDigit
                 firstDigit = null
                 renderDestinationMenu()
             }
@@ -109,7 +109,7 @@ class App {
                         firstDigit = digit
                         digitTime = System.currentTimeMillis()
                     } else {
-                        val combined = firstDigit!! * 10 + digit
+                        val combined = firstDigit * 10 + digit
                         currentDestiny = if (combined in 0 until STATION_COUNT) combined else firstDigit!!
                         firstDigit = null
                         renderDestinationMenu()
@@ -140,13 +140,15 @@ class App {
         TUI.clear()
         TUI.cursor(0, centeredPadding(station.name.length))
         TUI.write(station.name)
-        TUI.cursor(1, 0)
+        TUI.cursor(1, 2)
         TUI.write("* - to print")
 
         while (true) {
             when (TUI.getKey()) {
                 '*' -> {
-                    // Test print: skip coin collection and Stations.addTicket
+                    TUI.deleteText(LCD.Line.LOWER, 0, 15)
+                    TUI.cursor(1, 1)
+                    TUI.write("Collect Ticket")
                     TicketDispenser.activatePrintingTicket(false, 15, station.id)
                     TUI.clear()
                     TUI.cursor(0, 4)
@@ -192,6 +194,8 @@ class App {
         // Line 1: station id (left, 2 digits) + ticket count (right)
         TUI.cursor(1, 0)
         TUI.write(String.format("%02d", station.id))
+        TUI.writeIcon(Icons.UPWARDS_ARROW)
+        TUI.writeIcon(Icons.DOWNWARDS_ARROW)
         val countStr = station.currentTicketCount.toString()
         TUI.cursor(1, LCD_WIDTH - countStr.length)
         TUI.write(countStr)
@@ -220,7 +224,7 @@ class App {
 
     private fun renderCoinCounterScreen(idx: Int) {
         val coinCents = coinValues[idx]
-        val label = "${formatCurrency(coinCents)} \u20AC"   // e.g. "0.05 €"
+        val label = formatCurrency(coinCents)   // e.g. "0.05"
         val coin = CoinDeposit.storedCoins.getOrNull(idx)
         val count = coin?.currentCount ?: 0
 
@@ -228,9 +232,12 @@ class App {
         // Line 0: coin value centered
         TUI.cursor(0, centeredPadding(label.length))
         TUI.write(label)
+        TUI.writeIcon(Icons.EURO_SIGN)
         // Line 1: index (2 digits, left) + count (right)
         TUI.cursor(1, 0)
         TUI.write(String.format("%02d", idx))
+        TUI.writeIcon(Icons.UPWARDS_ARROW)
+        TUI.writeIcon(Icons.DOWNWARDS_ARROW)
         val countStr = count.toString()
         TUI.cursor(1, LCD_WIDTH - countStr.length)
         TUI.write(countStr)
@@ -242,34 +249,45 @@ class App {
         TUI.write("Reset System")
         TUI.cursor(1, 0)
         TUI.write("* - Yes  Other-No")
-
-        when (TUI.getKey()) {
-            '*' -> {
-                TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
-                TUI.cursor(1, 0)
-                TUI.write("Resetting...")
-                reset()
-                Thread.sleep(1500)
+        while (true) {
+            when (TUI.getKey()) {
+                '*' -> {
+                    TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+                    TUI.cursor(1, 0)
+                    TUI.write("Resetting...")
+                    reset()
+                    sleep(1500)
+                }
+                '\u0000' -> {}
+                else -> return
             }
         }
+
     }
 
-    private fun maintShutdown() {
+    private fun maintShutdown()
+
+
+    {
         TUI.clear()
         TUI.cursor(0, centeredPadding("Shutdown?".length))
         TUI.write("Shutdown?")
-        TUI.cursor(1, 0)
-        TUI.write("* - Yes  Other-No")
+        TUI.cursor(1, 1)
+        TUI.write("*-Yes/Other-No")
 
-        when (TUI.getKey()) {
-            '*' -> {
-                writeFile()
-                TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
-                TUI.cursor(1, 0)
-                TUI.write("Shutting down...")
-                Thread.sleep(1500)
-                TUI.clear()
-                kotlin.system.exitProcess(0)
+        while (true) {
+            when (TUI.getKey()) {
+                '*' -> {
+                    writeFile()
+                    TUI.deleteText(LCD.Line.LOWER, 0, LCD_WIDTH - 1)
+                    TUI.cursor(1, 0)
+                    TUI.write("Shutting down...")
+                    sleep(1500)
+                    TUI.clear()
+                    kotlin.system.exitProcess(0)
+                }
+                '\u0000' -> {}
+                else -> return
             }
         }
     }
@@ -290,7 +308,7 @@ class App {
 
         while (true) {
             if (firstDigit != null && System.currentTimeMillis() - digitTime > DIGIT_TIMEOUT_MS || firstDigit != null && firstDigit != 1) {
-                currentDestiny = firstDigit!!
+                currentDestiny = firstDigit
                 firstDigit = null
                 renderDestinationMenu()
             }
@@ -302,7 +320,7 @@ class App {
                         firstDigit = digit
                         digitTime = System.currentTimeMillis()
                     } else {
-                        val combined = firstDigit!! * 10 + digit
+                        val combined = firstDigit * 10 + digit
                         currentDestiny = if (combined in 0 until STATION_COUNT) combined else firstDigit!!
                         firstDigit = null
                         renderDestinationMenu()

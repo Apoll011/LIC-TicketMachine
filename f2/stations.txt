@@ -2,9 +2,9 @@
 175;0;Paris
 150;0;London
 125;0;Roma
-100;0;Berlin
+100;1;Berlin
 225;0;Moskva
-100;0;Bruxelles
+100;1;Bruxelles
 125;0;Amsterdam
 150;0;Kyiv
 175;0;Athina
