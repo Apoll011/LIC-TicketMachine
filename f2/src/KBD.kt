@@ -45,9 +45,9 @@ object KBD {
 
     fun init() {
         HAL.clrBits(TXCLK)
-        while (readKey() != Key.KEY_NONE) {
-            println("ignored key")
-        }
+        //while (readKey() != Key.KEY_NONE) {
+        //    println("ignored key")
+        //}
     }
 
     fun getKey(): Char = readKey().char

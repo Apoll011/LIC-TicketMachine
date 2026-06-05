@@ -39,21 +39,35 @@ architecture structural of RAMEF is
             F    : out std_logic_vector(3 downto 0)
         );
     end component MUX4;
+	 
+	 component FFD is
+		 port (
+			  CLK   : in  std_logic;
+			  RESET : in  std_logic;
+			  SET   : in  std_logic;
+			  D     : in  std_logic;
+			  EN    : in  std_logic;
+			  Q     : out std_logic
+		 );
+	end component FFD;
 
     signal count_q    : std_logic_vector(3 downto 0);
     signal addsub     : std_logic_vector(3 downto 0);
     signal next_count : std_logic_vector(3 downto 0);
     signal en_reg     : std_logic;
+	 signal CBO	       : std_logic;
+	 signal CBO_reg : std_logic;
 
 
 begin
     U_C: component AdderSubtrator
     port map (
         A     => count_q,
-        B     => "0001",
-        CBi   => '0',
+        B     => "0000",
+        CBi   => '1',
         OPau  => dec,
-        R     => addsub
+        R     => addsub,
+		  iCBO  => CBO
     );
 
     U_MUX_HOLD: component MUX4
@@ -75,7 +89,16 @@ begin
         Q     => count_q
     );
 
-
-    full   <= count_q(3) and count_q(2) and count_q(1) and count_q(0);
-    empty  <= (not count_q(3)) and (not count_q(2)) and (not count_q(1)) and (not count_q(0));
+	U_CBO_REG: component FFD
+	port map (
+		 CLK   => CLK,
+		 RESET => RESET,
+		 SET   => '0',
+		 D     => CBO,
+		 EN    => en_reg,
+		 Q     => CBO_reg
+	);
+	 
+	full   <= CBO_reg;
+    empty  <= ((not count_q(3)) and (not count_q(2)) and (not count_q(1)) and (not count_q(0))) and not CBO_reg;
 end architecture structural;

@@ -4,9 +4,11 @@ object KBDTestBench {
         HAL.init()
         KBD.init()
 
+        var total = 0
+        //val timeout = TestBenchUtils.readLong("TEST: [REQUEST] Timeout (ms): ", 1)
+/*
         while (true) {
             println("TEST: [START]   KBD test bench")
-            val timeout = TestBenchUtils.readLong("TEST: [REQUEST] Timeout (ms): ", 1)
             println("TEST: [INFO]    A aguardar tecla...")
 
             val key = KBD.waitKey(timeout)
@@ -18,8 +20,20 @@ object KBDTestBench {
 
             if (!TestBenchUtils.readYesNo("TEST: [REQUEST] Repetir teste? (sim/nao): ")) break
             println()
+        }*/
+        while (true) {
+
+
+            val key = KBD.getKey()
+            if (key != KBD.Key.KEY_NONE.char) {
+                total++
+                println( key)
+            } else {
+                //println(total)
+
+            }
+
         }
 
-        println("TEST: [END]     KBD test bench finalizado")
     }
 }

@@ -297,10 +297,12 @@ class App {
         TUI.write(" Ticket to Ride")
         TUI.cursor(1, 0)
         TUI.write(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMAT)))
-        while (TUI.getKey() == '\u0000') {}
+        while (TUI.getKey() == '\u0000' && !HAL.isBit(M_MASK)) {}
     }
 
     private fun listDestinations() {
+        if (HAL.isBit(M_MASK)) return
+
         var firstDigit: Int? = null
         var digitTime = 0L
 
