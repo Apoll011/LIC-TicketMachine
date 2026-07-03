@@ -25,25 +25,25 @@ object SerialEmitter {
         for (i in 0 until size) {
             HAL.writeBits(SDX_MASK, _data)
             _data = _data.shr(1)
-            sleep(0, 40)            // deixa SDX estabilizar
+            //sleep(0, 40)            // deixa SDX estabilizar
             HAL.setBits(SCLK_MASK)
-            sleep(0, 40)            // clock high time
+            //sleep(0, 40)            // clock high time
             HAL.clrBits(SCLK_MASK)
         }
 
         if (addr == Peripheral.LCD) {
             HAL.setBits(SSLCD_MASK)       // SS=1
-            sleep(1)      // tempo suficiente
+            //sleep(1)      // tempo suficiente
             HAL.setBits(SCLK_MASK)      // pulso de clock extra para HoldRegister capturar
             HAL.clrBits(SCLK_MASK)
-            sleep(1)
+            //sleep(1)
             HAL.clrBits(SSLCD_MASK)
         } else if (addr == Peripheral.TICKET) {
             HAL.setBits(SSTD_MASK)       // SS=1
-            sleep(1)      // tempo suficiente
+            //sleep(1)      // tempo suficiente
             HAL.setBits(SCLK_MASK)      // pulso de clock extra para HoldRegister capturar
             HAL.clrBits(SCLK_MASK)
-            Thread.sleep(1)
+            //Thread.sleep(1)
             HAL.clrBits(SSTD_MASK)
 
         }
