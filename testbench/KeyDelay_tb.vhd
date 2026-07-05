@@ -6,29 +6,30 @@ end entity KeyDelay_tb;
 
 architecture behavioral of KeyDelay_tb is
 
-    component KeyDelayTime is
-        port (
-            CLK     : in  std_logic;
-            Tdelay  : in  std_logic_vector(1 downto 0);
-            CLK_Out : out std_logic
-        );
-    end component KeyDelayTime;
+	 component KeyDelay is
+    port (
+        CLK, CE, RESET : in  std_logic;
+        Tdelay         : in  std_logic_vector(1 downto 0);
+        F              : out std_logic
+    );
+	 end component KeyDelay;
 
-    -- 1 ns clock: dividers fire in microseconds, not milliseconds
-    constant MCLK_PERIOD      : time := 1 ns;
+    constant MCLK_PERIOD      : time := 100 ms;
     constant MCLK_HALF_PERIOD : time := MCLK_PERIOD / 2;
 
-    signal clk_tb             : std_logic;
-    signal Tdelay_tb          : std_logic_vector(1 downto 0);
-    signal CLKOut_tb          : std_logic;
+    signal clk_tb, ce_tb, reset_tb 	: std_logic;
+    signal Tdelay_tb          		: std_logic_vector(1 downto 0);
+    signal F_tb        				   : std_logic;
 
 begin
 
-    UUT: component KeyDelayTime
+    UUT: component KeyDelay
     port map (
         CLK     => clk_tb,
+		  CE		 => ce_tb,
+		  RESET	 => reset_tb,
         Tdelay  => Tdelay_tb,
-        CLK_Out => CLKOut_tb
+        F => F_tb
     );
 
     clk_gen: process
@@ -41,30 +42,42 @@ begin
 
     stimulus: process
     begin
-        -- Tdelay="00": CLK_Out period = 500000 cycles = 500 us at 1ns clk
+	 ce_tb <= '1';
+	 reset_tb <= '1';
+	 wait for MCLK_PERIOD;
+	
+		 
+        -- Tdelay="00": 5  cycles = 500  ms
         Tdelay_tb <= "00";
-        wait for 1200 us;
-
-        -- Tdelay="01": CLK_Out period = 1000000 cycles = 1 ms at 1ns clk
+		  reset_tb <= '0';
+        wait for MCLK_PERIOD * 10;
+		  reset_tb <= '1';
+		  wait for MCLK_PERIOD;
+	 
+        -- Tdelay="01": 10 cycles = 1000 ms
         Tdelay_tb <= "01";
-        wait for 2200 us;
-
-        -- Tdelay="10": CLK_Out period = 1500000 cycles = 1.5 ms at 1ns clk
+		  reset_tb <= '0';
+        wait for MCLK_PERIOD * 15;
+		  reset_tb <= '1';
+		  wait for MCLK_PERIOD;
+		  
+        -- Tdelay="10": 15 cycles = 1500 ms
         Tdelay_tb <= "10";
-        wait for 3200 us;
-
-        -- Tdelay="11": CLK_Out period = 2000000 cycles = 2 ms at 1ns clk
+		  reset_tb <= '0';
+        wait for MCLK_PERIOD * 20;
+		  reset_tb <= '1';
+		  wait for MCLK_PERIOD;
+		  
+        -- Tdelay="11": 20 cycles = 2000 ms
         Tdelay_tb <= "11";
-        wait for 4200 us;
-
-        -- Switch Tdelay mid-run from "11" back to "00"
-        -- CLK_Out must switch to the faster divider output
-        Tdelay_tb <= "00";
-        wait for 1200 us;
+		  reset_tb <= '0';
+        wait for MCLK_PERIOD * 25;
+		  reset_tb <= '1';
+		  wait for MCLK_PERIOD;
 
         wait;
     end process stimulus;
 
-    -- 12 000 us
+    -- 11 s
 
 end architecture behavioral;

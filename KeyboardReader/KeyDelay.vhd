@@ -10,65 +10,84 @@ entity KeyDelay is
 end entity KeyDelay;
 
 architecture logicFunction of KeyDelay is
-
+	 
     component Counter is
         port (
             CE    : in  std_logic;
             CLK   : in  std_logic;
             Q     : out std_logic_vector(3 downto 0);
-            RESET : in  std_logic
+            RESET : in  std_logic;
+				CBO	: out std_logic
         );
     end component Counter;
 
-    component CLKDIV is
-        generic (
-            div     :     natural := 50000000
-        );
+    component MUX4X1 is
         port (
-            clk_in  : in  std_logic; -- Entrada do clock div
-            clk_out : out std_logic  -- Saída do clock div
+            A  : in  std_logic_vector(3 downto 0);
+            OP : in  std_logic_vector(1 downto 0);
+            F  : out std_logic
         );
-    end component CLKDIV;
-
-    component KeyDelayTime is
+    end component MUX4X1;	
+	
+	 component FFD is
         port (
-            CLK     : in  std_logic;
-            Tdelay  : in  std_logic_vector(1 downto 0);
-            CLK_Out : out std_logic
+            CLK   : in  std_logic;
+            RESET : in  STD_LOGIC;
+            SET   : in  std_logic;
+            D     : in  STD_LOGIC;
+            EN    : in  STD_LOGIC;
+            Q     : out std_logic
         );
-    end component KeyDelayTime;
+    end component FFD;	
 
-    signal CLK_Divider : std_logic;
-    signal ClkDelay    : std_logic;
-    signal Q           : std_logic_vector(3 downto 0);
-
+    signal Q, Y        : std_logic_vector(3 downto 0);
+	 signal CBO, C		  : std_logic;
+	 
+	 signal TD_00,TD_01,TD_10,TD_11 :std_logic;
+	 
 begin
-
-    Clk_div: component CLKDIV
-    generic map (
-        div     => 16
-    )
-    port map (
-        clk_in  => ClkDelay,
-        clk_out => CLK_Divider
-    );
 
     Count: component Counter
     port map (
         CE      => CE,
-        CLK     => ClkDelay,
+        CLK     => CLK,
         Q       => Q,
+        RESET   => RESET,
+		  CBO 	 => CBO
+
+    );
+	 
+	 Count11: component Counter
+    port map (
+        CE      => C,
+        CLK     => CLK,
+        Q       => Y,
         RESET   => RESET
     );
-
-    F <= Q(3) and Q(2) and Q(1) and Q(0);
-
-    DelayTime: component KeyDelayTime
+	 
+	 alavanca: component FFD
     port map (
-        CLK     => CLK,
-        Tdelay  => Tdelay,
-        CLK_Out => ClkDelay
+        CLK   => CLK,
+        RESET => RESET,
+        set   => '0',
+        D     => '1',
+        EN    => CBO,
+        Q     => C
+    );
+	 
+    mux: component MUX4X1
+    port map (
+        A(0)    => TD_00,
+        A(1)    => TD_01,
+        A(2)    => TD_10,
+        A(3)    => TD_11,
+        OP      => Tdelay,
+        F       => F
     );
 
-
+	 TD_00 <= not Q(3) and Q(2) and not Q(1) and Q(0);
+	 TD_01 <= Q(3) and not Q(2) and Q(1) and not Q(0);
+	 TD_10 <= Q(3) and Q(2) and Q(1) and Q(0);
+	 TD_11 <= not Y(3) and Y(2) and not Y(1) and not Y(0);
+	 
 end architecture logicFunction;

@@ -48,11 +48,11 @@ begin
 
     Clk_div: component CLKDIV
     generic map (
-        50
+        div => 5000000 
     )
     port map (
         clk_in          => CLK,
-        clk_out         => CLK_Divider
+        clk_out         => CLK_Divider -- 100ms, 10Hz
     );
 
     scan: component Key_Scan
@@ -69,7 +69,7 @@ begin
     control: component Key_Control
     port map (
         RESET           => RESET,
-        CLK             => CLK,
+        CLK             => not CLK_Divider,
         Kpress          => Kpress,
         Kack            => Kack,
         Tdelay          => Tdelay,

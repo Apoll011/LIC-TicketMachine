@@ -47,7 +47,6 @@ architecture behavioral of KeyDecoderFSM is
     signal clk_out1                : std_logic;
     signal clk_out_prev            : std_logic := '0';
     signal clk_out_rise1           : std_logic;
-    signal CLK_Divider             : std_logic;
 
     signal resetdelay              : std_logic;
     signal CEDelay                 : std_logic;
@@ -56,21 +55,12 @@ architecture behavioral of KeyDecoderFSM is
 
 begin
 
-    Clk_div: component CLKDIV
-    generic map (
-        50
-    )
-    port map (
-        clk_in  => CLK,
-        clk_out => CLK_Divider
-    );
-
     clk_out                   <= delay_out;
 
     -- Instantiate delay clock generator
     clkd: component KeyDelay
     port map (
-        CLK     => CLK_Divider,
+        CLK     => CLK,
         CE      => CEDelay,
         Tdelay  => Tdelay,
         F       => delay_out,

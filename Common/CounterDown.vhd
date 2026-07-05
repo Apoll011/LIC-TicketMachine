@@ -7,6 +7,7 @@ entity Counter is
         CE    : in  std_logic;
         CLK   : in  std_logic;
         Q     : out std_logic_vector(3 downto 0);
+		  CBO	  : out std_logic;
         RESET : in  std_logic
     );
 
@@ -33,12 +34,34 @@ architecture logicFuntion of Counter is
             Q     : out std_logic_VECTOR(3 downto 0)
         );
     end component Reg;
+	 
+	     component FFD is
+        port (
+            CLK   : in  std_logic;
+            RESET : in  STD_LOGIC;
+            SET   : in  std_logic;
+            D     : in  STD_LOGIC;
+            EN    : in  STD_LOGIC;
+            Q     : out std_logic
+        );
+    end component FFD;
 
     signal reg_out : std_logic_vector(3 downto 0);
     signal som_out : std_logic_vector(3 downto 0);
+	 signal CBO_out 	 : std_logic;
 
 begin
 
+    regcbo: component FFD
+    port map (
+        CLK   => CLK,
+        RESET => RESET,
+        set   => '0',
+        D     => CBO_out,
+        EN    => CE,
+        Q     => CBO
+    );
+	 
     registo: component Reg
     port map (
         CLK   => CLK,
@@ -53,7 +76,8 @@ begin
         B     => "0000",
         R     => som_out,
         CBi   => '1',
-        OPau  => '0'
+        OPau  => '0',
+		  iCBO  => CBO_out
     );
 
     Q <= reg_out;

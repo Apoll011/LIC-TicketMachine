@@ -1,4 +1,4 @@
-200;0;Madrid
+200;1;Madrid
 175;0;Paris
 150;0;London
 125;0;Roma
